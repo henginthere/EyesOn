@@ -10,9 +10,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
 }
 rootProject.name = "EyesOn"
 include ':presentation'
 include ':data'
 include ':domain'
+include ':webrtc'
