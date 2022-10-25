@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.ssafy.data'
+    namespace 'com.d201.data'
     compileSdk 32
 
     defaultConfig {

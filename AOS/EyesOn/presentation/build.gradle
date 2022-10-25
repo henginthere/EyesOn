@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'com.ssafy.eyeson'
+    namespace 'com.d201.eyeson'
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.ssafy.eyeson"
+        applicationId "com.d201.eyeson"
         minSdk 21
         targetSdk 32
         versionCode 1
