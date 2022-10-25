@@ -12,8 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "EyesOnArchitecture"
-include ':app'
+rootProject.name = "EyesOn"
 include ':presentation'
-include ':domain'
 include ':data'
+include ':domain'
