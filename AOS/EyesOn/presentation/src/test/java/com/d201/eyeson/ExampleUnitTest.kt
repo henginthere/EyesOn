@@ -1,4 +1,4 @@
-package com.ssafy.data
+package com.d201.eyeson
 
 import org.junit.Test
 

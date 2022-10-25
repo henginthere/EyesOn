@@ -1,4 +1,4 @@
-package com.ssafy.eyeson
+package com.d201.eyeson
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

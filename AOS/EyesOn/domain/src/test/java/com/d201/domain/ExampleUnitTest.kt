@@ -1,4 +1,4 @@
-package com.ssafy.domain
+package com.d201.domain
 
 import org.junit.Test
 
