@@ -1,4 +1,4 @@
-package com.backend.eyeson.repository;
+package com.backend.eyeson.mapper;
 
 import java.util.List;
 

@@ -30,9 +30,9 @@ public class ComplaintsEntity {
     @JoinColumn(name = "angel_seq", insertable = false, updatable = false)
     private UserEntity angelUser;
 
-    @Basic
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "comp_state")
-    private char compState;
+    private CompStateEnum compState;
 
     @Basic
     @Column(name = "comp_return")
