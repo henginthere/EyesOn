@@ -31,6 +31,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 
+	//test
+	testImplementation("org.junit.platform:junit-platform-launcher:1.5.2")
+	testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
+
 	// Swagger
 	implementation 'io.springfox:springfox-swagger2:2.9.2'
 	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
