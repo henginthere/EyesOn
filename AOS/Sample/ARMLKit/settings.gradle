@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ARMLkit"
 include ':app'
+include ':arcore'
+include ':mlkit'
