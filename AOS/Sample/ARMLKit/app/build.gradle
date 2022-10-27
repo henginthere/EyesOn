@@ -62,6 +62,10 @@ dependencies {
     implementation 'com.google.mlkit:text-recognition:16.0.0-beta6'
     implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta6'
 
+    // Object detection feature with custom classifier support
+    implementation 'com.google.mlkit:object-detection:17.0.0'
+    implementation 'com.google.mlkit:object-detection-custom:17.0.0'
+
 
 
 }

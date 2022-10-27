@@ -1,10 +1,12 @@
 package com.practice.armlkit
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
+import android.util.Pair
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,10 +15,7 @@ import com.d201.mlkit.BitmapUtils.imageToBitmap
 import com.d201.mlkit.mlkit.GraphicOverlay
 import com.d201.mlkit.mlkit.PreferenceUtils
 import com.d201.mlkit.mlkit.VisionImageProcessor
-import com.d201.mlkit.mlkit.common.OBJECT_DETECTION
-import com.d201.mlkit.mlkit.common.OBJECT_DETECTION_CUSTOM
-import com.d201.mlkit.mlkit.common.SIZE_SCREEN
-import com.d201.mlkit.mlkit.common.TEXT_RECOGNITION_KOREAN
+import com.d201.mlkit.mlkit.common.*
 import com.d201.mlkit.mlkit.objectdetector.ObjectDetectorProcessor
 import com.d201.mlkit.mlkit.textdetector.TextRecognitionProcessor
 import com.google.ar.core.*
@@ -34,10 +33,11 @@ import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
+    private var testFlag = false
     // --- ML Kit
     private var graphicOverlay: GraphicOverlay? = null
     private var selectedMode =
-        OBJECT_DETECTION
+        OBJECT_DETECTION_CUSTOM
     private var selectedSize: String? =
         SIZE_SCREEN
     private var isLandScape = false
@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
         setContentView(binding.root)
 
         surfaceView = binding.surfaceview
+        graphicOverlay = binding.graphicOverlay
         displayRotationHelper = DisplayRotationHelper( /*context=*/this)
 
         // Set up tap listener.
@@ -114,6 +115,11 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             } else {
                 showDepthMap = false
                 toggleDepthButton.setText("깊이이용불가")
+            }
+        }
+        binding.btnTest.setOnClickListener {
+            imageProcessor?.run {
+                this.stop()
             }
         }
     }
@@ -178,6 +184,8 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                 return
             }
             binding.tvDistance.bringToFront()
+            binding.graphicOverlay.bringToFront()
+            createImageProcessor()
         }
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
@@ -278,15 +286,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             val frame = session!!.update()
             val camera = frame.camera
 
-            val image = frame.acquireCameraImage()
-            val bitmap = imageToBitmap(image)
-
-            binding.surfaceMlkit.setImageBitmap(bitmap)
-
-
-//            binding.surfaceMlkit.draw
-
-
             // Retrieves the latest depth image for this frame.
             if (isDepthSupported) {
                 depthTexture.update(frame)
@@ -360,7 +359,18 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                     colorCorrectionRgba,
                     OBJECT_COLOR
                 )
+
             }
+            val image = frame.acquireCameraImage()
+//            Log.d(TAG, "onDrawFrame: ${image.format}")
+            val bitmap = imageToBitmap(image, this)
+//
+            binding.surfaceMlkit.setImageBitmap(bitmap)
+            Log.d(TAG, "onDrawFrame: ${bitmap.width} //// ${bitmap}")
+            tryReloadAndDetectInImage(bitmap)
+            image.close()
+
+//            bitmap.recycle()
         } catch (t: Throwable) {
             // Avoid crashing the application due to unhandled exceptions.
             Log.e(
@@ -480,4 +490,74 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                 .show()
         }
     }
+
+    private fun tryReloadAndDetectInImage(bitmap: Bitmap) {
+        Log.d(
+            TAG,
+            "Try reload and detect image${bitmap} ${bitmap.width}"
+        )
+        try {
+
+
+            // Clear the overlay first
+
+            val resizedBitmap: Bitmap
+            resizedBitmap = if (selectedSize == SIZE_ORIGINAL) {
+                bitmap
+            } else {
+                // Get the dimensions of the image view
+                val targetedSize: Pair<Int, Int> = targetedWidthHeight
+
+                // Determine how much to scale down the image
+                val scaleFactor = Math.max(
+                    bitmap.width.toFloat() / targetedSize.first.toFloat(),
+                    bitmap.height.toFloat() / targetedSize.second.toFloat()
+                )
+                Log.d(TAG, "tryReloadAndDetectInImage: ${bitmap.width} 2222 ${scaleFactor}")
+                Bitmap.createScaledBitmap(
+                    bitmap,
+                    (bitmap.width).toInt(),
+                    (bitmap.height).toInt(),
+                    true
+                )
+
+            }
+
+            if(resizedBitmap != null)
+                binding.surfaceMlkit!!.setImageBitmap(resizedBitmap)
+//            graphicOverlay!!.clear()
+
+            Log.d(TAG, "tryReloadAndDetectInImage: #########################")
+            if (imageProcessor != null) {
+                graphicOverlay!!.setImageSourceInfo(
+                    resizedBitmap.width, resizedBitmap.height, /* isFlipped= */false
+                )
+                imageProcessor!!.processBitmap(resizedBitmap, graphicOverlay)
+            } else {
+                Log.e(
+                    TAG,
+                    "Null imageProcessor, please check adb logs for imageProcessor creation error"
+                )
+            }
+        } catch (e: IOException) {
+            Log.e(
+                TAG,
+                "Error retrieving saved image"
+            )
+            imageUri = null
+        }
+    }
+    private val targetedWidthHeight: Pair<Int, Int>
+        get() {
+            val targetWidth: Int
+            val targetHeight: Int
+            when (selectedSize) {
+                SIZE_SCREEN -> {
+                    targetWidth = imageMaxWidth
+                    targetHeight = imageMaxHeight
+                }
+                else -> throw IllegalStateException("Unknown size")
+            }
+            return Pair(targetWidth, targetHeight)
+        }
 }
