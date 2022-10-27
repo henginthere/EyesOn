@@ -30,9 +30,10 @@ import com.d201.mlkit.R;
 import com.google.android.gms.common.images.Size;
 import com.google.common.base.Preconditions;
 import com.google.mlkit.common.model.LocalModel;
-import com.google.mlkit.vision.objects.ObjectDetectorOptionsBase.DetectorMode;
+import com.google.mlkit.vision.objects.ObjectDetectorOptionsBase;
 import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions;
 import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions;
+
 
 /** Utility class to retrieve shared preferences. */
 public class PreferenceUtils {
@@ -115,7 +116,7 @@ public class PreferenceUtils {
       Context context,
       @StringRes int prefKeyForMultipleObjects,
       @StringRes int prefKeyForClassification,
-      @DetectorMode int mode) {
+      @ObjectDetectorOptionsBase.DetectorMode int mode) {
 
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -160,7 +161,7 @@ public class PreferenceUtils {
       LocalModel localModel,
       @StringRes int prefKeyForMultipleObjects,
       @StringRes int prefKeyForClassification,
-      @DetectorMode int mode) {
+      @ObjectDetectorOptionsBase.DetectorMode int mode) {
 
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 

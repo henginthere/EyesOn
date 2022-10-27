@@ -20,13 +20,13 @@ import android.content.Context
 import android.util.Log
 import com.d201.mlkit.mlkit.GraphicOverlay
 import com.d201.mlkit.mlkit.PreferenceUtils
+import com.d201.mlkit.mlkit.VisionProcessorBase
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.TextRecognizerOptionsInterface
-import com.practice.mlkit.mlkit.VisionProcessorBase
 
 /** Processor for the text detector demo. */
 class TextRecognitionProcessor(

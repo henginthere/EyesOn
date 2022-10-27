@@ -1,6 +1,6 @@
 package com.practice.armlkit
 
-import android.media.Image
+import android.net.Uri
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.Bundle
@@ -9,8 +9,20 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.d201.arcore.DepthTextureHandler
+import com.d201.mlkit.BitmapUtils.imageToBitmap
+import com.d201.mlkit.mlkit.GraphicOverlay
+import com.d201.mlkit.mlkit.PreferenceUtils
+import com.d201.mlkit.mlkit.VisionImageProcessor
+import com.d201.mlkit.mlkit.common.OBJECT_DETECTION
+import com.d201.mlkit.mlkit.common.OBJECT_DETECTION_CUSTOM
+import com.d201.mlkit.mlkit.common.SIZE_SCREEN
+import com.d201.mlkit.mlkit.common.TEXT_RECOGNITION_KOREAN
+import com.d201.mlkit.mlkit.objectdetector.ObjectDetectorProcessor
+import com.d201.mlkit.mlkit.textdetector.TextRecognitionProcessor
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
+import com.google.mlkit.common.model.LocalModel
+import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.practice.armlkit.databinding.ActivityMainBinding
 import com.practice.depth.depth.common.*
 import com.practice.depth.depth.rendering.BackgroundRenderer
@@ -22,8 +34,25 @@ import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
-    private lateinit var surfaceView: GLSurfaceView
+    // --- ML Kit
+    private var graphicOverlay: GraphicOverlay? = null
+    private var selectedMode =
+        OBJECT_DETECTION
+    private var selectedSize: String? =
+        SIZE_SCREEN
+    private var isLandScape = false
+    private var imageUri: Uri? = null
 
+    // Max width (portrait mode)
+    private var imageMaxWidth = 0
+
+    // Max height (portrait mode)
+    private var imageMaxHeight = 0
+    private var imageProcessor: VisionImageProcessor? = null
+
+
+    // --- ARCore
+    private lateinit var surfaceView: GLSurfaceView
     private var installRequested = false
     private var isDepthSupported = false
 
@@ -50,7 +79,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
 
     private var showDepthMap = false
     private lateinit var binding: ActivityMainBinding
-    private lateinit var onDepthImageUpdateListener: DepthTextureHandler.OnDepthImageUpdateListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -157,6 +185,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             session!!.resume()
             session!!.pause()
             session!!.resume()
+
         } catch (e: CameraNotAvailableException) {
             messageSnackbarHelper.showError(this, "Camera not available. Try restarting the app.")
             session = null
@@ -248,6 +277,15 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             // camera framerate.
             val frame = session!!.update()
             val camera = frame.camera
+
+            val image = frame.acquireCameraImage()
+            val bitmap = imageToBitmap(image)
+
+            binding.surfaceMlkit.setImageBitmap(bitmap)
+
+
+//            binding.surfaceMlkit.draw
+
 
             // Retrieves the latest depth image for this frame.
             if (isDepthSupported) {
@@ -399,5 +437,47 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             binding.tvDistance.text = "${cm.toInt()} cm"
         }
 
+    }
+
+    private fun createImageProcessor() {
+        try {
+            when (selectedMode) {
+                OBJECT_DETECTION_CUSTOM -> {
+                    Log.i(
+                        TAG,
+                        "Using Custom Object Detector Processor"
+                    )
+                    val localModel = LocalModel.Builder()
+                        .setAssetFilePath("custom_models/object_labeler.tflite")
+                        .build()
+                    val customObjectDetectorOptions =
+                        PreferenceUtils.getCustomObjectDetectorOptionsForStillImage(this, localModel)
+                    imageProcessor =
+                        ObjectDetectorProcessor(
+                            this,
+                            customObjectDetectorOptions
+                        )
+                }
+                TEXT_RECOGNITION_KOREAN ->
+                    imageProcessor =
+                        TextRecognitionProcessor(this, KoreanTextRecognizerOptions.Builder().build())
+                else -> Log.e(
+                    TAG,
+                    "Unknown selectedMode: $selectedMode"
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Can not create image processor: $selectedMode",
+                e
+            )
+            Toast.makeText(
+                this,
+                "Can not create image processor: " + e.message,
+                Toast.LENGTH_LONG
+            )
+                .show()
+        }
     }
 }
