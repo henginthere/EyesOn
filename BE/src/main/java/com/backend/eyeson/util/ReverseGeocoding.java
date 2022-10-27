@@ -49,7 +49,7 @@ public class ReverseGeocoding {
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(result);
         System.out.println(element);
-        String value = element.getAsJsonObject().get("results")
+//        String value = element.getAsJsonObject().get("results")
 
 
     }
