@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Size
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.ar.core.*
@@ -27,6 +28,7 @@ import com.practice.mlkit.GraphicOverlay
 import com.practice.mlkit.PreferenceUtils
 import com.practice.mlkit.VisionProcessorBase
 import java.io.IOException
+import java.util.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -83,14 +85,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
         surfaceView = binding.surfaceview
         displayRotationHelper = DisplayRotationHelper( /*context=*/this)
 
-        // Set up tap listener.
-
-        // Set up tap listener.
-        tapHelper = TapHelper( /*context=*/this)
-        surfaceView.setOnTouchListener(tapHelper)
-
-        // Set up renderer.
-
         // Set up renderer.
         surfaceView.setPreserveEGLContextOnPause(true)
         surfaceView.setEGLContextClientVersion(2)
@@ -114,6 +108,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
         }
 
         graphicOverlay = binding.graphicOverlay
+        graphicOverlay!!.bringToFront()
     }
 
 
@@ -149,14 +144,20 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                 imageProcessor!!.processBitmap(frame, graphicOverlay)
             }
         }
-        graphicOverlay!!.bringToFront()
-        binding.ivTest.bringToFront()
     }
 
     protected fun onProcessComplete(frame: Bitmap?) {}
 
     override fun onResume() {
         super.onResume()
+        val params: ViewGroup.LayoutParams? = this.window.attributes
+        val deviceWidth = getDeviceSize(this).x
+        val deviceHeight = deviceWidth / 3 * 4
+        params?.width = deviceWidth
+        params?.height = deviceHeight
+        binding.surfaceview.layoutParams = params
+        binding.surfaceview.layout(0, 0,deviceWidth,deviceHeight)
+
         if (session == null) {
             var exception: Exception? = null
             var message: String? = null
@@ -179,7 +180,13 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                 // Creates the ARCore session.
                 session = Session( /* context= */this)
                 val config = session!!.config
+                val filter = CameraConfigFilter(session)
+                filter.targetFps = EnumSet.of(CameraConfig.TargetFps.TARGET_FPS_30)
+                filter.depthSensorUsage.add(CameraConfig.DepthSensorUsage.REQUIRE_AND_USE)
+                val cameraConfigList = session!!.getSupportedCameraConfigs(filter)
+                session!!.cameraConfig = cameraConfigList[1]
                 isDepthSupported = session!!.isDepthModeSupported(Config.DepthMode.AUTOMATIC)
+
                 if (isDepthSupported) {
                     config.setDepthMode(Config.DepthMode.AUTOMATIC)
                     config.setFocusMode(Config.FocusMode.AUTO)
@@ -361,7 +368,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             val bitmap = RotateBitmap(imageToBitmap(image, this), 90f)
             Log.d(TAG, "onDrawFrame: ${bitmap.width}, ${bitmap.height}")
             processFrame(bitmap)
-            binding.ivTest.setImageBitmap(bitmap)
             image.close()
 
             // No tracking error at this point. Inform user of what to do based on if planes are found.
