@@ -69,7 +69,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
             try {
                 val account = task.getResult(ApiException::class.java)
                 Log.d(TAG, "firebaseAuthWithGoogle: account: ${account.idToken}")
-                //loginViewModel.firebaseAuthWithGoogle(account.idToken!!)
+                loginViewModel.firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 Log.w(TAG, "google sign in failed: ", e)
             }
