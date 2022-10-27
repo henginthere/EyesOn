@@ -1,26 +1,51 @@
 package com.practice.depth
 
+import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
+import android.util.Size
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.ar.core.*
 import com.google.ar.core.ArCoreApk.InstallStatus
 import com.google.ar.core.exceptions.*
+import com.google.mlkit.common.model.LocalModel
+import com.google.mlkit.vision.demo.kotlin.objectdetector.ObjectDetectorProcessor
+import com.google.mlkit.vision.demo.kotlin.textdetector.TextRecognitionProcessor
+import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.practice.depth.databinding.ActivityMainBinding
 import com.practice.depth.depth.DepthTextureHandler
 import com.practice.depth.depth.common.*
 import com.practice.depth.depth.rendering.BackgroundRenderer
 import com.practice.depth.depth.rendering.ObjectRenderer
+import com.practice.mlkit.BitmapUtils.RotateBitmap
+import com.practice.mlkit.BitmapUtils.imageToBitmap
+import com.practice.mlkit.GraphicOverlay
+import com.practice.mlkit.PreferenceUtils
+import com.practice.mlkit.VisionProcessorBase
 import java.io.IOException
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
+
+    private var graphicOverlay: GraphicOverlay? = null
+
+    private var imageProcessor: VisionProcessorBase<*>? = null
+
+    private var frameWidth = 0
+    private  var frameHeight = 0
+
+    private var processing = false
+    private var pending = false
+    private var lastFrame: Bitmap? = null
+
+    private var selectedModel = OBJECT_DETECTION_CUSTOM
+
     private lateinit var surfaceView: GLSurfaceView
 
     private var installRequested = false
@@ -87,7 +112,49 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                 toggleDepthButton.setText("깊이이용불가")
             }
         }
+
+        graphicOverlay = binding.graphicOverlay
     }
+
+
+    private fun getSizeForDesiredSize(width: Int, height: Int, desiredSize: Int): Size? {
+        val w: Int
+        val h: Int
+        if (width > height) {
+            w = desiredSize
+            h = Math.round(height / width.toFloat() * w)
+        } else {
+            h = desiredSize
+            w = Math.round(width / height.toFloat() * h)
+        }
+        return Size(w, h)
+    }
+
+    private fun processFrame(frame: Bitmap) {
+        lastFrame = frame
+        if (imageProcessor != null) {
+            pending = processing
+            if (!processing) {
+                processing = true
+                if (frameWidth != frame.width || frameHeight != frame.height) {
+                    frameWidth = frame.width
+                    frameHeight = frame.height
+                    graphicOverlay!!.setImageSourceInfo(frameWidth, frameHeight, false)
+                }
+                imageProcessor!!.setOnProcessingCompleteListener {
+                    processing = false
+                    onProcessComplete(frame)
+                    if (pending) processFrame(lastFrame!!)
+                }
+                imageProcessor!!.processBitmap(frame, graphicOverlay)
+            }
+        }
+        graphicOverlay!!.bringToFront()
+        binding.ivTest.bringToFront()
+    }
+
+    protected fun onProcessComplete(frame: Bitmap?) {}
+
     override fun onResume() {
         super.onResume()
         if (session == null) {
@@ -161,6 +228,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             session = null
             return
         }
+        createImageProcessor()
         surfaceView.onResume()
         displayRotationHelper!!.onResume()
 
@@ -288,6 +356,14 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             val colorCorrectionRgba = FloatArray(4)
             frame.lightEstimate.getColorCorrection(colorCorrectionRgba, 0)
 
+            val image = frame.acquireCameraImage()
+            Log.d(TAG, "onDrawFrame: ${image.width}, ${image.height}")
+            val bitmap = RotateBitmap(imageToBitmap(image, this), 90f)
+            Log.d(TAG, "onDrawFrame: ${bitmap.width}, ${bitmap.height}")
+            processFrame(bitmap)
+            binding.ivTest.setImageBitmap(bitmap)
+            image.close()
+
             // No tracking error at this point. Inform user of what to do based on if planes are found.
             var messageToShow = ""
             messageToShow = if (hasTrackingPlane()) {
@@ -322,6 +398,8 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                     OBJECT_COLOR
                 )
             }
+
+
         } catch (t: Throwable) {
             // Avoid crashing the application due to unhandled exceptions.
             Log.e(
@@ -397,6 +475,45 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
         }else{
             binding.tvDistance.text = "${cm.toInt()} cm"
         }
+    }
 
+    private fun createImageProcessor() {
+        stopImageProcessor()
+        imageProcessor =
+            try {
+                when (selectedModel) {
+                    OBJECT_DETECTION_CUSTOM -> {
+                        Log.i(TAG, "Using Custom Object Detector (with object labeler) Processor")
+                        val localModel =
+                            LocalModel.Builder().setAssetFilePath("custom_models/object_labeler.tflite").build()
+                        val customObjectDetectorOptions =
+                            PreferenceUtils.getCustomObjectDetectorOptionsForLivePreview(this, localModel)
+                        ObjectDetectorProcessor(this, customObjectDetectorOptions)
+                    }
+                    TEXT_RECOGNITION_KOREAN -> {
+                        Log.i(TAG, "Using on-device Text recognition Processor for Latin and Korean")
+                        TextRecognitionProcessor(this, KoreanTextRecognizerOptions.Builder().build())
+                    }
+                    else -> throw IllegalStateException("Invalid model name")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Can not create image processor: $selectedModel", e)
+                Toast.makeText(
+                    applicationContext,
+                    "Can not create image processor: " + e.localizedMessage,
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                return
+            }
+    }
+
+    private fun stopImageProcessor() {
+        if (imageProcessor != null) {
+            imageProcessor!!.stop()
+            imageProcessor = null
+            processing = false
+            pending = false
+        }
     }
 }
