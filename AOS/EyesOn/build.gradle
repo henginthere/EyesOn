@@ -7,6 +7,9 @@ buildscript {
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.44'
         classpath 'com.google.gms:google-services:4.3.14'
     }
+    repositories {
+        google()
+    }
 }
 plugins {
     id 'com.android.application' version '7.3.1' apply false

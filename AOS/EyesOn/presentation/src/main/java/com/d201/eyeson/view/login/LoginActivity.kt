@@ -24,7 +24,16 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     private lateinit var mGoogleSignInClient : GoogleSignInClient
 
     override fun init() {
+        initListener()
         initAuth()
+    }
+
+    private fun initListener(){
+        binding.apply {
+            sbLogin.setOnClickListener {
+                initAuth()
+            }
+        }
     }
 
     private fun initAuth() {
@@ -50,7 +59,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     ) { activityResult ->
         Log.d(
             TAG,
-            "firebaseAuthWithGoogle: Activity.RESULT_OK): ${RESULT_OK}, activityResult.resultCode:${activityResult.resultCode}"
+            "firebaseAuthWithGoogle: Activity.RESULT_OK) : ${RESULT_OK}, resultCode : ${activityResult.resultCode}"
         )
         if (activityResult.resultCode == Activity.RESULT_OK) {
 

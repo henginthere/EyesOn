@@ -38,6 +38,8 @@ android {
     }
 }
 
+apply plugin: 'com.android.application'
+
 dependencies {
     implementation project(':domain')
     implementation project(':data')
