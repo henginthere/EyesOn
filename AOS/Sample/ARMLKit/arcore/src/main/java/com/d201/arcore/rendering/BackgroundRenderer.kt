@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.GLES11Ext
 import android.opengl.GLES20
 import android.util.Log
+import com.d201.arcore.rendering.ShaderUtil
 import com.google.ar.core.Coordinates2d
 import com.google.ar.core.Frame
 import java.io.IOException

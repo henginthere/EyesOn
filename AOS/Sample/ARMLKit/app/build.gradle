@@ -44,6 +44,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation project(path: ':arcore')
+    implementation project(path: ':mlkit')
     implementation 'com.google.ar:core:1.34.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -57,7 +58,9 @@ dependencies {
     // Fragment KTX
     implementation 'androidx.fragment:fragment-ktx:1.5.3'
 
-
+// Text features
+    implementation 'com.google.mlkit:text-recognition:16.0.0-beta6'
+    implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta6'
 
 
 

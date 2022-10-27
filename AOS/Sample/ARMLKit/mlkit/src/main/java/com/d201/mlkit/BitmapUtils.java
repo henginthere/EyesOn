@@ -283,4 +283,12 @@ public class BitmapUtils {
       rowStart += plane.getRowStride();
     }
   }
+
+  public static Bitmap imageToBitmap(Image image){
+    ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+    byte[] bytes = new byte[buffer.remaining()];
+    buffer.get(bytes);
+    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length,null);
+    return bitmap;
+  }
 }
