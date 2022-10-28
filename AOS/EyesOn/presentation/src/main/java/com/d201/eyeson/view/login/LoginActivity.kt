@@ -18,7 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
-
     private val loginViewModel : LoginViewModel by viewModels()
 
     private lateinit var mGoogleSignInClient : GoogleSignInClient
@@ -59,19 +58,18 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     ) { activityResult ->
         Log.d(
             TAG,
-            "firebaseAuthWithGoogle: Activity.RESULT_OK) : ${RESULT_OK}, resultCode : ${activityResult.resultCode}"
+            "GoogleLoginActivityResult : ${activityResult.resultCode}, RESULT_OK : $RESULT_OK"
         )
         if (activityResult.resultCode == Activity.RESULT_OK) {
-
             // 인증 결과 획득
             val task = GoogleSignIn.getSignedInAccountFromIntent(activityResult.data)
 
             try {
                 val account = task.getResult(ApiException::class.java)
-                Log.d(TAG, "firebaseAuthWithGoogle: account: ${account.idToken}")
-                loginViewModel.firebaseAuthWithGoogle(account.idToken!!)
+                Log.d(TAG, "IdToken: ${account.idToken}")
+                //loginViewModel.firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
-                Log.w(TAG, "google sign in failed: ", e)
+                Log.e(TAG, "google sign in failed: ", e)
             }
         }
     }

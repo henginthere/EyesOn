@@ -1,6 +1,7 @@
 package com.d201.eyeson.module
 
 
+import com.d201.data.api.UserApi
 import com.d201.eyeson.util.BASE_URL
 import com.d201.eyeson.util.XAccessTokenInterceptor
 import com.google.gson.Gson
@@ -58,9 +59,9 @@ object RemoteDataModule {
             .build()
     }
 
-//    @Provides
-//    @Singleton
-//    fun provideMusicManagerApi(@Named("mainRetrofit") retrofit: Retrofit): MusicManagerApi {
-//        return retrofit.create(MusicManagerApi::class.java)
-//    }
+    @Provides
+    @Singleton
+    fun provideUserApi(@Named("mainRetrofit") retrofit: Retrofit): UserApi {
+        return retrofit.create(UserApi::class.java)
+    }
 }
