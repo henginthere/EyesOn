@@ -6,7 +6,7 @@ spring:
 #    username: d201
 #    password: ssafyd201
     url: jdbc:mysql://d201.kro.kr:3121/eyeson?serverTimezone=Asia/Seoul
-    username: admin-bae
+    username: admin-jbj
     password: hy1221
 #    url: jdbc:mysql://localhost:3306/eyeson?serverTimezone=Asia/Seoul
 #    username: root

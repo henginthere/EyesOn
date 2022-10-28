@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/complaints")
+@RequestMapping("/complaints")
 @RequiredArgsConstructor
 @Api(tags   = "민원 컨트롤러")
 public class ComplaintsController {
