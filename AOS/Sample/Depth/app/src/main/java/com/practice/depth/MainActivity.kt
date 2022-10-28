@@ -1,26 +1,57 @@
 package com.practice.depth
 
+import android.app.Activity
+import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import android.util.Log
+import android.util.Size
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.ar.core.*
 import com.google.ar.core.ArCoreApk.InstallStatus
 import com.google.ar.core.exceptions.*
+import com.google.mlkit.common.model.LocalModel
+import com.google.mlkit.vision.demo.kotlin.objectdetector.ObjectDetectorProcessor
+import com.google.mlkit.vision.demo.kotlin.textdetector.TextRecognitionProcessor
+import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.practice.depth.databinding.ActivityMainBinding
 import com.practice.depth.depth.DepthTextureHandler
 import com.practice.depth.depth.common.*
 import com.practice.depth.depth.rendering.BackgroundRenderer
 import com.practice.depth.depth.rendering.ObjectRenderer
+import com.practice.mlkit.BitmapUtils.RotateBitmap
+import com.practice.mlkit.BitmapUtils.imageToBitmap
+import com.practice.mlkit.GraphicOverlay
+import com.practice.mlkit.PreferenceUtils
+import com.practice.mlkit.VisionProcessorBase
 import java.io.IOException
+import java.util.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "MainActivity"
-class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
+class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.OnInitListener{
+
+    private lateinit var tts: TextToSpeech
+
+    private var graphicOverlay: GraphicOverlay? = null
+    private var imageProcessor: VisionProcessorBase<*>? = null
+
+    private var frameWidth = 0
+    private  var frameHeight = 0
+
+    private var processing = false
+    private var pending = false
+    private var lastFrame: Bitmap? = null
+
+    private var selectedModel = OBJECT_DETECTION_CUSTOM
+
     private lateinit var surfaceView: GLSurfaceView
 
     private var installRequested = false
@@ -55,16 +86,10 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         surfaceView = binding.surfaceview
         displayRotationHelper = DisplayRotationHelper( /*context=*/this)
-
-        // Set up tap listener.
-
-        // Set up tap listener.
-        tapHelper = TapHelper( /*context=*/this)
-        surfaceView.setOnTouchListener(tapHelper)
-
-        // Set up renderer.
 
         // Set up renderer.
         surfaceView.setPreserveEGLContextOnPause(true)
@@ -87,9 +112,59 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                 toggleDepthButton.setText("깊이이용불가")
             }
         }
+
+        graphicOverlay = binding.graphicOverlay
+        graphicOverlay!!.bringToFront()
+        tts = TextToSpeech(this, this)
     }
+
+
+    private fun getSizeForDesiredSize(width: Int, height: Int, desiredSize: Int): Size? {
+        val w: Int
+        val h: Int
+        if (width > height) {
+            w = desiredSize
+            h = Math.round(height / width.toFloat() * w)
+        } else {
+            h = desiredSize
+            w = Math.round(width / height.toFloat() * h)
+        }
+        return Size(w, h)
+    }
+
+    private fun processFrame(frame: Bitmap) {
+        lastFrame = frame
+        if (imageProcessor != null) {
+            pending = processing
+            if (!processing) {
+                processing = true
+                if (frameWidth != frame.width || frameHeight != frame.height) {
+                    frameWidth = frame.width
+                    frameHeight = frame.height
+                    graphicOverlay!!.setImageSourceInfo(frameWidth, frameHeight, false)
+                }
+                imageProcessor!!.setOnProcessingCompleteListener {
+                    processing = false
+                    onProcessComplete(frame)
+                    if (pending) processFrame(lastFrame!!)
+                }
+                imageProcessor!!.processBitmap(frame, graphicOverlay)
+            }
+        }
+    }
+
+    protected fun onProcessComplete(frame: Bitmap?) {}
+
     override fun onResume() {
         super.onResume()
+        val params: ViewGroup.LayoutParams? = this.window.attributes
+        val deviceWidth = getDeviceSize(this).x
+        val deviceHeight = deviceWidth / 3 * 4
+        params?.width = deviceWidth
+        params?.height = deviceHeight
+        binding.surfaceview.layoutParams = params
+        binding.surfaceview.layout(0, 0,deviceWidth,deviceHeight)
+
         if (session == null) {
             var exception: Exception? = null
             var message: String? = null
@@ -112,7 +187,13 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                 // Creates the ARCore session.
                 session = Session( /* context= */this)
                 val config = session!!.config
+                val filter = CameraConfigFilter(session)
+                filter.targetFps = EnumSet.of(CameraConfig.TargetFps.TARGET_FPS_30)
+                filter.depthSensorUsage.add(CameraConfig.DepthSensorUsage.REQUIRE_AND_USE)
+                val cameraConfigList = session!!.getSupportedCameraConfigs(filter)
+                session!!.cameraConfig = cameraConfigList[1]
                 isDepthSupported = session!!.isDepthModeSupported(Config.DepthMode.AUTOMATIC)
+
                 if (isDepthSupported) {
                     config.setDepthMode(Config.DepthMode.AUTOMATIC)
                     config.setFocusMode(Config.FocusMode.AUTO)
@@ -161,6 +242,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             session = null
             return
         }
+        createImageProcessor()
         surfaceView.onResume()
         displayRotationHelper!!.onResume()
 
@@ -255,7 +337,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             }
 
             // Handle one tap per frame.
-            handleTap(frame, camera)
+//            handleTap(frame, camera)
 
             // If frame is ready, render camera preview image to the GL surface.
             backgroundRenderer.draw(frame)
@@ -287,6 +369,13 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             // The last one is the average pixel intensity in gamma space.
             val colorCorrectionRgba = FloatArray(4)
             frame.lightEstimate.getColorCorrection(colorCorrectionRgba, 0)
+
+            val image = frame.acquireCameraImage()
+            Log.d(TAG, "onDrawFrame: ${image.width}, ${image.height}")
+            val bitmap = RotateBitmap(imageToBitmap(image, this), 90f)
+            Log.d(TAG, "onDrawFrame: ${bitmap.width}, ${bitmap.height}")
+            processFrame(bitmap)
+            image.close()
 
             // No tracking error at this point. Inform user of what to do based on if planes are found.
             var messageToShow = ""
@@ -322,6 +411,8 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                     OBJECT_COLOR
                 )
             }
+
+
         } catch (t: Throwable) {
             // Avoid crashing the application due to unhandled exceptions.
             Log.e(
@@ -397,6 +488,62 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
         }else{
             binding.tvDistance.text = "${cm.toInt()} cm"
         }
+    }
 
+    private fun createImageProcessor() {
+        stopImageProcessor()
+        imageProcessor =
+            try {
+                when (selectedModel) {
+                    OBJECT_DETECTION_CUSTOM -> {
+                        Log.i(TAG, "Using Custom Object Detector (with object labeler) Processor")
+                        val localModel =
+                            LocalModel.Builder().setAssetFilePath("custom_models/object_labeler.tflite").build()
+                        val customObjectDetectorOptions =
+                            PreferenceUtils.getCustomObjectDetectorOptionsForLivePreview(this, localModel)
+                        ObjectDetectorProcessor(this, customObjectDetectorOptions)
+                    }
+                    TEXT_RECOGNITION_KOREAN -> {
+                        Log.i(TAG, "Using on-device Text recognition Processor for Latin and Korean")
+                        TextRecognitionProcessor(this, KoreanTextRecognizerOptions.Builder().build())
+                    }
+                    else -> throw IllegalStateException("Invalid model name")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Can not create image processor: $selectedModel", e)
+                Toast.makeText(
+                    applicationContext,
+                    "Can not create image processor: " + e.localizedMessage,
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                return
+            }
+    }
+
+    private fun stopImageProcessor() {
+        if (imageProcessor != null) {
+            imageProcessor!!.stop()
+            imageProcessor = null
+            processing = false
+            pending = false
+        }
+    }
+
+    override fun onInit(p0: Int) {
+        if(p0 == TextToSpeech.SUCCESS) {
+            tts.setLanguage(Locale.KOREAN)
+            tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                override fun onStart(p0: String?) {}
+                override fun onDone(p0: String?) {}
+                override fun onError(p0: String?) {}
+            })
+        }
+    }
+
+    fun speakOut(text: String) {
+        tts.setPitch(1f)
+        tts.setSpeechRate(1f)
+        tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
     }
 }
