@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GoogleLoginDto {
     private String googleAccessToken;
+    private String fcmToken;
 }

@@ -58,43 +58,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity
-//                .cors().configurationSource(request -> {
-//                    var cors = new CorsConfiguration();
-//                    cors.addAllowedOrigin("*");
-//                    cors.addAllowedHeader("*");
-//                    cors.addAllowedMethod("*");
-//                    return cors;
-//                })
-//                .and()
-//                // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
-//                .csrf().disable()
-//
-//                // Custom Jwt 토큰 필터를 filter chain의 UsernamePasswordAuthenticationFilter 앞에 세팅
-//                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-//
-//                .exceptionHandling()//예외처리 기능 수행
-//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)//인증 실패 진입점
-//                .accessDeniedHandler(jwtAccessDeniedHandler)//인가 실패 진입점
-//
-//                //세션 사용하지 않기때문에 STATELESS사용
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//
-//                .and()
-//                .authorizeRequests()
-////                .antMatchers("/api/**").permitAll() // 로그인
-//                .antMatchers("/api/user/register","/api/user/login").permitAll() // 관리자 권한 허용
-//                .antMatchers("/api/seller/**").permitAll() // 관리자 권한
-//                .antMatchers("/api/file/**").permitAll() // 파일 업로드
-//                .antMatchers("/api/user/**","/api/donation/**","/api/nft/**").hasAnyAuthority("ROLE_CHILD","ROLE_ADMIN")
-//                .antMatchers("/api/product/**").hasAnyAuthority("ROLE_SELLER","ROLE_ADMIN","ROLE_CHILD")
-//                .antMatchers("/api/order/**").permitAll()
-//                .anyRequest().authenticated()
-//
-//                .and()
-//                .apply(new JwtSecurityConfig(tokenProvider)); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig 적용
+        httpSecurity
+                .cors().configurationSource(request -> {
+                    var cors = new CorsConfiguration();
+                    cors.addAllowedOrigin("*");
+                    cors.addAllowedHeader("*");
+                    cors.addAllowedMethod("*");
+                    return cors;
+                })
+                .and()
+                // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
+                .csrf().disable()
+
+                // Custom Jwt 토큰 필터를 filter chain의 UsernamePasswordAuthenticationFilter 앞에 세팅
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+
+                .exceptionHandling()//예외처리 기능 수행
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)//인증 실패 진입점
+                .accessDeniedHandler(jwtAccessDeniedHandler)//인가 실패 진입점
+
+                //세션 사용하지 않기때문에 STATELESS사용
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/**").permitAll()
+                .anyRequest().authenticated()
+
+                .and()
+                .apply(new JwtSecurityConfig(tokenProvider)); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig 적용
 
     }
 

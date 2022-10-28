@@ -34,28 +34,28 @@ public class UserController {
     private final UserService userService;
 
     private final UserRepository userRepository;
-    /**
-     * 회원가입
-     *
-     * @param requestRegistDto
-     * @return Object
-     */
-
-    @ApiOperation(value = "회원가입", response = Object.class)
-    @PostMapping("/regist")
-    public ResponseEntity<?> signup(@RequestBody RequestRegistDto requestRegistDto) throws IOException {
-        ResponseFrame<?> res;
-
-        ResponseLoginDto responseLoginDto = userService.signup(requestRegistDto);
-
-        if(requestRegistDto != null){
-            res = ResponseFrame.of(responseLoginDto, "회원가입을 성공했습니다.");
-        }
-        else{
-            res = ResponseFrame.of(HttpStatus.CONFLICT,"이미 회원이 존재합니다.");
-        }
-        return new ResponseEntity<>(res, HttpStatus.OK);
-    }
+//    /**
+//     * 회원가입
+//     *
+//     * @param requestRegistDto
+//     * @return Object
+//     */
+//
+//    @ApiOperation(value = "회원가입", response = Object.class)
+//    @PostMapping("/register")
+//    public ResponseEntity<?> signup(@RequestBody RequestRegistDto requestRegistDto) throws IOException {
+//        ResponseFrame<?> res;
+//
+//        ResponseLoginDto responseLoginDto = userService.signup(requestRegistDto);
+//
+//        if(requestRegistDto != null){
+//            res = ResponseFrame.of(responseLoginDto, "회원가입을 성공했습니다.");
+//        }
+//        else{
+//            res = ResponseFrame.of(HttpStatus.CONFLICT,"이미 회원이 존재합니다.");
+//        }
+//        return new ResponseEntity<>(res, HttpStatus.OK);
+//    }
 
     /**
      * 로그인
@@ -69,7 +69,10 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody GoogleLoginDto googleLoginDto) throws IOException, GeneralSecurityException{
         ResponseFrame<?> res;
         String userEmail;
+        String fcmToken;
         String googleAccessToken = googleLoginDto.getGoogleAccessToken();
+        System.out.println(googleAccessToken);
+        fcmToken = googleLoginDto.getFcmToken();
         JsonFactory jsonFactory = new JacksonFactory();
         GoogleIdToken idToken = GoogleIdToken.parse(jsonFactory, googleAccessToken);
 
@@ -95,15 +98,27 @@ public class UserController {
                 return new ResponseEntity<>(res,HttpStatus.OK);
             }
             else{
-                res = ResponseFrame.of(HttpStatus.UNAUTHORIZED,"로그인에 실패하였습니다.");
-                return new ResponseEntity<>(res, HttpStatus.OK);
+                responseLoginDto = userService.signup(userEmail, fcmToken);
+//                res = ResponseFrame.of(HttpStatus.UNAUTHORIZED,"로그인에 실패하였습니다.");
+                res = ResponseFrame.of(responseLoginDto,"회원가입을 성공했습니다.");
+                return new ResponseEntity<>(res,HttpStatus.OK);
             }
-
+//            res = ResponseFrame.of(responseLoginDto,"로그인에 성공하였습니다.");
         }
-        else {
-            res = ResponseFrame.of(HttpStatus.UNAUTHORIZED,"로그인에 실패하였습니다.");
-            return new ResponseEntity<>(res, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(null,HttpStatus.OK);
+//        else {
+//            //회원가입을 한다.
+//            ResponseLoginDto responseLoginDto = userService.signup(userEmail, fcmToken);
+//
+////            if(requestRegistDto != null){
+////                res = ResponseFrame.of(responseLoginDto, "회원가입을 성공했습니다.");
+////            }
+////            else{
+////                res = ResponseFrame.of(HttpStatus.CONFLICT,"이미 회원이 존재합니다.");
+////            }
+//            res = ResponseFrame.of(responseLoginDto,"회원가입을 성공했습니다.");
+//        }
+//        return new ResponseEntity<>(res,HttpStatus.OK);
 
     }
 }
