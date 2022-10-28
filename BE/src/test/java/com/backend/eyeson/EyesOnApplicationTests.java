@@ -15,11 +15,7 @@ class EyesOnApplicationTests {
 //	public void setup() {
 //
 //	}
-
-	@Test
-	void contextLoads() {
-	}
-
+	
 //	@AfterAll
 //	public void tearDown() {
 //
