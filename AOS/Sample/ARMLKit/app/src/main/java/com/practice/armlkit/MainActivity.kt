@@ -10,6 +10,13 @@ import android.util.Pair
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import androidx.core.content.ContextCompat
 import com.d201.arcore.DepthTextureHandler
 import com.d201.mlkit.BitmapUtils.imageToBitmap
 import com.d201.mlkit.mlkit.GraphicOverlay
@@ -20,6 +27,7 @@ import com.d201.mlkit.mlkit.objectdetector.ObjectDetectorProcessor
 import com.d201.mlkit.mlkit.textdetector.TextRecognitionProcessor
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
+import com.google.mlkit.common.MlKitException
 import com.google.mlkit.common.model.LocalModel
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.practice.armlkit.databinding.ActivityMainBinding
@@ -33,22 +41,34 @@ import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
-    private var testFlag = false
-    // --- ML Kit
+
+    private var previewView: PreviewView? = null
     private var graphicOverlay: GraphicOverlay? = null
-    private var selectedMode =
-        OBJECT_DETECTION_CUSTOM
-    private var selectedSize: String? =
-        SIZE_SCREEN
-    private var isLandScape = false
-    private var imageUri: Uri? = null
-
-    // Max width (portrait mode)
-    private var imageMaxWidth = 0
-
-    // Max height (portrait mode)
-    private var imageMaxHeight = 0
+    private var cameraProvider: ProcessCameraProvider? = null
+    private var previewUseCase: Preview? = null
+    private var analysisUseCase: ImageAnalysis? = null
     private var imageProcessor: VisionImageProcessor? = null
+    private var needUpdateGraphicOverlayImageSourceInfo = false
+    private var selectedModel = OBJECT_DETECTION_CUSTOM
+    private var lensFacing = CameraSelector.LENS_FACING_BACK
+    private var cameraSelector: CameraSelector? = null
+
+//    private var testFlag = false
+//    // --- ML Kit
+//    private var graphicOverlay: GraphicOverlay? = null
+//    private var selectedMode =
+//        OBJECT_DETECTION_CUSTOM
+//    private var selectedSize: String? =
+//        SIZE_SCREEN
+//    private var isLandScape = false
+//    private var imageUri: Uri? = null
+//
+//    // Max width (portrait mode)
+//    private var imageMaxWidth = 0
+//
+//    // Max height (portrait mode)
+//    private var imageMaxHeight = 0
+//    private var imageProcessor: VisionImageProcessor? = null
 
 
     // --- ARCore
@@ -122,6 +142,9 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
                 this.stop()
             }
         }
+
+        previewView = binding.surfaceMlkit
+        graphicOverlay = binding.graphicOverlay
     }
     override fun onResume() {
         super.onResume()
@@ -185,7 +208,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             }
             binding.tvDistance.bringToFront()
             binding.graphicOverlay.bringToFront()
-            createImageProcessor()
+//            createImageProcessor()
         }
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
@@ -365,10 +388,10 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
 //            Log.d(TAG, "onDrawFrame: ${image.format}")
             val bitmap = imageToBitmap(image, this)
 //
-            binding.surfaceMlkit.setImageBitmap(bitmap)
-            Log.d(TAG, "onDrawFrame: ${bitmap.width} //// ${bitmap}")
-            tryReloadAndDetectInImage(bitmap)
-            image.close()
+//            binding.surfaceMlkit.setImageBitmap(bitmap)
+//            Log.d(TAG, "onDrawFrame: ${bitmap.width} //// ${bitmap}")
+//            tryReloadAndDetectInImage(bitmap)
+//            image.close()
 
 //            bitmap.recycle()
         } catch (t: Throwable) {
@@ -437,127 +460,70 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
         return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
     }
 
-
-    fun onUpdateDepthImage(distance: Int) {
-        var cm = (distance / 10.0).toFloat()
-        if(cm > 100){
-            cm /= 100
-            binding.tvDistance.text = "%.1f m".format(cm)
-        }else{
-            binding.tvDistance.text = "${cm.toInt()} cm"
+    private fun bindAnalysisUseCase() {
+        if (imageProcessor != null) {
+            imageProcessor!!.stop()
         }
-
-    }
-
-    private fun createImageProcessor() {
-        try {
-            when (selectedMode) {
-                OBJECT_DETECTION_CUSTOM -> {
-                    Log.i(
-                        TAG,
-                        "Using Custom Object Detector Processor"
-                    )
-                    val localModel = LocalModel.Builder()
-                        .setAssetFilePath("custom_models/object_labeler.tflite")
-                        .build()
-                    val customObjectDetectorOptions =
-                        PreferenceUtils.getCustomObjectDetectorOptionsForStillImage(this, localModel)
-                    imageProcessor =
-                        ObjectDetectorProcessor(
-                            this,
-                            customObjectDetectorOptions
-                        )
-                }
-                TEXT_RECOGNITION_KOREAN ->
-                    imageProcessor =
+        imageProcessor =
+            try {
+                when (selectedModel) {
+                    OBJECT_DETECTION_CUSTOM -> {
+                        Log.i(TAG, "Using Custom Object Detector (with object labeler) Processor")
+                        val localModel =
+                            LocalModel.Builder().setAssetFilePath("custom_models/object_labeler.tflite").build()
+                        val customObjectDetectorOptions =
+                            PreferenceUtils.getCustomObjectDetectorOptionsForLivePreview(this, localModel)
+                        ObjectDetectorProcessor(this, customObjectDetectorOptions)
+                    }
+                    TEXT_RECOGNITION_KOREAN -> {
+                        Log.i(TAG, "Using on-device Text recognition Processor for Latin and Korean")
                         TextRecognitionProcessor(this, KoreanTextRecognizerOptions.Builder().build())
-                else -> Log.e(
-                    TAG,
-                    "Unknown selectedMode: $selectedMode"
-                )
-            }
-        } catch (e: Exception) {
-            Log.e(
-                TAG,
-                "Can not create image processor: $selectedMode",
-                e
-            )
-            Toast.makeText(
-                this,
-                "Can not create image processor: " + e.message,
-                Toast.LENGTH_LONG
-            )
-                .show()
-        }
-    }
-
-    private fun tryReloadAndDetectInImage(bitmap: Bitmap) {
-        Log.d(
-            TAG,
-            "Try reload and detect image${bitmap} ${bitmap.width}"
-        )
-        try {
-
-
-            // Clear the overlay first
-
-            val resizedBitmap: Bitmap
-            resizedBitmap = if (selectedSize == SIZE_ORIGINAL) {
-                bitmap
-            } else {
-                // Get the dimensions of the image view
-                val targetedSize: Pair<Int, Int> = targetedWidthHeight
-
-                // Determine how much to scale down the image
-                val scaleFactor = Math.max(
-                    bitmap.width.toFloat() / targetedSize.first.toFloat(),
-                    bitmap.height.toFloat() / targetedSize.second.toFloat()
-                )
-                Log.d(TAG, "tryReloadAndDetectInImage: ${bitmap.width} 2222 ${scaleFactor}")
-                Bitmap.createScaledBitmap(
-                    bitmap,
-                    (bitmap.width).toInt(),
-                    (bitmap.height).toInt(),
-                    true
-                )
-
-            }
-
-            if(resizedBitmap != null)
-                binding.surfaceMlkit!!.setImageBitmap(resizedBitmap)
-//            graphicOverlay!!.clear()
-
-            Log.d(TAG, "tryReloadAndDetectInImage: #########################")
-            if (imageProcessor != null) {
-                graphicOverlay!!.setImageSourceInfo(
-                    resizedBitmap.width, resizedBitmap.height, /* isFlipped= */false
-                )
-                imageProcessor!!.processBitmap(resizedBitmap, graphicOverlay)
-            } else {
-                Log.e(
-                    TAG,
-                    "Null imageProcessor, please check adb logs for imageProcessor creation error"
-                )
-            }
-        } catch (e: IOException) {
-            Log.e(
-                TAG,
-                "Error retrieving saved image"
-            )
-            imageUri = null
-        }
-    }
-    private val targetedWidthHeight: Pair<Int, Int>
-        get() {
-            val targetWidth: Int
-            val targetHeight: Int
-            when (selectedSize) {
-                SIZE_SCREEN -> {
-                    targetWidth = imageMaxWidth
-                    targetHeight = imageMaxHeight
+                    }
+                    else -> throw IllegalStateException("Invalid model name")
                 }
-                else -> throw IllegalStateException("Unknown size")
+            } catch (e: Exception) {
+                Log.e(TAG, "Can not create image processor: $selectedModel", e)
+                Toast.makeText(
+                    applicationContext,
+                    "Can not create image processor: " + e.localizedMessage,
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                return
             }
-            return Pair(targetWidth, targetHeight)
+
+        val builder = ImageAnalysis.Builder()
+        val targetResolution = PreferenceUtils.getCameraXTargetResolution(this, lensFacing)
+        if (targetResolution != null) {
+            builder.setTargetResolution(targetResolution)
         }
+        analysisUseCase = builder.build()
+
+        needUpdateGraphicOverlayImageSourceInfo = true
+
+        analysisUseCase?.setAnalyzer(
+            // imageProcessor.processImageProxy will use another thread to run the detection underneath,
+            // thus we can just runs the analyzer itself on main thread.
+            ContextCompat.getMainExecutor(this), ImageAnalysis.Analyzer { imageProxy: ImageProxy ->
+                if (needUpdateGraphicOverlayImageSourceInfo) {
+                    val isImageFlipped = lensFacing == CameraSelector.LENS_FACING_FRONT
+                    val rotationDegrees = imageProxy.imageInfo.rotationDegrees
+                    if (rotationDegrees == 0 || rotationDegrees == 180) {
+                        graphicOverlay!!.setImageSourceInfo(imageProxy.width, imageProxy.height, isImageFlipped)
+                    } else {
+                        graphicOverlay!!.setImageSourceInfo(imageProxy.height, imageProxy.width, isImageFlipped)
+                    }
+                    needUpdateGraphicOverlayImageSourceInfo = false
+                }
+                try {
+                    imageProcessor!!.processImageProxy(imageProxy, graphicOverlay)
+                } catch (e: MlKitException) {
+                    Log.e(TAG, "Failed to process image. Error: " + e.localizedMessage)
+                    Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
+//        cameraProvider!!.bindToLifecycle(/* lifecycleOwner= */ this, cameraSelector!!, analysisUseCase)
+    }
+
 }

@@ -16,7 +16,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             />
 
-        <ImageView
+        <androidx.camera.view.PreviewView
             android:id="@+id/surface_mlkit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
