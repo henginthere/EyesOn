@@ -20,13 +20,6 @@ class EyesOnApplicationTests {
 	void contextLoads() {
 	}
 
-	@Test
-	public void practice() {
-		String message = "hello";
-		assertEquals("hello", message);
-		System.out.println("dd");
-	}
-
 //	@AfterAll
 //	public void tearDown() {
 //
