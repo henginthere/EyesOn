@@ -47,19 +47,16 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String authorities = getAuthorities(authentication);
 
-        logger.info("권한 : "+authorities);
         System.out.println("권한 : "+authorities);
         TokenDto tokenDto;
-        long seq;
 
-        UserEntity user = userRepository.findByUserEmail(email);
+        UserEntity user = userRepository.findByUserEmail(email).get();
 
         if(user==null){
             return null;
         }
 
         else{
-            seq = user.getUserSeq();
             tokenDto = tokenProvider.createUserToken(authentication.getName(), authorities);
         }
 

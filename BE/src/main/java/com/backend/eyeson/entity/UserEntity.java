@@ -1,10 +1,13 @@
 package com.backend.eyeson.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -16,7 +19,7 @@ import java.util.Set;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name="t_user", schema = "eyeson")
-public class UserEntity {
+public class UserEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +27,15 @@ public class UserEntity {
     private long userSeq;
 
     @Basic
-    @Column(name="user_name", length = 5, nullable = false)
-    private String userName;
-
-    @Basic
     @Column(name="user_email", length = 30, nullable = false)
     private String userEmail;
+
+    @Basic
+    @JsonIgnore
+    // 쓰기 전용 및 조회 불가
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "user_pass", length = 100)
+    private String userPass;
 
     @Basic
     @Column(name="user_gender", length = 1, nullable = false)
