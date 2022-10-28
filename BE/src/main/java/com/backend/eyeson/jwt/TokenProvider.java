@@ -61,7 +61,7 @@ public class TokenProvider implements InitializingBean {
         String refreshToken;
 
         //        Manager manager = managerRepository.findBymanagerId(id).orElseThrow(()->new ManagerNotFoundException("가입되지 않은 정보입니다."));
-            UserEntity user = userRepository.findByUserEmail(email);
+            UserEntity user = userRepository.findByUserEmail(email).get();
 
             //claim에 userSeq, userEmail 정보 추가
             accessToken = Jwts.builder()
