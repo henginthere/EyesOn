@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class RequestCompDto {
     private String compAddress;
     private String compImage;
-    private String compTitle;
     private String compContent;
 }
