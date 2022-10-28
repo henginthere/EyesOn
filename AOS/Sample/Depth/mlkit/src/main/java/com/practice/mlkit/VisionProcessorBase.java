@@ -129,6 +129,7 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
           /* shouldShowFps= */ false,
           frameStartMs);
       mlImage.close();
+      bitmap.recycle();
 
       return;
     }

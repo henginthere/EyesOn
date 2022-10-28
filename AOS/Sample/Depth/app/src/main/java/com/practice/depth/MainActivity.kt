@@ -1,9 +1,12 @@
 package com.practice.depth
 
+import android.app.Activity
 import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.util.Size
 import android.view.View
@@ -33,10 +36,11 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "MainActivity"
-class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
+class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.OnInitListener{
+
+    private lateinit var tts: TextToSpeech
 
     private var graphicOverlay: GraphicOverlay? = null
-
     private var imageProcessor: VisionProcessorBase<*>? = null
 
     private var frameWidth = 0
@@ -82,6 +86,8 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         surfaceView = binding.surfaceview
         displayRotationHelper = DisplayRotationHelper( /*context=*/this)
 
@@ -109,6 +115,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
 
         graphicOverlay = binding.graphicOverlay
         graphicOverlay!!.bringToFront()
+        tts = TextToSpeech(this, this)
     }
 
 
@@ -330,7 +337,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             }
 
             // Handle one tap per frame.
-            handleTap(frame, camera)
+//            handleTap(frame, camera)
 
             // If frame is ready, render camera preview image to the GL surface.
             backgroundRenderer.draw(frame)
@@ -521,5 +528,22 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer{
             processing = false
             pending = false
         }
+    }
+
+    override fun onInit(p0: Int) {
+        if(p0 == TextToSpeech.SUCCESS) {
+            tts.setLanguage(Locale.KOREAN)
+            tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                override fun onStart(p0: String?) {}
+                override fun onDone(p0: String?) {}
+                override fun onError(p0: String?) {}
+            })
+        }
+    }
+
+    fun speakOut(text: String) {
+        tts.setPitch(1f)
+        tts.setSpeechRate(1f)
+        tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
     }
 }
