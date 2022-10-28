@@ -11,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class EyesOnApplicationTests {
 
-	@BeforeAll
-	public void setup() {
-
-	}
+//	@BeforeAll
+//	public void setup() {
+//
+//	}
 
 	@Test
 	void contextLoads() {
@@ -27,10 +27,10 @@ class EyesOnApplicationTests {
 		System.out.println("dd");
 	}
 
-	@AfterAll
-	public void tearDown() {
-
-	}
+//	@AfterAll
+//	public void tearDown() {
+//
+//	}
 
 
 }

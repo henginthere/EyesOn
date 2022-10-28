@@ -2,6 +2,7 @@ package com.backend.eyeson.controller;
 
 import com.backend.eyeson.dto.ComplaintsDto;
 import com.backend.eyeson.entity.UserEntity;
+import com.backend.eyeson.repository.UserRepository;
 import com.backend.eyeson.util.ResponseFrame;
 import com.backend.eyeson.util.ReverseGeocoding;
 import io.swagger.annotations.Api;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Api(tags   = "민원 컨트롤러")
 public class ComplaintsController {
+    private final UserRepository userRepository;
 
 //    public UserDto getLoginUser() {
 //        UserEntity user = null;
@@ -46,7 +48,7 @@ public class ComplaintsController {
     //paging 처리
     @GetMapping(value = "/list")
     public ResponseEntity<?> listAll(String address) throws Exception{
-        ReverseGeocoding.getAddress(address);
+
         return new ResponseEntity<>(ResponseFrame.of(HttpStatus.OK, "신청 민원 전체 조회"), HttpStatus.OK);
     }
 
