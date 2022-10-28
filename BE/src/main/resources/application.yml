@@ -39,3 +39,11 @@ jwt:
   access-token-validity-in-seconds: 1800 # ? ??
   refresh-token-validity-in-seconds: 604800
 
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+
