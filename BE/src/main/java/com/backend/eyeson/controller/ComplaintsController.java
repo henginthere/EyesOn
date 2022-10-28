@@ -1,7 +1,9 @@
 package com.backend.eyeson.controller;
 
 import com.backend.eyeson.dto.ComplaintsDto;
+import com.backend.eyeson.entity.ComplaintsEntity;
 import com.backend.eyeson.entity.UserEntity;
+import com.backend.eyeson.repository.CompRepository;
 import com.backend.eyeson.repository.UserRepository;
 import com.backend.eyeson.util.ResponseFrame;
 import com.backend.eyeson.util.ReverseGeocoding;
@@ -48,6 +50,7 @@ public class ComplaintsController {
     //paging 처리
     @GetMapping(value = "/list")
     public ResponseEntity<?> listAll(String address) throws Exception{
+        ReverseGeocoding.getAddress(address);
 
         return new ResponseEntity<>(ResponseFrame.of(HttpStatus.OK, "신청 민원 전체 조회"), HttpStatus.OK);
     }
