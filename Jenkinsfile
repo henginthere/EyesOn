@@ -26,7 +26,7 @@ pipeline {
                                 sh 'docker run -v /home/files:/home/files -e TZ=Asia/Seoul -d --name back -p 8090:8090 backimg'
                         }
                 }
-		statge('Remove Images"){
+		statge('Remove Images'){
 			agent any
 			steps {
 				sh 'docker container prune -f'
