@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
 
     private var graphicOverlay: GraphicOverlay? = null
     private var imageProcessor: VisionProcessorBase<*>? = null
+    private var objectImageProcessor: ObjectDetectorProcessor? = null
 
     private var frameWidth = 0
     private  var frameHeight = 0
@@ -116,6 +117,8 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
         graphicOverlay = binding.graphicOverlay
         graphicOverlay!!.bringToFront()
         tts = TextToSpeech(this, this)
+
+
     }
 
 
@@ -132,6 +135,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
         return Size(w, h)
     }
 
+    // MLKit
     private fun processFrame(frame: Bitmap) {
         lastFrame = frame
         if (imageProcessor != null) {
@@ -143,12 +147,15 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
                     frameHeight = frame.height
                     graphicOverlay!!.setImageSourceInfo(frameWidth, frameHeight, false)
                 }
-                imageProcessor!!.setOnProcessingCompleteListener {
-                    processing = false
-                    onProcessComplete(frame)
-                    if (pending) processFrame(lastFrame!!)
-                }
-                imageProcessor!!.processBitmap(frame, graphicOverlay)
+                imageProcessor!!.setOnProcessingCompleteListener(object :VisionProcessorBase.OnProcessingCompleteListener{
+                    override fun onProcessingComplete() {
+                        processing = false
+                        onProcessComplete(frame)
+                        if(pending) processFrame(lastFrame!!)
+                    }
+                })
+
+                imageProcessor!!.processBitmap(frame, graphicOverlay!!)
             }
         }
     }
@@ -188,8 +195,8 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
                 session = Session( /* context= */this)
                 val config = session!!.config
                 val filter = CameraConfigFilter(session)
-                filter.targetFps = EnumSet.of(CameraConfig.TargetFps.TARGET_FPS_30)
-                filter.depthSensorUsage.add(CameraConfig.DepthSensorUsage.REQUIRE_AND_USE)
+                filter.targetFps = EnumSet.of(CameraConfig.TargetFps.TARGET_FPS_30) // 30프레임
+                filter.depthSensorUsage.add(CameraConfig.DepthSensorUsage.REQUIRE_AND_USE) // tof 사용
                 val cameraConfigList = session!!.getSupportedCameraConfigs(filter)
                 session!!.cameraConfig = cameraConfigList[1]
                 isDepthSupported = session!!.isDepthModeSupported(Config.DepthMode.AUTOMATIC)
@@ -246,6 +253,9 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
         surfaceView.onResume()
         displayRotationHelper!!.onResume()
 
+        objectImageProcessor!!.resultData.observe(this){
+            speakOut(it)
+        }
 
     }
 
@@ -501,7 +511,8 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
                             LocalModel.Builder().setAssetFilePath("custom_models/object_labeler.tflite").build()
                         val customObjectDetectorOptions =
                             PreferenceUtils.getCustomObjectDetectorOptionsForLivePreview(this, localModel)
-                        ObjectDetectorProcessor(this, customObjectDetectorOptions)
+                        objectImageProcessor = ObjectDetectorProcessor(this, customObjectDetectorOptions)
+                        objectImageProcessor
                     }
                     TEXT_RECOGNITION_KOREAN -> {
                         Log.i(TAG, "Using on-device Text recognition Processor for Latin and Korean")
