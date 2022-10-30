@@ -380,12 +380,18 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
             val colorCorrectionRgba = FloatArray(4)
             frame.lightEstimate.getColorCorrection(colorCorrectionRgba, 0)
 
-            val image = frame.acquireCameraImage()
-            Log.d(TAG, "onDrawFrame: ${image.width}, ${image.height}")
-            val bitmap = RotateBitmap(imageToBitmap(image, this), 90f)
-            Log.d(TAG, "onDrawFrame: ${bitmap.width}, ${bitmap.height}")
-            processFrame(bitmap)
-            image.close()
+            try {
+                val image = frame.acquireCameraImage()
+                Log.d(TAG, "onDrawFrame: ${image.width}, ${image.height}")
+                val bitmap = RotateBitmap(imageToBitmap(image, this), 90f)
+                Log.d(TAG, "onDrawFrame: ${bitmap.width}, ${bitmap.height}")
+                processFrame(bitmap)
+                image.close()
+            }catch (e: Exception){
+                Log.d(TAG, "onDrawFrame: ${e.message}")
+            }
+            
+            
 
             // No tracking error at this point. Inform user of what to do based on if planes are found.
             var messageToShow = ""

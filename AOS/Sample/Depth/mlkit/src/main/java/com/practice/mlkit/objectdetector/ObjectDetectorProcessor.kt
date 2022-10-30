@@ -56,7 +56,9 @@ class ObjectDetectorProcessor(context: Context, options: ObjectDetectorOptionsBa
   override fun onSuccess(results: List<DetectedObject>, graphicOverlay: GraphicOverlay) {
     for (result in results) {
       graphicOverlay.add(ObjectGraphic(graphicOverlay, result))
-      resultData.postValue(result.labels[0].text)
+      if(result.labels.isNotEmpty()) {
+        resultData.postValue(result.labels[0].text)
+      }
     }
   }
 
