@@ -26,6 +26,7 @@ import androidx.annotation.GuardedBy
 import androidx.annotation.RequiresApi
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageProxy
+import com.d201.mlkit.*
 import com.google.android.gms.tasks.*
 import com.google.android.odml.image.BitmapMlImageBuilder
 import com.google.android.odml.image.ByteBufferMlImageBuilder
