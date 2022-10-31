@@ -3,34 +3,27 @@ package com.backend.eyeson.controller;
 
 import com.backend.eyeson.dto.GoogleLoginDto;
 import com.backend.eyeson.dto.RequestRGDto;
-import com.backend.eyeson.dto.RequestRegistDto;
+import com.backend.eyeson.dto.ResponseAngelInfoDto;
 import com.backend.eyeson.dto.ResponseLoginDto;
-import com.backend.eyeson.jwt.TokenProvider;
 import com.backend.eyeson.repository.UserRepository;
-import com.backend.eyeson.service.AuthService;
 import com.backend.eyeson.service.UserService;
 import com.backend.eyeson.util.ResponseFrame;
 import com.backend.eyeson.util.SecurityUtil;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.sun.istack.ByteArrayDataSource;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.logging.Logger;
 
 @Api("UserController")
 @RestController
@@ -105,17 +98,34 @@ public class UserController {
         res = ResponseFrame.of(responseLoginDto, "정보 등록에 성공하였습니다.");
         return new ResponseEntity<>(res, HttpStatus.OK);
 
+    }
+    
 
-//
-//    @ApiOperation(value = "aa", response = Object.class)
-//    @GetMapping("/a")
-//    public void login(HttpServletRequest request){
-//       // Long.parseLong(authentication.getName());
-//        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-//
-//        long userSeq = SecurityUtil.getCurrentMemberSeq();
-//        System.out.println(userSeq);
-//    }
+    /**
+     * 회원탈퇴
+     *
+     * @param
+     * @return Object
+     */
 
+    @ApiOperation(value = "회원탈퇴", response = Object.class)
+    @DeleteMapping("/info")
+    public ResponseFrame<?> dropUser(){
+
+        // userSeq 가져오기
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        userService.dropUser(userSeq);
+
+        return ResponseFrame.of(HttpStatus.OK, "회원 탈퇴 성공");
+
+    }
+
+    @ApiOperation(value = "엔젤 정보 반환", response = ResponseAngelInfoDto.class)
+    @GetMapping("/info")
+    public ResponseEntity<?> getInfo(){
+        ResponseFrame<?> res;
+        ResponseAngelInfoDto responseAngelInfoDto = userService.getInfo();
+        res = ResponseFrame.of(responseAngelInfoDto, "정보 조회에 성공하였습니다.");
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }
