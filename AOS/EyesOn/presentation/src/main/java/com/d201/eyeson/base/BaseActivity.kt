@@ -1,4 +1,5 @@
-package com.ssafy.indive.base
+package com.d201.eyeson.base
+
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.LayoutRes
