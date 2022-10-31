@@ -95,4 +95,9 @@ public class UserService {
         ResponseLoginDto responseLoginDto = login(email);
         return responseLoginDto;
     }
+
+    //회원탈퇴
+    public void dropUser(long userSeq){
+        userRepository.delete(userRepository.findByUserSeq(userSeq).get());
+    }
 }

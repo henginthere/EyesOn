@@ -105,17 +105,25 @@ public class UserController {
         res = ResponseFrame.of(responseLoginDto, "정보 등록에 성공하였습니다.");
         return new ResponseEntity<>(res, HttpStatus.OK);
 
+    }
+    
 
-//
-//    @ApiOperation(value = "aa", response = Object.class)
-//    @GetMapping("/a")
-//    public void login(HttpServletRequest request){
-//       // Long.parseLong(authentication.getName());
-//        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-//
-//        long userSeq = SecurityUtil.getCurrentMemberSeq();
-//        System.out.println(userSeq);
-//    }
+    /**
+     * 회원탈퇴
+     *
+     * @param
+     * @return Object
+     */
+
+    @ApiOperation(value = "회원탈퇴", response = Object.class)
+    @DeleteMapping("/info")
+    public ResponseFrame<?> dropUser(){
+
+        // userSeq 가져오기
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        userService.dropUser(userSeq);
+
+        return ResponseFrame.of(HttpStatus.OK, "회원 탈퇴 성공");
 
     }
 }
