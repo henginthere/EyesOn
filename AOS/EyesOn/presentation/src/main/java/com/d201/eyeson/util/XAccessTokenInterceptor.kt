@@ -7,7 +7,6 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
-private const val TAG = "XAccessTokenInterceptor"
 class XAccessTokenInterceptor @Inject constructor(
     private val sharedPref: SharedPreferences
 ): Interceptor {

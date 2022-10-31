@@ -43,12 +43,10 @@ jwt:
   refresh-token-validity-in-seconds: 604800
 
 server:
-  port: 8090
   servlet:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
-
 
 

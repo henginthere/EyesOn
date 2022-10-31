@@ -30,9 +30,6 @@ import com.practice.mlkit.BitmapUtils.imageToBitmap
 import com.practice.mlkit.GraphicOverlay
 import com.practice.mlkit.PreferenceUtils
 import com.practice.mlkit.VisionProcessorBase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 import javax.microedition.khronos.egl.EGLConfig
@@ -45,7 +42,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
 
     private var graphicOverlay: GraphicOverlay? = null
     private var imageProcessor: VisionProcessorBase<*>? = null
-    private var objectImageProcessor: ObjectDetectorProcessor? = null
 
     private var frameWidth = 0
     private  var frameHeight = 0
@@ -120,8 +116,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
         graphicOverlay = binding.graphicOverlay
         graphicOverlay!!.bringToFront()
         tts = TextToSpeech(this, this)
-
-
     }
 
 
@@ -138,7 +132,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
         return Size(w, h)
     }
 
-    // MLKit
     private fun processFrame(frame: Bitmap) {
         lastFrame = frame
         if (imageProcessor != null) {
@@ -150,15 +143,12 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
                     frameHeight = frame.height
                     graphicOverlay!!.setImageSourceInfo(frameWidth, frameHeight, false)
                 }
-                imageProcessor!!.setOnProcessingCompleteListener(object :VisionProcessorBase.OnProcessingCompleteListener{
-                    override fun onProcessingComplete() {
-                        processing = false
-                        onProcessComplete(frame)
-                        if(pending) processFrame(lastFrame!!)
-                    }
-                })
-
-                imageProcessor!!.processBitmap(frame, graphicOverlay!!)
+                imageProcessor!!.setOnProcessingCompleteListener {
+                    processing = false
+                    onProcessComplete(frame)
+                    if (pending) processFrame(lastFrame!!)
+                }
+                imageProcessor!!.processBitmap(frame, graphicOverlay)
             }
         }
     }
@@ -198,8 +188,8 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
                 session = Session( /* context= */this)
                 val config = session!!.config
                 val filter = CameraConfigFilter(session)
-                filter.targetFps = EnumSet.of(CameraConfig.TargetFps.TARGET_FPS_30) // 30프레임
-                filter.depthSensorUsage.add(CameraConfig.DepthSensorUsage.REQUIRE_AND_USE) // tof 사용
+                filter.targetFps = EnumSet.of(CameraConfig.TargetFps.TARGET_FPS_30)
+                filter.depthSensorUsage.add(CameraConfig.DepthSensorUsage.REQUIRE_AND_USE)
                 val cameraConfigList = session!!.getSupportedCameraConfigs(filter)
                 session!!.cameraConfig = cameraConfigList[1]
                 isDepthSupported = session!!.isDepthModeSupported(Config.DepthMode.AUTOMATIC)
@@ -256,9 +246,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
         surfaceView.onResume()
         displayRotationHelper!!.onResume()
 
-        objectImageProcessor!!.resultData.observe(this){
-            speakOut(it)
-        }
 
     }
 
@@ -383,19 +370,12 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
             val colorCorrectionRgba = FloatArray(4)
             frame.lightEstimate.getColorCorrection(colorCorrectionRgba, 0)
 
-            try {
-                val image = frame.acquireCameraImage()
-                val bitmap = RotateBitmap(imageToBitmap(image, this), 90f)
-                CoroutineScope(Dispatchers.Main).launch {
-                    processFrame(bitmap)
-                    image.close()
-                }
-
-            }catch (e: Exception){
-                Log.d(TAG, "onDrawFrame: ${e.message}")
-            }
-            
-            
+            val image = frame.acquireCameraImage()
+            Log.d(TAG, "onDrawFrame: ${image.width}, ${image.height}")
+            val bitmap = RotateBitmap(imageToBitmap(image, this), 90f)
+            Log.d(TAG, "onDrawFrame: ${bitmap.width}, ${bitmap.height}")
+            processFrame(bitmap)
+            image.close()
 
             // No tracking error at this point. Inform user of what to do based on if planes are found.
             var messageToShow = ""
@@ -521,8 +501,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
                             LocalModel.Builder().setAssetFilePath("custom_models/object_labeler.tflite").build()
                         val customObjectDetectorOptions =
                             PreferenceUtils.getCustomObjectDetectorOptionsForLivePreview(this, localModel)
-                        objectImageProcessor = ObjectDetectorProcessor(this, customObjectDetectorOptions)
-                        objectImageProcessor
+                        ObjectDetectorProcessor(this, customObjectDetectorOptions)
                     }
                     TEXT_RECOGNITION_KOREAN -> {
                         Log.i(TAG, "Using on-device Text recognition Processor for Latin and Korean")
