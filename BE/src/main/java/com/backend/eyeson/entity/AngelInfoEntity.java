@@ -1,6 +1,7 @@
 package com.backend.eyeson.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -46,7 +47,12 @@ public class AngelInfoEntity {
     private int angelHelpCnt;
 
     @Basic
+    @Column(name = "angel_gender")
+    private char angelGender;
+
+    @Basic
     @Column(name = "angel_active")
+    @ColumnDefault("false")
     private boolean angelActive;
 
 }

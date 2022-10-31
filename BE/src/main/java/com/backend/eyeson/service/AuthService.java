@@ -77,7 +77,7 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final Authentication abcd = SecurityContextHolder.getContext().getAuthentication();
         String authorities = getAuthorities(authentication);
-        String userEmail = userRepository.findByUserSeq(Long.parseLong(authentication.getName())).getUserEmail();
+        String userEmail = userRepository.findByUserSeq(Long.parseLong(authentication.getName())).get().getUserEmail();
         return tokenProvider.createUserToken(userEmail,authorities);
 
     }
