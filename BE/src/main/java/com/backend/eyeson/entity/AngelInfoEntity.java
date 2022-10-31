@@ -24,7 +24,7 @@ public class AngelInfoEntity {
 
     @OneToOne
     @JoinColumn(name="user_seq")
-    private UserEntity userSeq;
+    private UserEntity userEntity;
 
     @Basic
     @Column(name = "angel_alarm_start")
