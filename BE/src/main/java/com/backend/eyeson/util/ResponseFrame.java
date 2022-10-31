@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseFrame<T> {
-    private HttpStatus status;
+    private Integer status;
     private T data;
     private String message;
 
@@ -20,7 +20,7 @@ public class ResponseFrame<T> {
         ResponseFrame<?> frame = new ResponseFrame<>();
         frame.setData(null);
         frame.setMessage(message);
-        frame.setStatus(status);
+        frame.setStatus(status.value());
 
         return frame;
     }
@@ -28,7 +28,7 @@ public class ResponseFrame<T> {
     // 반환 데이터 있을 때
     public static <T> ResponseFrame<T> of(T data, String message){
         ResponseFrame<T> frame = new ResponseFrame<>();
-        frame.setStatus(HttpStatus.OK);
+        frame.setStatus(HttpStatus.OK.value());
         frame.setData(data);
         frame.setMessage(message);
 

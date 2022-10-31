@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d201.domain.base.BaseResponse
-import com.d201.domain.model.User
+import com.d201.domain.model.Login
 import com.d201.domain.usecase.LoginUseCase
 import com.d201.domain.utils.ResultType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
 
 private const val TAG = "LoginViewModel"
@@ -22,17 +23,16 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
-    private val _user: MutableStateFlow<ResultType<BaseResponse<User>>> =
-        MutableStateFlow(ResultType.Uninitialized)
-    val user get() = _user.asStateFlow()
+    private val _login: MutableStateFlow<Login?> = MutableStateFlow(null)
+    val login get() = _login.asStateFlow()
 
     fun login(idToken: String, fcmToken: String){
         viewModelScope.launch(Dispatchers.IO) {
             Log.d(TAG, "login: ${idToken}")
             loginUseCase.execute(idToken, fcmToken).collectLatest {
-                if(it is ResultType.Success){
+                if(it is ResultType.Success && it.data.status == 200){
                     // 로그인 성공 처리
-                    _user.value = it
+                    _login.value = it.data.data
                 } else {
                     //로그인 실패
                     Log.d(TAG, "login: ${it}")
