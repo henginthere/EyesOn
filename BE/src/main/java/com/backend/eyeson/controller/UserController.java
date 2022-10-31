@@ -4,23 +4,29 @@ package com.backend.eyeson.controller;
 import com.backend.eyeson.dto.GoogleLoginDto;
 import com.backend.eyeson.dto.RequestRegistDto;
 import com.backend.eyeson.dto.ResponseLoginDto;
+import com.backend.eyeson.jwt.TokenProvider;
 import com.backend.eyeson.repository.UserRepository;
+import com.backend.eyeson.service.AuthService;
 import com.backend.eyeson.service.UserService;
 import com.backend.eyeson.util.ResponseFrame;
+import com.backend.eyeson.util.SecurityUtil;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.sun.istack.ByteArrayDataSource;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.logging.Logger;
@@ -30,32 +36,8 @@ import java.util.logging.Logger;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
-
     private final UserService userService;
-
     private final UserRepository userRepository;
-//    /**
-//     * 회원가입
-//     *
-//     * @param requestRegistDto
-//     * @return Object
-//     */
-//
-//    @ApiOperation(value = "회원가입", response = Object.class)
-//    @PostMapping("/register")
-//    public ResponseEntity<?> signup(@RequestBody RequestRegistDto requestRegistDto) throws IOException {
-//        ResponseFrame<?> res;
-//
-//        ResponseLoginDto responseLoginDto = userService.signup(requestRegistDto);
-//
-//        if(requestRegistDto != null){
-//            res = ResponseFrame.of(responseLoginDto, "회원가입을 성공했습니다.");
-//        }
-//        else{
-//            res = ResponseFrame.of(HttpStatus.CONFLICT,"이미 회원이 존재합니다.");
-//        }
-//        return new ResponseEntity<>(res, HttpStatus.OK);
-//    }
 
     /**
      * 로그인
@@ -81,7 +63,6 @@ public class UserController {
         if (verifier.verify(idToken)) {
             Payload payload = idToken.getPayload();
             userEmail = payload.getEmail();
-            System.out.println("User Email: "+userEmail);
         }
         else {
             //Invalid ID token
@@ -97,28 +78,26 @@ public class UserController {
                 res = ResponseFrame.of(responseLoginDto,"로그인에 성공하였습니다.");
                 return new ResponseEntity<>(res,HttpStatus.OK);
             }
-            else{
+            else{ //db에 이메일이 없으면 회원가입을 한다.
                 responseLoginDto = userService.signup(userEmail, fcmToken);
-//                res = ResponseFrame.of(HttpStatus.UNAUTHORIZED,"로그인에 실패하였습니다.");
                 res = ResponseFrame.of(responseLoginDto,"회원가입을 성공했습니다.");
                 return new ResponseEntity<>(res,HttpStatus.OK);
             }
-//            res = ResponseFrame.of(responseLoginDto,"로그인에 성공하였습니다.");
+
         }
         return new ResponseEntity<>(null,HttpStatus.OK);
-//        else {
-//            //회원가입을 한다.
-//            ResponseLoginDto responseLoginDto = userService.signup(userEmail, fcmToken);
-//
-////            if(requestRegistDto != null){
-////                res = ResponseFrame.of(responseLoginDto, "회원가입을 성공했습니다.");
-////            }
-////            else{
-////                res = ResponseFrame.of(HttpStatus.CONFLICT,"이미 회원이 존재합니다.");
-////            }
-//            res = ResponseFrame.of(responseLoginDto,"회원가입을 성공했습니다.");
-//        }
-//        return new ResponseEntity<>(res,HttpStatus.OK);
+
 
     }
+//
+//    @ApiOperation(value = "aa", response = Object.class)
+//    @GetMapping("/a")
+//    public void login(HttpServletRequest request){
+//       // Long.parseLong(authentication.getName());
+//        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+//
+//        long userSeq = SecurityUtil.getCurrentMemberSeq();
+//        System.out.println(userSeq);
+//    }
+
 }

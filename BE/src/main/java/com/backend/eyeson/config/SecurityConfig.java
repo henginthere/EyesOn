@@ -69,8 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
                 .csrf().disable()
-
-                // Custom Jwt 토큰 필터를 filter chain의 UsernamePasswordAuthenticationFilter 앞에 세팅
+                // Custom Jwt 토큰 필터를 filter chain의 UsernamePasswordAuthenticationFilter 앞에  세팅
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .exceptionHandling()//예외처리 기능 수행
