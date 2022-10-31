@@ -1,4 +1,4 @@
-package com.d201.data.model
+package com.d201.data.model.response
 
 data class UserResponse(
     val accessToken : String,
@@ -6,5 +6,5 @@ data class UserResponse(
     val userSeq : Int,
     val userName : String,
     val userEmail : String,
-    val status : Boolean
+    val status : Int
 )

@@ -1,7 +1,9 @@
 package com.d201.data.repository
 
 import com.d201.data.datasource.UserRemoteDataSource
+import com.d201.data.mapper.mapperToToken
 import com.d201.data.mapper.mapperToUser
+import com.d201.data.model.request.UserRequest
 import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.User
 import com.d201.domain.repository.UserRepository
@@ -19,12 +21,12 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun loginUser(idToken: String, fcmToken: String): Flow<ResultType<BaseResponse<User>>> = flow {
         emit(ResultType.Loading)
-        userRemoteDataSource.loginUser(idToken, fcmToken).collect {
+        userRemoteDataSource.loginUser(UserRequest(idToken, fcmToken)).collect {
             emit(ResultType.Success(
                 BaseResponse(
                 it.message,
                 it.status,
-                it.data.mapperToUser()
+                it.data.mapperToToken()
             )
             ))
         }

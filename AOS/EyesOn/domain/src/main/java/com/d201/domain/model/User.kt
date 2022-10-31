@@ -6,5 +6,7 @@ data class User(
     val userSeq : Int,
     val userName : String,
     val userEmail : String,
-    val status : Boolean
-)
+    val status : Int
+){
+
+}
