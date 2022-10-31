@@ -30,6 +30,9 @@ import com.practice.mlkit.BitmapUtils.imageToBitmap
 import com.practice.mlkit.GraphicOverlay
 import com.practice.mlkit.PreferenceUtils
 import com.practice.mlkit.VisionProcessorBase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 import javax.microedition.khronos.egl.EGLConfig
@@ -382,11 +385,12 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
 
             try {
                 val image = frame.acquireCameraImage()
-                Log.d(TAG, "onDrawFrame: ${image.width}, ${image.height}")
                 val bitmap = RotateBitmap(imageToBitmap(image, this), 90f)
-                Log.d(TAG, "onDrawFrame: ${bitmap.width}, ${bitmap.height}")
-                processFrame(bitmap)
-                image.close()
+                CoroutineScope(Dispatchers.Main).launch {
+                    processFrame(bitmap)
+                    image.close()
+                }
+
             }catch (e: Exception){
                 Log.d(TAG, "onDrawFrame: ${e.message}")
             }
