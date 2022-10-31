@@ -20,7 +20,7 @@ public class FirebaseService {
 
     private final ObjectMapper objectMapper;
 
-    private final String API_URL = "";
+    private final String API_URL = "https://fcm.googleapis.com/v1/projects/eyeson-8f746/messages:send";
 
 
     // FCM에 push 요청을 보낼 때 인증을 위해 Header에 포함시킬 AccessToken 생성
