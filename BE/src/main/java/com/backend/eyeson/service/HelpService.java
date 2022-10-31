@@ -30,7 +30,7 @@ public class HelpService {
 
 
     // 도움 요청
-    public boolean requestHelp(long userSeq, char gender) throws IOException {
+    public boolean requestHelp(char gender) throws IOException {
         // gender가 같은 엔젤들 가져오기
         Optional<List<AngelInfoEntity>> angelList = angelRepository.findAllByAngelGender(gender);
 
@@ -66,6 +66,7 @@ public class HelpService {
         System.out.println("시간 " + hour);
         System.out.println("요일 " + days);
 
+        // 가능한 엔젤 리스트
         List<AngelInfoEntity> canAngelList = new ArrayList<>();
 
         // 시간으로 엔젤 필터링

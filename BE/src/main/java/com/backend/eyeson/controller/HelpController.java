@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @Api("HelpController")
 @RestController
-@RequestMapping("/api/help")
+@RequestMapping("/help")
 @RequiredArgsConstructor
 public class HelpController {
 
@@ -30,10 +30,10 @@ public class HelpController {
 
     @ApiOperation(value = "도움 요청", response = Object.class)
     @PostMapping("/{gender}")
-    public ResponseFrame<?> requestHelp(HttpServletRequest request, @PathVariable("gender") char gender) throws IOException {
-        ResponseFrame res;
-        long userSeq = 0;
-        boolean check = helpService.requestHelp(userSeq, gender);
+    public ResponseFrame<?> requestHelp(@PathVariable("gender") char gender) throws IOException {
+
+        // userSeq 가져오기
+        boolean check = helpService.requestHelp(gender);
         if(check) {
             return ResponseFrame.of(HttpStatus.OK, "도움 요청 성공");
         }else{
