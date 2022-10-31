@@ -25,7 +25,7 @@ public class FirebaseService {
 
     // FCM에 push 요청을 보낼 때 인증을 위해 Header에 포함시킬 AccessToken 생성
     private String getAccessToken() throws IOException {
-        String firebaseConfigPath = "firebase/firebase_service_key.json";
+        String firebaseConfigPath = "firebase/google_service_key.json";
 
         // GoogleApi를 사용하기 위해 oAuth2를 이용해 인증한 대상을 나타내는객체
         GoogleCredentials googleCredentials = GoogleCredentials

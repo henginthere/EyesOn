@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "348486946008",
+    "project_id": "eyeson-8f746",
+    "storage_bucket": "eyeson-8f746.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348486946008:android:d27e91a98466e6a0c9dbad",
+        "android_client_info": {
+          "package_name": "com.d201.eyeson"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348486946008-thjodigtsj86h4hlk9g3bnbob0rg2cgl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.d201.eyeson",
+            "certificate_hash": "76890492ab64f10177d4c20b8bc997b1d6010651"
+          }
+        },
+        {
+          "client_id": "348486946008-hd8uupieaccgs0io0dr7b205uirnhajp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN1CMEbB0uV9Sdq7St8CfbpjmS_QNH_dc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348486946008-hd8uupieaccgs0io0dr7b205uirnhajp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
