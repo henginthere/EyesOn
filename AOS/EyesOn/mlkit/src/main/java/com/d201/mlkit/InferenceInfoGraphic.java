@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.practice.mlkit;
+package com.d201.mlkit;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

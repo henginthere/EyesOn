@@ -257,6 +257,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             displayRotationHelper!!.onPause()
             surfaceView.onPause()
             session!!.pause()
+            tts.stop()
         }
     }
 

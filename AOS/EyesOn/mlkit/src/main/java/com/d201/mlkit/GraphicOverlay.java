@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.practice.mlkit;
+package com.d201.mlkit;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;

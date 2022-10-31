@@ -21,8 +21,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.Log
+import com.d201.mlkit.GraphicOverlay
 import com.google.mlkit.vision.text.Text
-import com.practice.mlkit.GraphicOverlay
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
