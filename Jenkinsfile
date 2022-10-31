@@ -23,9 +23,17 @@ pipeline {
                                 sh 'docker container ls -a -f name=back -q \
                                         | xargs -r docker container rm'
 
-                                sh 'docker run -v /home/files:/home/files -d --name back -p 8090:8090 backimg'
+                                sh 'docker run -v /home/files:/home/files -e TZ=Asia/Seoul -d --name back -p 8090:8090 backimg'
                         }
                 }
+		stage('Remove Images'){
+			agent any
+			steps {
+				sh 'docker container prune -f'
+
+				sh 'docker image prune -f'
+			}
+		}
         }
 
 }
