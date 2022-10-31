@@ -44,8 +44,8 @@ class TextRecognitionProcessor(
     textRecognizer.close()
   }
 
-  override fun detectInImage(image: InputImage?): Task<Text> {
-    return textRecognizer.process(image!!)
+  override fun detectInImage(image: InputImage): Task<Text> {
+    return textRecognizer.process(image)
   }
 
   override fun onSuccess(text: Text, graphicOverlay: GraphicOverlay) {

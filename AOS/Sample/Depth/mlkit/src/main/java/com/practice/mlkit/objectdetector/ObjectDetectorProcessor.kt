@@ -18,7 +18,6 @@ package com.google.mlkit.vision.demo.kotlin.objectdetector
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.objects.DetectedObject
@@ -34,7 +33,6 @@ class ObjectDetectorProcessor(context: Context, options: ObjectDetectorOptionsBa
   VisionProcessorBase<List<DetectedObject>>(context) {
 
   private val detector: ObjectDetector = ObjectDetection.getClient(options)
-  val resultData = MutableLiveData<String>()
 
   override fun stop() {
     super.stop()
@@ -49,16 +47,13 @@ class ObjectDetectorProcessor(context: Context, options: ObjectDetectorOptionsBa
     }
   }
 
-  override fun detectInImage(image: InputImage?): Task<List<DetectedObject>> {
-    return detector.process(image!!)
+  override fun detectInImage(image: InputImage): Task<List<DetectedObject>> {
+    return detector.process(image)
   }
 
   override fun onSuccess(results: List<DetectedObject>, graphicOverlay: GraphicOverlay) {
     for (result in results) {
       graphicOverlay.add(ObjectGraphic(graphicOverlay, result))
-      if(result.labels.isNotEmpty()) {
-        resultData.postValue(result.labels[0].text)
-      }
     }
   }
 
