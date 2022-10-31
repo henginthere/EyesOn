@@ -2,6 +2,7 @@ package com.backend.eyeson.controller;
 
 import com.backend.eyeson.service.HelpService;
 import com.backend.eyeson.util.ResponseFrame;
+import com.backend.eyeson.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -49,15 +50,14 @@ public class HelpController {
 
     @ApiOperation(value = "도와 주기", response = Object.class)
     @GetMapping("")
-    public ResponseFrame<?> responseHelp(HttpServletRequest request){
+    public ResponseFrame<?> responseHelp(){
 
-        // email 가져오기
-        String email = "aa@gmail.com";
-        long userSeq = helpService.responseHelp(email);
-        if(userSeq == -1){
-            return ResponseFrame.of(HttpStatus.BAD_REQUEST, "없는 엔젤입니다. 도움 응답 실패");
-        }else {
+        // userSeq 가져오기
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        if(userSeq > 0){
             return ResponseFrame.of(userSeq, "도움 응답 성공");
+        }else {
+            return ResponseFrame.of(HttpStatus.BAD_REQUEST, "없는 엔젤입니다. 도움 응답 실패");
         }
     }
 
@@ -70,11 +70,11 @@ public class HelpController {
 
     @ApiOperation(value = "도움 종료", response = Object.class)
     @PutMapping("/finish")
-    public ResponseFrame<?> finishHelp(HttpServletRequest request){
+    public ResponseFrame<?> finishHelp(){
 
-        // email 가져오기
-        String email = "aa@gmail.com";
-        boolean check = helpService.finishHelp(email);
+        // userSeq 가져오기
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        boolean check = helpService.finishHelp(userSeq);
 
         if(!check){
             return ResponseFrame.of(HttpStatus.BAD_REQUEST, "도움 종료 성공");

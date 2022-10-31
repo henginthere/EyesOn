@@ -9,10 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -95,6 +93,7 @@ public class HelpService {
                 System.out.println("시작 시간 : " + angelInfoEntity.getAngelAlarmStart().getHour());
                 System.out.println("끝나는 시간 : " + angelInfoEntity.getAngelAlarmEnd().getHour());
                 System.out.println("지금 시간 : " + hour);
+                System.out.println("요일 : " + days);
                 canAngelList.add(angelInfoEntity);
             }
         }
@@ -127,14 +126,12 @@ public class HelpService {
     }
 
     // 도움 종료
-    public boolean finishHelp(String email) {
-        // 유저 정보 가져오기
-        Optional<UserEntity> userEntity = userRepository.findByUserEmail(email);
+    public boolean finishHelp(long userSeq) {
 
         // 엔젤 찾기
-        Optional<AngelInfoEntity> angelInfoEntity = angelRepository.findByUserSeq(userEntity.get().getUserSeq());
+        Optional<AngelInfoEntity> angelInfoEntity = angelRepository.findByUserSeq(userSeq);
 
-        if(!userEntity.isPresent() || !angelInfoEntity.isPresent()) return false;
+        if(!angelInfoEntity.isPresent()) return false;
 
         // 바꿔주기
         // 카운팅 하기
