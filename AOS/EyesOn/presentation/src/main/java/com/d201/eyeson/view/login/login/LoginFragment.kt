@@ -12,6 +12,11 @@ import androidx.navigation.fragment.findNavController
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentLoginBinding
+import com.d201.eyeson.util.ANGEL
+import com.d201.eyeson.util.BLIND
+import com.d201.eyeson.util.GENDER_DEFAULT
+import com.d201.eyeson.view.angel.AngelMainActivity
+import com.d201.eyeson.view.blind.BlindMainActivity
 import com.d201.eyeson.view.login.LoginViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -29,20 +34,25 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     override fun init() {
         initListener()
-        initAuth()
         initViewModel()
+//        initAuth()
     }
 
     private fun initViewModel() {
         lifecycleScope.launch {
             loginViewModel.login.collectLatest {
                 when(it?.gender){
-                    "d" -> {
+                    GENDER_DEFAULT -> {
                         Log.d(TAG, "initViewModel: ${it}")
                         findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSelectRoleFragment())
                     }
-                    else ->{
-                        //startActivity(Intent())
+                    else -> {
+                        when(it?.role){
+                            BLIND -> startActivity(Intent(requireContext(), BlindMainActivity::class.java))
+                            ANGEL -> startActivity(Intent(requireContext(), AngelMainActivity::class.java))
+                            else -> return@collectLatest
+                        }
+                        requireActivity().finish()
                     }
                 }
             }

@@ -16,16 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EyesOn"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        tools:targetApi="33">
         <activity
-            android:name=".AngelMainActivity"
+            android:name=".view.angel.AngelMainActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".BlindMainActivity"
+            android:name=".view.blind.BlindMainActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
