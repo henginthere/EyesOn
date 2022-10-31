@@ -3,12 +3,9 @@ package com.d201.eyeson.view.blind.scanobstacle
 import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -26,13 +23,14 @@ import com.d201.mlkit.BitmapUtils.RotateBitmap
 import com.d201.mlkit.BitmapUtils.imageToBitmap
 import com.d201.mlkit.GraphicOverlay
 import com.d201.mlkit.PreferenceUtils
-import com.d201.mlkit.objectdetector.ObjectDetectorProcessor
-import com.d201.mlkit.textdetector.TextRecognitionProcessor
+import com.d201.mlkit.VisionProcessorBase
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
 import com.google.mlkit.common.model.LocalModel
+import com.google.mlkit.vision.demo.kotlin.objectdetector.ObjectDetectorProcessor
+import com.google.mlkit.vision.demo.kotlin.textdetector.TextRecognitionProcessor
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
-import com.practice.mlkit.VisionProcessorBase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,6 +40,7 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "ScanObstacleFragment"
+@AndroidEntryPoint
 class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.fragment_scan_obstacle),
     GLSurfaceView.Renderer, TextToSpeech.OnInitListener {
     private lateinit var tts: TextToSpeech
@@ -67,10 +66,10 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     private var session: Session? = null
     private val messageSnackbarHelper: SnackbarHelper = SnackbarHelper()
     private var displayRotationHelper: DisplayRotationHelper? = null
-    private val trackingStateHelper: TrackingStateHelper = TrackingStateHelper(requireActivity())
+    private lateinit var trackingStateHelper: TrackingStateHelper
     private var tapHelper: TapHelper? = null
 
-    private val depthTexture: DepthTextureHandler = DepthTextureHandler(requireContext())
+    private lateinit var depthTexture: DepthTextureHandler
     private val backgroundRenderer: BackgroundRenderer = BackgroundRenderer()
     private val virtualObject: ObjectRenderer = ObjectRenderer()
 
@@ -95,6 +94,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     private fun initView(){
         surfaceView = binding.surfaceview
         displayRotationHelper = DisplayRotationHelper( /*context=*/requireContext())
+        trackingStateHelper = TrackingStateHelper(requireActivity())
+        depthTexture = DepthTextureHandler(requireContext())
 
         // Set up renderer.
         surfaceView.setPreserveEGLContextOnPause(true)

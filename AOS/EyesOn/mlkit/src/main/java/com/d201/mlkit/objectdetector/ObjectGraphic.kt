@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.d201.mlkit.objectdetector
+package com.google.mlkit.vision.demo.kotlin.objectdetector
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import com.d201.mlkit.GraphicOverlay
 import com.google.mlkit.vision.objects.DetectedObject
+import com.practice.mlkit.GraphicOverlay
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.max

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.d201.mlkit;
+package com.practice.mlkit;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

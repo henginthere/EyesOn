@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.d201.mlkit;
+package com.practice.mlkit;
 
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
@@ -335,7 +335,7 @@ public class BitmapUtils {
         final int width = crop.width();
         final int height = crop.height();
 
-        final Plane[] planes = image.getPlanes();
+        final Image.Plane[] planes = image.getPlanes();
         final byte[] rowData = new byte[planes[0].getRowStride()];
         final int bufferSize = width * height * ImageFormat.getBitsPerPixel(ImageFormat.YUV_420_888) / 8;
         final ByteBuffer output = ByteBuffer.allocateDirect(bufferSize);

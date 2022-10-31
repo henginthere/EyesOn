@@ -5,7 +5,6 @@ import android.view.WindowManager
 import com.google.ar.core.Camera
 import com.google.ar.core.TrackingFailureReason
 import com.google.ar.core.TrackingState
-import com.d201.depth.MainActivity
 
 class TrackingStateHelper(var activity: Activity?) {
     private val INSUFFICIENT_FEATURES_MESSAGE =

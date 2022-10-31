@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.d201.mlkit;
+package com.practice.mlkit;
 
 /** Describing a frame info. */
 public class FrameMetadata {
