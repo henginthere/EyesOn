@@ -8,7 +8,6 @@ import com.backend.eyeson.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -102,7 +101,7 @@ public class HelpService {
         // 알림 보내기
         for(int i=0; i<canAngelList.size(); i++){
             // fcm 토큰
-            String fcmToken = canAngelList.get(i).getUserSeq().getUserFcm();
+            String fcmToken = canAngelList.get(i).getUserEntity().getUserFcm();
             // 알림 제목
             String title = "도움 요청이 도착했어요 !";
             // 알림 내용
@@ -130,7 +129,7 @@ public class HelpService {
     public boolean finishHelp(long userSeq) {
 
         // 엔젤 찾기
-        Optional<AngelInfoEntity> angelInfoEntity = angelRepository.findByUserSeq(userSeq);
+        Optional<AngelInfoEntity> angelInfoEntity = angelRepository.findByUserEntity_UserSeq(userSeq);
 
         if(!angelInfoEntity.isPresent()) return false;
 
