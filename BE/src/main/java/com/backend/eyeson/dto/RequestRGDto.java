@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseLoginDto {
-    private TokenDto tokenDto;
-    private String role;
-    private char gender;
+public class RequestRGDto {
+
+    private char userGender;
+    private String userRole;
+
 }

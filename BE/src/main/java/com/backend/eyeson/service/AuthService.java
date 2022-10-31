@@ -6,6 +6,7 @@ import com.backend.eyeson.dto.TokenDto;
 import com.backend.eyeson.entity.UserEntity;
 import com.backend.eyeson.jwt.TokenProvider;
 import com.backend.eyeson.repository.UserRepository;
+import com.backend.eyeson.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,10 +48,11 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String authorities = getAuthorities(authentication);
 
-        System.out.println("권한 : "+authorities);
         TokenDto tokenDto;
 
         UserEntity user = userRepository.findByUserEmail(email).get();
+        //권한 가져오기
+        String role = SecurityUtil.getCurrentMemberRole();
 
         if(user==null){
             return null;
@@ -60,7 +62,7 @@ public class AuthService {
             tokenDto = tokenProvider.createUserToken(authentication.getName(), authorities);
         }
 
-        return new ResponseLoginDto(tokenDto);
+        return new ResponseLoginDto(tokenDto, authorities, user.getUserGender());
 
     }
 
@@ -75,8 +77,9 @@ public class AuthService {
         Authentication authentication = tokenProvider.getAuthentication(requestRefreshToken);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        final Authentication abcd = SecurityContextHolder.getContext().getAuthentication();
         String authorities = getAuthorities(authentication);
-        String userEmail = userRepository.findByUserSeq(Long.parseLong(authentication.getName())).getUserEmail();
+        String userEmail = userRepository.findByUserSeq(Long.parseLong(authentication.getName())).get().getUserEmail();
         return tokenProvider.createUserToken(userEmail,authorities);
 
     }
