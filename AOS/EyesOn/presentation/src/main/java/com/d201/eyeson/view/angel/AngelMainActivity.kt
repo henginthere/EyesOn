@@ -1,5 +1,7 @@
 package com.d201.eyeson.view.angel
 
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseActivity
 import com.d201.eyeson.databinding.ActivityAngelMainBinding
@@ -8,7 +10,15 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AngelMainActivity : BaseActivity<ActivityAngelMainBinding>(R.layout.activity_angel_main){
+    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var navController: NavController
+
     override fun init() {
-        supportFragmentManager.beginTransaction().replace(R.id.frame_angel_main, AngelMainFragment()).commit()
+        initView()
+    }
+
+    private fun initView() {
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.frame_angel_main) as NavHostFragment
+        navController = navHostFragment.navController
     }
 }

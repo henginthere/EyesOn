@@ -1,10 +1,12 @@
 package com.d201.data.repository
 
 import com.d201.data.datasource.UserRemoteDataSource
+import com.d201.data.mapper.mapperToAngelInfo
 import com.d201.data.mapper.mapperToToken
 import com.d201.data.model.request.UserRequest
 import com.d201.data.model.response.LoginResponse
 import com.d201.domain.base.BaseResponse
+import com.d201.domain.model.AngelInfo
 import com.d201.domain.model.Login
 import com.d201.domain.repository.UserRepository
 import com.d201.domain.utils.ResultType
@@ -30,5 +32,15 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-
+    override fun getAngelInfo(): Flow<ResultType<BaseResponse<AngelInfo>>> = flow{
+        emit(ResultType.Loading)
+        userRemoteDataSource.getAngelInfo().collect{
+            emit(ResultType.Success(
+                BaseResponse(
+                    it.message,
+                    it.status,
+                    it.data.mapperToAngelInfo()
+                )))
+        }
+    }
 }
