@@ -2,6 +2,7 @@ package com.backend.eyeson.controller;
 
 
 import com.backend.eyeson.dto.GoogleLoginDto;
+import com.backend.eyeson.dto.RequestRGDto;
 import com.backend.eyeson.dto.RequestRegistDto;
 import com.backend.eyeson.dto.ResponseLoginDto;
 import com.backend.eyeson.jwt.TokenProvider;
@@ -48,7 +49,7 @@ public class UserController {
 
     @ApiOperation(value = "로그인", response = Object.class)
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody GoogleLoginDto googleLoginDto) throws IOException, GeneralSecurityException{
+    public ResponseEntity<?> login(@RequestBody GoogleLoginDto googleLoginDto) throws IOException, GeneralSecurityException {
         ResponseFrame<?> res;
         String userEmail;
         String fcmToken;
@@ -63,31 +64,48 @@ public class UserController {
         if (verifier.verify(idToken)) {
             Payload payload = idToken.getPayload();
             userEmail = payload.getEmail();
-        }
-        else {
+        } else {
             //Invalid ID token
             System.out.println("만료된 토큰");
-            res = ResponseFrame.of(HttpStatus.UNAUTHORIZED,"만료된 토큰으로 로그인에 실패하였습니다.");
+            res = ResponseFrame.of(HttpStatus.UNAUTHORIZED, "만료된 토큰으로 로그인에 실패하였습니다.");
             return new ResponseEntity<>(res, HttpStatus.OK);
         }
 
         //t_user에 email 존재 여부 확인
-        if(userRepository.findByUserEmail(userEmail) != null){
+        if (userRepository.findByUserEmail(userEmail) != null) {
             ResponseLoginDto responseLoginDto = userService.login(userEmail);
-            if(responseLoginDto!=null){
-                res = ResponseFrame.of(responseLoginDto,"로그인에 성공하였습니다.");
-                return new ResponseEntity<>(res,HttpStatus.OK);
-            }
-            else{ //db에 이메일이 없으면 회원가입을 한다.
+            if (responseLoginDto != null) {
+                res = ResponseFrame.of(responseLoginDto, "로그인에 성공하였습니다.");
+                return new ResponseEntity<>(res, HttpStatus.OK);
+            } else { //db에 이메일이 없으면 회원가입을 한다.
                 responseLoginDto = userService.signup(userEmail, fcmToken);
-                res = ResponseFrame.of(responseLoginDto,"회원가입을 성공했습니다.");
-                return new ResponseEntity<>(res,HttpStatus.OK);
+                res = ResponseFrame.of(responseLoginDto, "회원가입을 성공했습니다.");
+                return new ResponseEntity<>(res, HttpStatus.OK);
             }
         }
-        return new ResponseEntity<>(null,HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.OK);
 
 
     }
+
+    /**
+     * 성별, 역할 등록
+     *
+     * @param requestRGDto
+     * @return Object
+     */
+
+    @ApiOperation(value = "성별, 역할 등록", response = Object.class)
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RequestRGDto requestRGDto) throws IOException, GeneralSecurityException {
+        ResponseFrame<?> res;
+        String role = requestRGDto.getUserRole();
+        char gender = requestRGDto.getUserGender();
+        ResponseLoginDto responseLoginDto = userService.register(role, gender);
+        res = ResponseFrame.of(responseLoginDto, "정보 등록에 성공하였습니다.");
+        return new ResponseEntity<>(res, HttpStatus.OK);
+
+
 //
 //    @ApiOperation(value = "aa", response = Object.class)
 //    @GetMapping("/a")
@@ -99,4 +117,5 @@ public class UserController {
 //        System.out.println(userSeq);
 //    }
 
+    }
 }

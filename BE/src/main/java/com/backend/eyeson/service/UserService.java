@@ -7,13 +7,17 @@ import com.backend.eyeson.entity.AuthorityEntity;
 import com.backend.eyeson.entity.UserEntity;
 import com.backend.eyeson.repository.AuthorityRepository;
 import com.backend.eyeson.repository.UserRepository;
+import com.backend.eyeson.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,41 +36,14 @@ public class UserService {
         String g_id[] = email.split("@");
         String pass = g_id[0];
 
-//        // gender enum으로 변경
-//        // m : men, w : women
-//        char gender = 0;
-//        if(requestRegistDto.getUserGender().equals("Women")) gender = 'w';
-//        else if(requestRegistDto.getUserGender().equals("Men")) gender = 'm';
-
         // 회원 가입 시 gender와 role은 default로 저장,
-
 
         // 권한 설정
         AuthorityEntity authorityEntity;
 
-        boolean role;
         authorityEntity = AuthorityEntity.builder()
                 .authorityName("ROLE_ADMIN")
                 .build();
-//        // true : 시각장애인, false : 엔젤
-//        if(!requestRegistDto.isUserRole()){
-//            role = false;
-//            authorityEntity = AuthorityEntity.builder()
-//                    .authorityName("ROLE_ANGEL")
-//                    .build();
-//
-//            // 로그로 바꾸기
-//            System.out.println(authorityEntity.getAuthorityName());
-//        }
-//        else{
-//            role = true;
-//            authorityEntity = AuthorityEntity.builder()
-//                    .authorityName("ROLE_BLIND")
-//                    .build();
-//
-//            // 로그로 바꾸기
-//            System.out.println(authorityEntity.getAuthorityName());
-//        }
 
         // 권한 저장
         authorityRepository.save(authorityEntity);
@@ -97,6 +74,25 @@ public class UserService {
 
         ResponseLoginDto responseLoginDto = authService.authorize(userEmail);
 
+        return responseLoginDto;
+    }
+
+    public ResponseLoginDto register(String role, char gender){
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        UserEntity userEntity = userRepository.findByUserSeq(userSeq).get();
+
+        Set<AuthorityEntity> set = new HashSet<>();
+        AuthorityEntity authorityEntity = AuthorityEntity.builder().
+                authorityName(role).
+                build();
+        set.add(authorityEntity);
+        userEntity.setUserGender(gender);
+        userEntity.setAuthorities(set);
+
+        userRepository.save(userEntity);
+
+        String email = userRepository.findByUserSeq(SecurityUtil.getCurrentMemberSeq()).get().getUserEmail();
+        ResponseLoginDto responseLoginDto = login(email);
         return responseLoginDto;
     }
 }
