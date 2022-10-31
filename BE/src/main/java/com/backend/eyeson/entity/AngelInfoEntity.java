@@ -44,4 +44,9 @@ public class AngelInfoEntity {
     @Basic
     @Column(name = "angel_help_cnt")
     private int angelHelpCnt;
+
+    @Basic
+    @Column(name = "angel_active")
+    private boolean angelActive;
+
 }
