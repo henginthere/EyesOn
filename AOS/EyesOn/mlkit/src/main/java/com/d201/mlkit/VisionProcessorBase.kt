@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.practice.mlkit
+package com.d201.mlkit
 
 import android.app.ActivityManager
 import android.content.Context
