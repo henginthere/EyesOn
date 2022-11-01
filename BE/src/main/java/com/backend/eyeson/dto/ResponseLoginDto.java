@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseLoginDto {
     private TokenDto tokenDto;
+    private String role;
+    private char gender;
 }

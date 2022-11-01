@@ -8,7 +8,6 @@ private const val TAG = "SelectRoleFragment"
 class SelectRoleFragment : BaseFragment<FragmentSelectRoleBinding>(R.layout.fragment_select_role) {
 
     override fun init() {
-        TODO("Not yet implemented")
     }
 
 }

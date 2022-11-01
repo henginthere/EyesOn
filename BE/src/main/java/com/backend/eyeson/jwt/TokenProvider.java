@@ -155,4 +155,29 @@ public class TokenProvider implements InitializingBean {
         }
     }
 
+
+    // 사용자 이름 추출
+    public long getUserSeq(String authorizationHeader){
+        System.out.println("asdf");
+        validationAuthorizationHeader(authorizationHeader); // (1)
+        String token = extractToken(authorizationHeader); // (2)
+
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        long userSeq = Long.parseLong(String.valueOf(claims.get("userSeq")));
+        System.out.println("userSeq");
+        return userSeq;
+    }
+
+    private void validationAuthorizationHeader(String header) {
+        if (header == null || !header.startsWith("Bearer ")) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private String extractToken(String authorizationHeader) {
+        return authorizationHeader.substring("Bearer ".length());
+    }
+
+
+
 }

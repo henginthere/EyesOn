@@ -1,12 +1,15 @@
 package com.backend.eyeson.service;
 
-import com.backend.eyeson.controller.UserController;
-import com.backend.eyeson.dto.RequestRegistDto;
+import com.backend.eyeson.dto.ResponseAngelInfoDto;
 import com.backend.eyeson.dto.ResponseLoginDto;
+import com.backend.eyeson.entity.AngelInfoEntity;
 import com.backend.eyeson.entity.AuthorityEntity;
 import com.backend.eyeson.entity.UserEntity;
+import com.backend.eyeson.mapper.AngelMapper;
+import com.backend.eyeson.repository.AngelRepository;
 import com.backend.eyeson.repository.AuthorityRepository;
 import com.backend.eyeson.repository.UserRepository;
+import com.backend.eyeson.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,12 +17,15 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
+    private final AngelRepository angelRepository;
 
     private final AuthorityRepository authorityRepository;
 
@@ -32,41 +38,14 @@ public class UserService {
         String g_id[] = email.split("@");
         String pass = g_id[0];
 
-//        // gender enum으로 변경
-//        // m : men, w : women
-//        char gender = 0;
-//        if(requestRegistDto.getUserGender().equals("Women")) gender = 'w';
-//        else if(requestRegistDto.getUserGender().equals("Men")) gender = 'm';
-
         // 회원 가입 시 gender와 role은 default로 저장,
-
 
         // 권한 설정
         AuthorityEntity authorityEntity;
 
-        boolean role;
         authorityEntity = AuthorityEntity.builder()
                 .authorityName("ROLE_ADMIN")
                 .build();
-//        // true : 시각장애인, false : 엔젤
-//        if(!requestRegistDto.isUserRole()){
-//            role = false;
-//            authorityEntity = AuthorityEntity.builder()
-//                    .authorityName("ROLE_ANGEL")
-//                    .build();
-//
-//            // 로그로 바꾸기
-//            System.out.println(authorityEntity.getAuthorityName());
-//        }
-//        else{
-//            role = true;
-//            authorityEntity = AuthorityEntity.builder()
-//                    .authorityName("ROLE_BLIND")
-//                    .build();
-//
-//            // 로그로 바꾸기
-//            System.out.println(authorityEntity.getAuthorityName());
-//        }
 
         // 권한 저장
         authorityRepository.save(authorityEntity);
@@ -98,5 +77,40 @@ public class UserService {
         ResponseLoginDto responseLoginDto = authService.authorize(userEmail);
 
         return responseLoginDto;
+    }
+
+    public ResponseLoginDto register(String role, char gender){
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        UserEntity userEntity = userRepository.findByUserSeq(userSeq).get();
+
+        Set<AuthorityEntity> set = new HashSet<>();
+        AuthorityEntity authorityEntity = AuthorityEntity.builder().
+                authorityName(role).
+                build();
+        set.add(authorityEntity);
+        userEntity.setUserGender(gender);
+        userEntity.setAuthorities(set);
+
+        userRepository.save(userEntity);
+        if(role.equals("ROLE_ANGEL") && angelRepository.findByUserEntity_UserSeq(userSeq).isEmpty()){
+            AngelInfoEntity angelInfoEntity = new AngelInfoEntity();
+            angelInfoEntity.setUserEntity(userEntity);
+            angelRepository.save(angelInfoEntity);
+        }
+
+        String email = userRepository.findByUserSeq(SecurityUtil.getCurrentMemberSeq()).get().getUserEmail();
+        ResponseLoginDto responseLoginDto = login(email);
+        return responseLoginDto;
+    }
+
+    //회원탈퇴
+    public void dropUser(long userSeq) {
+        userRepository.delete(userRepository.findByUserSeq(userSeq).get());
+    }
+    
+    public ResponseAngelInfoDto getInfo(){
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        AngelInfoEntity angelInfoEntity = angelRepository.findByUserEntity_UserSeq(userSeq).get();
+        return AngelMapper.INSTANCE.toDto(angelInfoEntity);
     }
 }

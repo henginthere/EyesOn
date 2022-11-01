@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.d201.mlkit.objectdetector
+package com.google.mlkit.vision.demo.kotlin.objectdetector
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.d201.mlkit.GraphicOverlay
+import com.d201.mlkit.VisionProcessorBase
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.objects.DetectedObject
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.ObjectDetector
 import com.google.mlkit.vision.objects.ObjectDetectorOptionsBase
-import com.practice.mlkit.VisionProcessorBase
 import java.io.IOException
 
 /** A processor to run object detector.  */
