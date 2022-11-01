@@ -8,7 +8,6 @@ private const val TAG = "JoinSuccessFragment"
 class JoinSuccessFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_join_success) {
 
     override fun init() {
-        TODO("Not yet implemented")
     }
 
 }

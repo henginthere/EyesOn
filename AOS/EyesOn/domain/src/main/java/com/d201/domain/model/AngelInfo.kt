@@ -11,4 +11,7 @@ data class AngelInfo(
     val helpCnt: Int,
     val gender: String,
     val active: Boolean
-)
+){
+    constructor(alarmStart: Int, alarmEnd: Int, alarmDay: Int, active: Boolean):
+            this(alarmStart, alarmEnd, alarmDay, 0, 0, "",active)
+}
