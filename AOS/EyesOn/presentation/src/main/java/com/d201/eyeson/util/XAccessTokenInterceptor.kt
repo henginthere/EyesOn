@@ -17,7 +17,7 @@ class XAccessTokenInterceptor @Inject constructor(
             sharedPref.getString(JWT,"")!!
         }
         val request = chain.request().newBuilder()
-            .addHeader(JWT, token)
+            .addHeader(JWT, "Bearer $token")
             .build()
         Log.d(TAG, "intercept headers: ${request.headers} ")
         Log.d(TAG, "intercept body : ${request.body} ")
