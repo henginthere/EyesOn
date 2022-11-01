@@ -29,5 +29,12 @@
             android:name="role"
             app:argType="string"
             />
+        <action
+            android:id="@+id/action_selectGenderFragment_to_joinSuccessFragment"
+            app:destination="@id/joinSuccessFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/joinSuccessFragment"
+        android:name="com.d201.eyeson.view.login.join.JoinSuccessFragment"
+        android:label="JoinSuccessFragment" />
 </navigation>
