@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,12 +40,13 @@ public class CustomUserDetailService implements UserDetailsService {
     }
 
     private org.springframework.security.core.userdetails.User createUser(String email, UserEntity user) {
-        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
-                .collect(Collectors.toList());
+//        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
+//                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
+//                .collect(Collectors.toList());
         // 1의 정보를 기반으로 userdetails.User객체를 생성해서 return
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getAuthority().toString());
         return new org.springframework.security.core.userdetails.User(user.getUserEmail(),
                 user.getUserPass(),
-                grantedAuthorities);
+                Collections.singleton(grantedAuthority));
     }
 }

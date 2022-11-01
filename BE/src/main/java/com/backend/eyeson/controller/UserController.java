@@ -115,7 +115,6 @@ public class UserController {
         // userSeq 가져오기
         long userSeq = SecurityUtil.getCurrentMemberSeq();
         userService.dropUser(userSeq);
-
         return ResponseFrame.of(HttpStatus.OK, "회원 탈퇴 성공");
 
     }
