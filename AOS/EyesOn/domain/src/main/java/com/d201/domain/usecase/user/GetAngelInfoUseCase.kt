@@ -1,4 +1,4 @@
-package com.d201.domain.usecase
+package com.d201.domain.usecase.user
 
 import com.d201.domain.repository.UserRepository
 import javax.inject.Inject

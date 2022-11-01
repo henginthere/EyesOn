@@ -1,5 +1,6 @@
 package com.d201.domain.repository
 
+import androidx.paging.PagingData
 import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.Complaints
 import com.d201.domain.utils.ResultType
@@ -15,4 +16,11 @@ interface ComplaintsRepository {
     fun submitComplaints(complaintsRequest: Complaints): Flow<ResultType<BaseResponse<Void>>>
 
     fun completeComplaints(complaintsRequest: Complaints): Flow<ResultType<BaseResponse<Void>>>
+
+    fun selectAllComplaints(flag: Int): Flow<ResultType<PagingData<Complaints>>>
+
+    fun selectComplaintsByAngel(flag: Int): Flow<ResultType<PagingData<Complaints>>>
+
+    fun selectComplaintsByBlind(flag: Int): Flow<ResultType<PagingData<Complaints>>>
+    
 }

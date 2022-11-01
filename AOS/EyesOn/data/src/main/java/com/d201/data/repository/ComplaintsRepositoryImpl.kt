@@ -1,6 +1,11 @@
 package com.d201.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.d201.data.api.ComplaintsApi
 import com.d201.data.datasource.ComplaintsRemoteDataSource
+import com.d201.data.datasource.paging.ComplaintsPagingSource
 import com.d201.data.mapper.mapperToComplaints
 import com.d201.data.mapper.mapperToComplaintsRequest
 import com.d201.domain.base.BaseResponse
@@ -13,7 +18,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ComplaintsRepositoryImpl @Inject constructor(private val complaintsRemoteDataSource: ComplaintsRemoteDataSource)
+class ComplaintsRepositoryImpl @Inject constructor(
+    private val complaintsRemoteDataSource: ComplaintsRemoteDataSource
+)
     : ComplaintsRepository {
 
     override fun insertComp(complaints: Complaints): Flow<ResultType<BaseResponse<Void>>> = flow {
@@ -75,5 +82,23 @@ class ComplaintsRepositoryImpl @Inject constructor(private val complaintsRemoteD
                     it.data
                 )))
         }
+    }
+
+    override fun selectAllComplaints(flag: Int): Flow<ResultType<PagingData<Complaints>>> = flow {
+//        emit(ResultType.Loading)
+//        emit(ResultType.Success(
+//            Pager(
+//                config = PagingConfig(pageSize = 1, maxSize = 15, enablePlaceholders = false),
+//                pagingSourceFactory = { ComplaintsPagingSource(complaintsApi, 0)}
+//            ).flow
+//        ))
+    }
+
+    override fun selectComplaintsByAngel(flag: Int): Flow<ResultType<PagingData<Complaints>>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun selectComplaintsByBlind(flag: Int): Flow<ResultType<PagingData<Complaints>>> {
+        TODO("Not yet implemented")
     }
 }
