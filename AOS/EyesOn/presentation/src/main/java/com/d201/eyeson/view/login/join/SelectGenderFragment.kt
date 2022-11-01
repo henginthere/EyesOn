@@ -8,7 +8,7 @@ import androidx.navigation.fragment.navArgs
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentSelectGenderBinding
-import com.d201.eyeson.util.GENDER_FEMAIL
+import com.d201.eyeson.util.GENDER_FEMALE
 import com.d201.eyeson.util.GENDER_MALE
 import com.d201.eyeson.view.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +36,7 @@ class SelectGenderFragment : BaseFragment<FragmentSelectGenderBinding>(R.layout.
                 viewModel.putUserRole(args.role, GENDER_MALE)
             }
             btnFemale.setOnClickListener {
-                viewModel.putUserRole(args.role, GENDER_FEMAIL)
+                viewModel.putUserRole(args.role, GENDER_FEMALE)
             }
         }
     }
