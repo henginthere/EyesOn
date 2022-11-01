@@ -22,7 +22,7 @@ public class AngelInfoEntity {
     @Column(name = "angel_info_seq")
     private long angelInfoSeq;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name="user_seq")
     private UserEntity userSeq;
 

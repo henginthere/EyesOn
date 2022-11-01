@@ -1,21 +1,16 @@
 package com.backend.eyeson.service;
 
-import com.backend.eyeson.controller.UserController;
-import com.backend.eyeson.dto.RequestRegistDto;
 import com.backend.eyeson.dto.ResponseLoginDto;
 import com.backend.eyeson.entity.AuthorityEntity;
 import com.backend.eyeson.entity.UserEntity;
-import com.backend.eyeson.repository.AuthorityRepository;
 import com.backend.eyeson.repository.UserRepository;
 import com.backend.eyeson.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,9 +19,6 @@ import java.util.Set;
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
-
-    private final AuthorityRepository authorityRepository;
-
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
 
@@ -38,15 +30,17 @@ public class UserService {
 
         // 회원 가입 시 gender와 role은 default로 저장,
 
-        // 권한 설정
+//        // 권한 설정
+//        AuthorityEntity authorityEntity;
+//
+//        authorityEntity = AuthorityEntity.builder()
+//                .authorityName("ROLE_ADMIN")
+//                .build();
+
+//        // 권한 저장
+//        authorityRepository.save(authorityEntity);
+
         AuthorityEntity authorityEntity;
-
-        authorityEntity = AuthorityEntity.builder()
-                .authorityName("ROLE_ADMIN")
-                .build();
-
-        // 권한 저장
-        authorityRepository.save(authorityEntity);
 
         UserEntity userEntity = UserEntity.builder().
                 userFcm(fcmToken).
@@ -54,7 +48,8 @@ public class UserService {
                 userPass(passwordEncoder.encode(pass)).
                 userGender('d').
                 userDate(LocalDateTime.now()).
-                authorities(Collections.singleton(authorityEntity))
+                authority(AuthorityEntity.ROLE_ADMIN)
+//                authorities(Collections.singleton(authorityEntity))
                 .build();
 
         userRepository.save(userEntity);
@@ -81,14 +76,15 @@ public class UserService {
         long userSeq = SecurityUtil.getCurrentMemberSeq();
         UserEntity userEntity = userRepository.findByUserSeq(userSeq).get();
 
-        Set<AuthorityEntity> set = new HashSet<>();
-        AuthorityEntity authorityEntity = AuthorityEntity.builder().
-                authorityName(role).
-                build();
-        set.add(authorityEntity);
         userEntity.setUserGender(gender);
-        userEntity.setAuthorities(set);
-
+        switch (role){
+            case "ROLE_ANGEL":
+                userEntity.setAuthority(AuthorityEntity.ROLE_ANGEL);
+                break;
+            case "ROLE_BLIND":
+                userEntity.setAuthority(AuthorityEntity.ROLE_BLIND);
+                break;
+        }
         userRepository.save(userEntity);
 
         String email = userRepository.findByUserSeq(SecurityUtil.getCurrentMemberSeq()).get().getUserEmail();
