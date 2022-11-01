@@ -22,11 +22,11 @@ public class ComplaintsEntity {
     @Column(name = "comp_seq")
     private long compSeq;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "blind_seq", insertable = false, updatable = false)
     private UserEntity blindUser;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "angel_seq", insertable = false, updatable = false)
     private UserEntity angelUser;
 
