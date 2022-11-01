@@ -31,7 +31,6 @@ class LoginViewModel @Inject constructor(
 
     fun login(idToken: String, fcmToken: String){
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d(TAG, "login: ${idToken}")
             loginUseCase.execute(idToken, fcmToken).collectLatest {
                 if(it is ResultType.Success && it.data.status == 200){
                     // 로그인 성공 처리
