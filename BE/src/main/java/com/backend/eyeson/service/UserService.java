@@ -1,8 +1,13 @@
 package com.backend.eyeson.service;
 
+
+import com.backend.eyeson.dto.ResponseAngelInfoDto;
 import com.backend.eyeson.dto.ResponseLoginDto;
+import com.backend.eyeson.entity.AngelInfoEntity;
 import com.backend.eyeson.entity.AuthorityEntity;
 import com.backend.eyeson.entity.UserEntity;
+import com.backend.eyeson.mapper.AngelMapper;
+import com.backend.eyeson.repository.AngelRepository;
 import com.backend.eyeson.repository.UserRepository;
 import com.backend.eyeson.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,13 +16,14 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
+
+    private final AngelRepository angelRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
@@ -86,6 +92,11 @@ public class UserService {
                 break;
         }
         userRepository.save(userEntity);
+        if(role.equals("ROLE_ANGEL") && angelRepository.findByUserEntity_UserSeq(userSeq).isEmpty()){
+            AngelInfoEntity angelInfoEntity = new AngelInfoEntity();
+            angelInfoEntity.setUserEntity(userEntity);
+            angelRepository.save(angelInfoEntity);
+        }
 
         String email = userRepository.findByUserSeq(SecurityUtil.getCurrentMemberSeq()).get().getUserEmail();
         ResponseLoginDto responseLoginDto = login(email);
@@ -93,7 +104,13 @@ public class UserService {
     }
 
     //회원탈퇴
-    public void dropUser(long userSeq){
+    public void dropUser(long userSeq) {
         userRepository.delete(userRepository.findByUserSeq(userSeq).get());
+    }
+    
+    public ResponseAngelInfoDto getInfo(){
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        AngelInfoEntity angelInfoEntity = angelRepository.findByUserEntity_UserSeq(userSeq).get();
+        return AngelMapper.INSTANCE.toDto(angelInfoEntity);
     }
 }

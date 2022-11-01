@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface AngelRepository extends JpaRepository<AngelInfoEntity, Long> {
 
-    Optional<AngelInfoEntity> findByUserSeq(long userSeq);
+    Optional<AngelInfoEntity> findByUserEntity_UserSeq(long userSeq);
 
     Optional<List<AngelInfoEntity>> findAllByAngelGender(char gender);
 }

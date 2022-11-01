@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentLoginBinding
@@ -35,8 +36,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun initViewModel() {
         lifecycleScope.launch {
             loginViewModel.login.collectLatest {
-                Log.d(TAG, "initViewModel: $it")
-
+                when(it?.gender){
+                    "d" -> {
+                        Log.d(TAG, "initViewModel: ${it}")
+                        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSelectRoleFragment())
+                    }
+                    else ->{
+                        //startActivity(Intent())
+                    }
+                }
             }
         }
     }
