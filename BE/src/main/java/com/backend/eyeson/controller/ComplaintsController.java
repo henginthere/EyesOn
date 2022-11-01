@@ -1,18 +1,26 @@
 package com.backend.eyeson.controller;
 
 import com.backend.eyeson.dto.ComplaintsDto;
+import com.backend.eyeson.dto.RequestCompDto;
+import com.backend.eyeson.dto.UserDto;
 import com.backend.eyeson.entity.ComplaintsEntity;
 import com.backend.eyeson.entity.UserEntity;
 import com.backend.eyeson.repository.CompRepository;
 import com.backend.eyeson.repository.UserRepository;
+import com.backend.eyeson.service.CompService;
 import com.backend.eyeson.util.ResponseFrame;
 import com.backend.eyeson.util.ReverseGeocoding;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import com.google.api.client.json.JsonFactory;
+
+import java.time.LocalDateTime;
 
 
 @RestController
@@ -21,28 +29,30 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags   = "민원 컨트롤러")
 public class ComplaintsController {
     private final UserRepository userRepository;
+    private final CompService compService;
 
-//    public UserDto getLoginUser() {
-//        UserEntity user = null;
-//        try {
-//            user = userRepo.findById(SecurityUtil.getCurrentMemberId()).get();
-//        } catch (Exception e) {
-//            user = new User();
-//            user.setBirthday(1996);
-//            user.setGender("male");
-//            user.setId("anfidthtn");
-//            user.setNickName("무량소수");
-//            user.setPoint(1000);
-//            user.setPass("1234");
-//            user.setRegTime(LocalDateTime.now());
-//        }
-//
-//        return UserDto.of(user);
-//    }
+    public UserDto getLoginUser() {
+        UserEntity user = null;
+        try {
+            //user = userRepository.findById(SecurityUtil.getCurrentMemberId()).get();
+            user = userRepository.findByUserEmail("zzz").get();
+        } catch (Exception e) {
+            user = new UserEntity();
+            user.setUserSeq(9999);
+            user.setUserEmail("null@null.com");
+            user.setUserGender('M');
+            user.setUserFcm("abcdefghijklmnopqrstuvwxyz");
+            user.setUserDate(LocalDateTime.now());
+        }
+
+        return UserDto.of(user);
+    }
 
     @ApiParam(value = "민원 등록")
+    //blindSeq 추가, 제목 추가
     @PostMapping(value = "/register")
-    public ResponseEntity<?> registerCom(@RequestBody ComplaintsDto params) throws Exception{
+    public ResponseEntity<?> registerCom(@RequestBody RequestCompDto params) throws Exception{
+        boolean result = compService.regiserCom(params);
         return new ResponseEntity<>(ResponseFrame.of(HttpStatus.OK, "민원 등록 성공"), HttpStatus.OK);
     }
 
@@ -59,6 +69,9 @@ public class ComplaintsController {
     //paging 처리
     @GetMapping(value = "/list/angel")
     public ResponseEntity<?> listAngel() throws Exception{
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("로그인한 사용자는: " + name);
+
         return new ResponseEntity<>(ResponseFrame.of(HttpStatus.OK, "민원 조회"), HttpStatus.OK);
     }
 
