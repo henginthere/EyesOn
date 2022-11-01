@@ -8,11 +8,70 @@
         android:layout_height="match_parent"
         tools:context=".view.angel.complaints.ComplaintsDetailFragment">
 
-        <!-- TODO: Update blank fragment layout -->
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="민원 목록 상세 페이지"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <ImageView
+            android:id="@+id/iv_complaints_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_title_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="민원 신고 주소"
+            app:layout_constraintTop_toBottomOf="@id/iv_complaints_image"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_title_address"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="주소"/>
+
+        <TextView
+            android:id="@+id/tv_title_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="민원 내용"
+            app:layout_constraintTop_toBottomOf="@id/tv_address"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_title_content"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="내용"/>
+
+        <Button
+            android:id="@+id/btn_go_safety_e_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="접수하러 가기"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_reject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="반환"
+            app:layout_constraintStart_toEndOf="@id/btn_go_safety_e_report"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
