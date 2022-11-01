@@ -31,23 +31,6 @@ public class ComplaintsController {
     private final UserRepository userRepository;
     private final CompService compService;
 
-    public UserDto getLoginUser() {
-        UserEntity user = null;
-        try {
-            //user = userRepository.findById(SecurityUtil.getCurrentMemberId()).get();
-            user = userRepository.findByUserEmail("zzz").get();
-        } catch (Exception e) {
-            user = new UserEntity();
-            user.setUserSeq(9999);
-            user.setUserEmail("null@null.com");
-            user.setUserGender('M');
-            user.setUserFcm("abcdefghijklmnopqrstuvwxyz");
-            user.setUserDate(LocalDateTime.now());
-        }
-
-        return UserDto.of(user);
-    }
-
     @ApiParam(value = "민원 등록")
     //blindSeq 추가, 제목 추가
     @PostMapping(value = "/register")
