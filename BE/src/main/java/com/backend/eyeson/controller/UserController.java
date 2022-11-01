@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 @Api("UserController")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
