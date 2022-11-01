@@ -8,12 +8,29 @@
         android:layout_height="match_parent"
         tools:context=".view.blind.help.HelperSelectFragment">
 
-        <!-- TODO: Update blank fragment layout -->
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="어떤 엔젤이 편하신가요?"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
+        <Button
+            android:id="@+id/btn_same_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="같은 성별"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btn_anyone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="누구나"
+            app:layout_constraintTop_toBottomOf="@id/btn_same_gender"
+            app:layout_constraintStart_toStartOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

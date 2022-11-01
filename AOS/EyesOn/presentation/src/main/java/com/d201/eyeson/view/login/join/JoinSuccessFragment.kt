@@ -5,7 +5,7 @@ import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentLoginBinding
 
 private const val TAG = "JoinSuccessFragment"
-class JoinSuccessFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
+class JoinSuccessFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_join_success) {
 
     override fun init() {
         TODO("Not yet implemented")

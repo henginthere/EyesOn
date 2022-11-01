@@ -6,16 +6,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.blind.help.HelpLoadingFragment">
+        tools:context=".view.blind.findobject.FindObjectActivity">
 
-        <Button
-            android:id="@+id/btn_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="취소"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/frame_find_object"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>
