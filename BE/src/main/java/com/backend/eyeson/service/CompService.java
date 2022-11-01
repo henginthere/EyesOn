@@ -48,17 +48,16 @@ public class CompService {
         ComplaintsEntity complaints = CompMapper.INSTANCE.toEntity(params);
         complaints.setCompAddress(ReverseGeocoding.getAddress(params.getCompAddress()));
         complaints.setCompState(CompStateEnum.PROGRESS_IN);
-        System.out.println(getLoginUser().getUserSeq());
         UserEntity user = UserMapper.INSTANCE.toEntity(getLoginUser());
 
         complaints.setBlindUser(user);
-        System.out.println(complaints.getBlindUser().getUserSeq());
         compRepository.save(complaints);
         return true;
 
     }
 
     public void listAll(String address) {
+
 
 
     }
