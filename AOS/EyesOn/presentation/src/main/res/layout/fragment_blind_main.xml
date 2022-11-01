@@ -8,11 +8,61 @@
         android:layout_height="match_parent"
         tools:context=".view.blind.BlindMainFragment">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+        <Button
+            android:id="@+id/btn_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="알림"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="세팅"
+            app:layout_constraintTop_toBottomOf="@id/btn_notification"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_scan_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="글자 보기"
+            app:layout_constraintTop_toBottomOf="@id/btn_setting"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_find_object"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="물건 찾기"
+            app:layout_constraintTop_toBottomOf="@id/btn_scan_text"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_scan_obstacle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="장애물 인식"
+            app:layout_constraintTop_toBottomOf="@id/btn_find_object"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="도움 요청"
+            app:layout_constraintTop_toBottomOf="@id/btn_scan_obstacle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_complaints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="민원 신청 및 확인"
+            app:layout_constraintTop_toBottomOf="@id/btn_help"
+            app:layout_constraintStart_toStartOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
