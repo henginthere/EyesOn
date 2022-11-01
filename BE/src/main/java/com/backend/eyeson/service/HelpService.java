@@ -114,16 +114,6 @@ public class HelpService {
         else return true;
     }
 
-    // 도움 응답
-    public long responseHelp(String email) {
-        // 이메일로 사용자 seq 찾기
-        Optional<UserEntity> userEntity = userRepository.findByUserEmail(email);
-        if (!userEntity.isPresent()) {
-            return -1;
-        } else {
-            return userEntity.get().getUserSeq();
-        }
-    }
 
     // 도움 종료
     public boolean finishHelp(long userSeq) {
