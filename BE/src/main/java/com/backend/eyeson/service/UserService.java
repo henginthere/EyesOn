@@ -7,7 +7,6 @@ import com.backend.eyeson.entity.AuthorityEntity;
 import com.backend.eyeson.entity.UserEntity;
 import com.backend.eyeson.mapper.AngelMapper;
 import com.backend.eyeson.repository.AngelRepository;
-import com.backend.eyeson.repository.AuthorityRepository;
 import com.backend.eyeson.repository.UserRepository;
 import com.backend.eyeson.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -16,19 +15,14 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
-    private final UserRepository userRepository;
+
     private final AngelRepository angelRepository;
-
-    private final AuthorityRepository authorityRepository;
-
+    private final UserRepository userRepository;
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
 
@@ -38,25 +32,13 @@ public class UserService {
         String g_id[] = email.split("@");
         String pass = g_id[0];
 
-        // 회원 가입 시 gender와 role은 default로 저장,
-
-        // 권한 설정
-        AuthorityEntity authorityEntity;
-
-        authorityEntity = AuthorityEntity.builder()
-                .authorityName("ROLE_ADMIN")
-                .build();
-
-        // 권한 저장
-        authorityRepository.save(authorityEntity);
-
         UserEntity userEntity = UserEntity.builder().
                 userFcm(fcmToken).
                 userEmail(email).
                 userPass(passwordEncoder.encode(pass)).
                 userGender('d').
                 userDate(LocalDateTime.now()).
-                authorities(Collections.singleton(authorityEntity))
+                authority(AuthorityEntity.ROLE_ADMIN)
                 .build();
 
         userRepository.save(userEntity);
@@ -83,18 +65,20 @@ public class UserService {
         long userSeq = SecurityUtil.getCurrentMemberSeq();
         UserEntity userEntity = userRepository.findByUserSeq(userSeq).get();
 
-        Set<AuthorityEntity> set = new HashSet<>();
-        AuthorityEntity authorityEntity = AuthorityEntity.builder().
-                authorityName(role).
-                build();
-        set.add(authorityEntity);
         userEntity.setUserGender(gender);
-        userEntity.setAuthorities(set);
-
+        switch (role){
+            case "ROLE_ANGEL":
+                userEntity.setAuthority(AuthorityEntity.ROLE_ANGEL);
+                break;
+            case "ROLE_BLIND":
+                userEntity.setAuthority(AuthorityEntity.ROLE_BLIND);
+                break;
+        }
         userRepository.save(userEntity);
         if(role.equals("ROLE_ANGEL") && angelRepository.findByUserEntity_UserSeq(userSeq).isEmpty()){
             AngelInfoEntity angelInfoEntity = new AngelInfoEntity();
             angelInfoEntity.setUserEntity(userEntity);
+            angelInfoEntity.setAngelGender(gender);
             angelRepository.save(angelInfoEntity);
         }
 
@@ -111,6 +95,17 @@ public class UserService {
     public ResponseAngelInfoDto getInfo(){
         long userSeq = SecurityUtil.getCurrentMemberSeq();
         AngelInfoEntity angelInfoEntity = angelRepository.findByUserEntity_UserSeq(userSeq).get();
+        return AngelMapper.INSTANCE.toDto(angelInfoEntity);
+    }
+
+    public ResponseAngelInfoDto setAngelInfo(int start, int end, int day, boolean active){
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        AngelInfoEntity angelInfoEntity = angelRepository.findByUserEntity_UserSeq(userSeq).get();
+        angelInfoEntity.setAngelActive(active);
+        angelInfoEntity.setAngelAlarmStart(start);
+        angelInfoEntity.setAngelAlarmEnd(end);
+        angelInfoEntity.setAngelAlarmDay(day);
+        angelRepository.save(angelInfoEntity);
         return AngelMapper.INSTANCE.toDto(angelInfoEntity);
     }
 }

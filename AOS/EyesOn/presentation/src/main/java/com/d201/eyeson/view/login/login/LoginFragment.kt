@@ -34,11 +34,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     override fun init() {
         initListener()
-        initViewModel()
-//        initAuth()
+        initViewModelCallback()
     }
 
-    private fun initViewModel() {
+    private fun initViewModelCallback() {
         lifecycleScope.launch {
             loginViewModel.login.collectLatest {
                 when(it?.gender){
@@ -100,6 +99,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             try {
                 val account = task.getResult(ApiException::class.java)
                 Log.d(TAG, "IdToken: ${account.idToken}")
+                // 발급 받은 IdToken 을 서버로 전송
                 loginViewModel.login(account.idToken!!, "i")
             } catch (e: ApiException) {
                 Log.e(TAG, "google sign in failed: ", e)

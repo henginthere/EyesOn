@@ -10,7 +10,7 @@ spring:
     password: hy1221
 #    url: jdbc:mysql://localhost:3306/eyeson?serverTimezone=Asia/Seoul
 #    username: root
-#    password: hy1234
+#    password: 1234
 #  security:
 #    google_id_token: [ ]
 #    oauth2:

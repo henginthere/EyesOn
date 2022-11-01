@@ -1,5 +1,6 @@
 package com.d201.data.mapper
 
+import com.d201.data.model.request.AngelRequest
 import com.d201.data.model.response.AngelInfoResponse
 import com.d201.data.model.response.LoginResponse
 import com.d201.data.model.response.UserResponse
@@ -40,6 +41,17 @@ fun AngelInfoResponse.mapperToAngelInfo(): AngelInfo{
             it.helpCnt,
             it.gender,
             it.active,
+        )
+    }
+}
+
+fun AngelInfo.mapperToAngelRequest(): AngelRequest{
+    return this.let {
+        AngelRequest(
+            it.alarmStart,
+            it.alarmEnd,
+            it.alarmDay,
+            it.active
         )
     }
 }

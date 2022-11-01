@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName
 import java.time.LocalDateTime
 
 data class AngelInfoResponse(
-    @SerializedName("angelAlarmStart") val alarmStart: LocalDateTime,
-    @SerializedName("angelAlarmEnd") val alarmEnd: LocalDateTime,
+    @SerializedName("angelAlarmStart") val alarmStart: Int,
+    @SerializedName("angelAlarmEnd") val alarmEnd: Int,
     @SerializedName("angelAlarmDay") val alarmDay: Int,
     @SerializedName("angelCompCnt") val compCnt: Int,
     @SerializedName("angelHelpCnt") val helpCnt: Int,

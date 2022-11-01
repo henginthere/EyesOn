@@ -1,10 +1,7 @@
 package com.backend.eyeson.controller;
 
 
-import com.backend.eyeson.dto.GoogleLoginDto;
-import com.backend.eyeson.dto.RequestRGDto;
-import com.backend.eyeson.dto.ResponseAngelInfoDto;
-import com.backend.eyeson.dto.ResponseLoginDto;
+import com.backend.eyeson.dto.*;
 import com.backend.eyeson.repository.UserRepository;
 import com.backend.eyeson.service.UserService;
 import com.backend.eyeson.util.ResponseFrame;
@@ -115,17 +112,42 @@ public class UserController {
         // userSeq 가져오기
         long userSeq = SecurityUtil.getCurrentMemberSeq();
         userService.dropUser(userSeq);
-
         return ResponseFrame.of(HttpStatus.OK, "회원 탈퇴 성공");
 
     }
 
-    @ApiOperation(value = "엔젤 정보 반환", response = ResponseAngelInfoDto.class)
+    /**
+     * 엔젤 정보 조회
+     *
+     * @param
+     * @return Object
+     */
+    @ApiOperation(value = "엔젤 정보 조회", response = ResponseAngelInfoDto.class)
     @GetMapping("/info")
     public ResponseEntity<?> getInfo(){
         ResponseFrame<?> res;
         ResponseAngelInfoDto responseAngelInfoDto = userService.getInfo();
         res = ResponseFrame.of(responseAngelInfoDto, "정보 조회에 성공하였습니다.");
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+
+    /**
+     * 엔젤 정보 입력
+     *
+     * @param
+     * @return Object
+     */
+    @ApiOperation(value = "엔젤 정보 입력", response = ResponseAngelInfoDto.class)
+    @PutMapping("/angel")
+    public ResponseEntity<?> setAngelInfo(@RequestBody RequestAngelInfoDto requestAngelInfoDto){
+        ResponseFrame<?> res;
+        int angelAlarmStart = requestAngelInfoDto.getAngelAlarmStart();
+        int angelAlarmEnd = requestAngelInfoDto.getAngelAlarmEnd();
+        int angelAlarmDay = requestAngelInfoDto.getAngelAlarmDay();
+        boolean angelActive = requestAngelInfoDto.isAngelActive();
+        ResponseAngelInfoDto responseAngelInfoDto = userService.setAngelInfo(angelAlarmStart, angelAlarmEnd, angelAlarmDay, angelActive);
+        res = ResponseFrame.of(responseAngelInfoDto, "엔젤 정보 입력에 성공하였습니다.");
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }

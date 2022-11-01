@@ -23,11 +23,11 @@ public class ComplaintsEntity {
     private long compSeq;
 
     @ManyToOne
-    @JoinColumn(name = "blind_seq", insertable = false, updatable = false)
+    @JoinColumn(name = "blind_seq")
     private UserEntity blindUser;
 
     @ManyToOne
-    @JoinColumn(name = "angel_seq", insertable = false, updatable = false)
+    @JoinColumn(name = "angel_seq")
     private UserEntity angelUser;
 
     @Enumerated(EnumType.ORDINAL)
