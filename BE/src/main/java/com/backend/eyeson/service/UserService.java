@@ -1,6 +1,5 @@
 package com.backend.eyeson.service;
 
-
 import com.backend.eyeson.dto.ResponseAngelInfoDto;
 import com.backend.eyeson.dto.ResponseLoginDto;
 import com.backend.eyeson.entity.AngelInfoEntity;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-
 
 @Service
 @RequiredArgsConstructor
@@ -34,20 +32,6 @@ public class UserService {
         String g_id[] = email.split("@");
         String pass = g_id[0];
 
-        // 회원 가입 시 gender와 role은 default로 저장,
-
-//        // 권한 설정
-//        AuthorityEntity authorityEntity;
-//
-//        authorityEntity = AuthorityEntity.builder()
-//                .authorityName("ROLE_ADMIN")
-//                .build();
-
-//        // 권한 저장
-//        authorityRepository.save(authorityEntity);
-
-        AuthorityEntity authorityEntity;
-
         UserEntity userEntity = UserEntity.builder().
                 userFcm(fcmToken).
                 userEmail(email).
@@ -55,7 +39,6 @@ public class UserService {
                 userGender('d').
                 userDate(LocalDateTime.now()).
                 authority(AuthorityEntity.ROLE_ADMIN)
-//                authorities(Collections.singleton(authorityEntity))
                 .build();
 
         userRepository.save(userEntity);
