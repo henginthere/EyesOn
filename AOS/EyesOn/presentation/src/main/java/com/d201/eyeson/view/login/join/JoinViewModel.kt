@@ -3,7 +3,6 @@ package com.d201.eyeson.view.login.join
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.Login
 import com.d201.domain.usecase.PutUserRoleUseCase
 import com.d201.domain.utils.ResultType
@@ -17,15 +16,16 @@ import javax.inject.Inject
 
 private const val TAG = "SelectGenderViewModel"
 @HiltViewModel
-class SelectGenderViewModel @Inject constructor(private val angelInfoUseCase: PutUserRoleUseCase): ViewModel() {
+class SelectGenderViewModel @Inject constructor(private val putUserRoleUseCase: PutUserRoleUseCase): ViewModel() {
 
-    private val _login: MutableStateFlow<Login?> = MutableStateFlow(null)
-    val login get() = _login.asStateFlow()
+    private val _info: MutableStateFlow<Login?> = MutableStateFlow(null)
+    val info get() = _info.asStateFlow()
+
     fun putUserRole(role: String, gender: String){
         viewModelScope.launch(Dispatchers.IO){
-            angelInfoUseCase.excute(role, gender).collectLatest {
+            putUserRoleUseCase.execute(role, gender).collectLatest {
                 if(it is ResultType.Success && it.data.status == 200){
-                    _login.value = it.data.data
+                    _info.value = it.data.data
                 }else{
                     Log.d(TAG, "putUserRole: ${it}")
                 }
