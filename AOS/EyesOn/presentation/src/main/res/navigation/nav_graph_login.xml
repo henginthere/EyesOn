@@ -37,5 +37,11 @@
     <fragment
         android:id="@+id/joinSuccessFragment"
         android:name="com.d201.eyeson.view.login.join.JoinSuccessFragment"
-        android:label="JoinSuccessFragment" />
+        android:label="JoinSuccessFragment" >
+        <argument
+            android:name="role"
+            app:argType="string" />
+        <argument android:name="gender"
+            app:argType="string" />
+    </fragment>
 </navigation>
