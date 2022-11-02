@@ -1,5 +1,7 @@
 package com.d201.data.repository
 
+import android.util.Log
+import android.util.LogPrinter
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -13,13 +15,16 @@ import com.d201.domain.model.Complaints
 import com.d201.domain.repository.ComplaintsRepository
 import com.d201.domain.utils.ResultType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val TAG ="ComplaintsRepositoryImpl"
 @Singleton
 class ComplaintsRepositoryImpl @Inject constructor(
-    private val complaintsRemoteDataSource: ComplaintsRemoteDataSource
+    private val complaintsRemoteDataSource: ComplaintsRemoteDataSource,
+    private val complaintsApi: ComplaintsApi,
 )
     : ComplaintsRepository {
 
@@ -84,14 +89,12 @@ class ComplaintsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun selectAllComplaints(flag: Int): Flow<ResultType<PagingData<Complaints>>> = flow {
-        emit(ResultType.Loading)
+    override fun selectAllComplaints() =
         Pager(
             config = PagingConfig(pageSize = 1, maxSize = 15, enablePlaceholders = false),
-            pagingSourceFactory = { ComplaintsPagingSource(flag) }
+            pagingSourceFactory = { ComplaintsPagingSource(complaintsApi) }
         ).flow
 
-    }
 
     override fun selectComplaintsByAngel(flag: Int): Flow<ResultType<PagingData<Complaints>>> {
         TODO("Not yet implemented")

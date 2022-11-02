@@ -35,9 +35,9 @@ class AngelMainViewModel @Inject constructor(private val angelInfoUseCase: GetAn
         }
     }
 
-//    fun getCrewBoards(flag: Int): Flow<ResultType<PagingData<Complaints>>> {
-//        return selectAllCompUseCase.excute(flag).cachedIn(viewModelScope)
-//    }
+    fun getCrewBoards(flag: Int): Flow<PagingData<Complaints>> {
+        return selectAllCompUseCase.excute(flag)
+    }
 
 //    private val _complaintsList: MutableStateFlow<Int> = MutableStateFlow(0)
 //    val complaintsList = _complaintsList.switchMap {

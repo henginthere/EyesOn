@@ -1,7 +1,9 @@
 package com.d201.eyeson.module
 
+import com.d201.data.api.ComplaintsApi
 import com.d201.data.datasource.ComplaintsRemoteDataSource
 import com.d201.data.datasource.UserRemoteDataSource
+import com.d201.data.datasource.paging.ComplaintsPagingSource
 import com.d201.data.repository.ComplaintsRepositoryImpl
 import com.d201.data.repository.UserRepositoryImpl
 import com.d201.domain.repository.ComplaintsRepository
@@ -27,8 +29,9 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideComplaintsRepository(
-        complaintsRemoteDataSource: ComplaintsRemoteDataSource
+        complaintsRemoteDataSource: ComplaintsRemoteDataSource,
+        complaintsApi: ComplaintsApi,
     ): ComplaintsRepository{
-        return ComplaintsRepositoryImpl(complaintsRemoteDataSource)
+        return ComplaintsRepositoryImpl(complaintsRemoteDataSource, complaintsApi)
     }
 }

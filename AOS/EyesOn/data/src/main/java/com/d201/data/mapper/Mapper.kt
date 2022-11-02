@@ -3,17 +3,13 @@ package com.d201.data.mapper
 import com.d201.data.model.request.AngelRequest
 import com.d201.data.model.request.ComplaintsRequest
 import com.d201.data.model.response.AngelInfoResponse
-import com.d201.data.model.response.ComplaintsResponse
+import com.d201.data.model.response.ResponseCompDto
 import com.d201.data.model.response.LoginResponse
 import com.d201.data.model.response.UserResponse
 import com.d201.domain.model.AngelInfo
 import com.d201.domain.model.Complaints
 import com.d201.domain.model.Login
 import com.d201.domain.model.User
-import com.fasterxml.jackson.core.TreeNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import java.util.function.Function
-import java.util.stream.Collectors
 
 fun UserResponse.mapperToUser(): User {
     return this.let {
@@ -77,7 +73,7 @@ fun Complaints.mapperToComplaintsRequest(): ComplaintsRequest{
     }
 }
 
-fun ComplaintsResponse.mapperToComplaints(): Complaints{
+fun ResponseCompDto.mapperToComplaints(): Complaints{
     return this.let {
         Complaints(
             it.seq,
@@ -93,7 +89,7 @@ fun ComplaintsResponse.mapperToComplaints(): Complaints{
     }
 }
 
-fun List<ComplaintsResponse>.mapperToListComplaints(): List<Complaints>{
+fun List<ResponseCompDto>.mapperToListComplaints(): List<Complaints>{
     return this.let {
         it.map {
             it.mapperToComplaints()

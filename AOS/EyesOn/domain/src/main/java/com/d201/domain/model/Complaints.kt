@@ -5,12 +5,12 @@ import java.time.LocalDateTime
 
 data class Complaints(
     val seq: Long,
-    val address: String,
-    val content: String,
-    val image: String,
-    val regTime: LocalDateTime,
-    val resultContent: String,
-    val returnContent: String,
-    val state: Int,
-    val title: String
+    val address: String?,
+    val content: String?,
+    val image: String?,
+    val regTime: String?,
+    val resultContent: String?,
+    val returnContent: String?,
+    val state: String?,
+    val title: String?
 )
