@@ -89,9 +89,9 @@ public class HelpService {
             char[] chArray = res.toCharArray();
             
             // 요일에 있고 시간안에 있으면 배열에 추가
-            if(chArray[days] == '1' && (angelInfoEntity.getAngelAlarmStart().getHour() <= hour && angelInfoEntity.getAngelAlarmEnd().getHour() >= hour)){
-                System.out.println("시작 시간 : " + angelInfoEntity.getAngelAlarmStart().getHour());
-                System.out.println("끝나는 시간 : " + angelInfoEntity.getAngelAlarmEnd().getHour());
+            if(chArray[days] == '1' && (angelInfoEntity.getAngelAlarmStart()) <= hour && angelInfoEntity.getAngelAlarmEnd() >= hour){
+                System.out.println("시작 시간 : " + angelInfoEntity.getAngelAlarmStart());
+                System.out.println("끝나는 시간 : " + angelInfoEntity.getAngelAlarmEnd());
                 System.out.println("지금 시간 : " + hour);
                 System.out.println("요일 : " + days);
                 canAngelList.add(angelInfoEntity);
@@ -114,16 +114,6 @@ public class HelpService {
         else return true;
     }
 
-    // 도움 응답
-    public long responseHelp(String email) {
-        // 이메일로 사용자 seq 찾기
-        Optional<UserEntity> userEntity = userRepository.findByUserEmail(email);
-        if (!userEntity.isPresent()) {
-            return -1;
-        } else {
-            return userEntity.get().getUserSeq();
-        }
-    }
 
     // 도움 종료
     public boolean finishHelp(long userSeq) {

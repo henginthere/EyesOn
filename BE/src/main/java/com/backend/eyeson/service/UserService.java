@@ -78,6 +78,7 @@ public class UserService {
         if(role.equals("ROLE_ANGEL") && angelRepository.findByUserEntity_UserSeq(userSeq).isEmpty()){
             AngelInfoEntity angelInfoEntity = new AngelInfoEntity();
             angelInfoEntity.setUserEntity(userEntity);
+            angelInfoEntity.setAngelGender(gender);
             angelRepository.save(angelInfoEntity);
         }
 
@@ -94,6 +95,17 @@ public class UserService {
     public ResponseAngelInfoDto getInfo(){
         long userSeq = SecurityUtil.getCurrentMemberSeq();
         AngelInfoEntity angelInfoEntity = angelRepository.findByUserEntity_UserSeq(userSeq).get();
+        return AngelMapper.INSTANCE.toDto(angelInfoEntity);
+    }
+
+    public ResponseAngelInfoDto setAngelInfo(int start, int end, int day, boolean active){
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        AngelInfoEntity angelInfoEntity = angelRepository.findByUserEntity_UserSeq(userSeq).get();
+        angelInfoEntity.setAngelActive(active);
+        angelInfoEntity.setAngelAlarmStart(start);
+        angelInfoEntity.setAngelAlarmEnd(end);
+        angelInfoEntity.setAngelAlarmDay(day);
+        angelRepository.save(angelInfoEntity);
         return AngelMapper.INSTANCE.toDto(angelInfoEntity);
     }
 }
