@@ -100,4 +100,11 @@ dependencies {
 
     // FCM
     implementation 'com.google.firebase:firebase-messaging-ktx:23.1.0'
+
+    // webrtc
+    implementation 'org.webrtc:google-webrtc:'
+    implementation 'com.neovisionaries:nv-websocket-client:2.9'
+
+    // Permission
+    implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
 }
