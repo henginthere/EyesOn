@@ -1,5 +1,7 @@
 package com.backend.eyeson.controller;
 
+import com.backend.eyeson.dto.Token;
+import com.backend.eyeson.service.FirebaseService;
 import com.backend.eyeson.service.HelpService;
 import com.backend.eyeson.util.ResponseFrame;
 import com.backend.eyeson.util.SecurityUtil;
@@ -21,6 +23,8 @@ public class HelpController {
 
     // 시각장애인 userSeq 저장 Queue
     Queue<Long> blindQueue = new LinkedList<>();
+
+    private final FirebaseService firebaseService;
 
 
     private final HelpService helpService;
@@ -101,6 +105,13 @@ public class HelpController {
         }else {
             return ResponseFrame.of(HttpStatus.OK, "도움 종료 성공");
         }
+    }
+
+
+    @ApiOperation(value = "알림 테스트")
+    @PostMapping("/alarm")
+    public void checkAlarm(@RequestBody Token token) throws IOException {
+        firebaseService.sendMessageTo(token.getFcmToken(), token.getTitle(), token.getBody());
     }
 }
 
