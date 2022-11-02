@@ -8,6 +8,7 @@ import com.d201.eyeson.databinding.ActivityAngelMainBinding
 import com.d201.eyeson.view.blind.BlindMainFragment
 import dagger.hilt.android.AndroidEntryPoint
 
+private const val TAG = "AngelMainActivity"
 @AndroidEntryPoint
 class AngelMainActivity : BaseActivity<ActivityAngelMainBinding>(R.layout.activity_angel_main){
     private lateinit var navHostFragment: NavHostFragment

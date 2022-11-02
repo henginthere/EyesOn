@@ -6,8 +6,10 @@ import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentSelectRoleBinding
 import com.d201.eyeson.util.ANGEL
 import com.d201.eyeson.util.BLIND
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "SelectRoleFragment"
+@AndroidEntryPoint
 class SelectRoleFragment : BaseFragment<FragmentSelectRoleBinding>(R.layout.fragment_select_role) {
 
     override fun init() {

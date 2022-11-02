@@ -1,12 +1,10 @@
 package com.d201.eyeson.view.login
 
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.Login
 import com.d201.domain.usecase.LoginUseCase
 import com.d201.domain.utils.ResultType
@@ -17,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
 
 private const val TAG = "LoginViewModel"
