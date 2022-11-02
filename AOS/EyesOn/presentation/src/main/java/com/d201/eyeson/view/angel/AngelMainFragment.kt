@@ -3,6 +3,7 @@ package com.d201.eyeson.view.angel
 import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelMainBinding
@@ -16,11 +17,23 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
 
     private val angelMainViewModel: AngelMainViewModel by viewModels()
     override fun init() {
-        initViewModel()
+        initListener()
+        initViewModelCallback()
         angelMainViewModel.getAngelInfo()
     }
 
-    private fun initViewModel(){
+    private fun initListener() {
+        binding.apply {
+            btnSetting.setOnClickListener {
+                findNavController().navigate(AngelMainFragmentDirections.actionAngelMainFragmentToAngelSettingFragment())
+            }
+            btnComplaintsList.setOnClickListener {
+                findNavController().navigate(AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsListFragment())
+            }
+        }
+    }
+
+    private fun initViewModelCallback(){
         lifecycleScope.launch{
             angelMainViewModel.apply {
                 angelInfo.collectLatest {
