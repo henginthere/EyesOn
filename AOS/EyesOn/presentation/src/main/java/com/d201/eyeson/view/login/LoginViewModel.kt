@@ -27,6 +27,7 @@ class LoginViewModel @Inject constructor(
     val login get() = _login.asStateFlow()
 
     fun login(idToken: String, fcmToken: String){
+        Log.d(TAG, "login: $idToken \n $fcmToken")
         viewModelScope.launch(Dispatchers.IO) {
             loginUseCase.execute(idToken, fcmToken).collectLatest {
                 if(it is ResultType.Success && it.data.status == 200){
