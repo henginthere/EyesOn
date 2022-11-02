@@ -26,6 +26,10 @@ class BlindMainFragment : BaseFragment<FragmentBlindMainBinding>(R.layout.fragme
                 findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToBlindNotificationFragment())
             }
 
+            btnSetting.setOnClickListener {
+                findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToBlindSettingFragment())
+            }
+
             btnScanText.setOnClickListener {
                 startActivity(Intent(requireContext(), ScanTextActivity::class.java))
             }
@@ -34,6 +38,12 @@ class BlindMainFragment : BaseFragment<FragmentBlindMainBinding>(R.layout.fragme
             }
             btnScanObstacle.setOnClickListener {
                 startActivity(Intent(requireContext(), ScanObstacleActivity::class.java))
+            }
+            btnHelp.setOnClickListener {
+                findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToHelperSelectFragment())
+            }
+            btnComplaints.setOnClickListener {
+                findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToHelperSelectFragment())
             }
         }
     }
