@@ -10,7 +10,6 @@ private const val TAG = "HelperSelectFragment"
 class HelperSelectFragment : BaseFragment<FragmentHelperSelectBinding>(R.layout.fragment_helper_select) {
 
     override fun init() {
-        TODO("Not yet implemented")
     }
 
 }

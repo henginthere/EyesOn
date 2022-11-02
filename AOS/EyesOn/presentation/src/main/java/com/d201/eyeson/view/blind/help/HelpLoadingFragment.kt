@@ -10,7 +10,6 @@ private const val TAG = "HelpLoadingFragment"
 class HelpLoadingFragment : BaseFragment<FragmentHelpLoadingBinding>(R.layout.fragment_help_loading) {
 
     override fun init() {
-        TODO("Not yet implemented")
     }
 
 }

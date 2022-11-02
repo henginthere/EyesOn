@@ -10,7 +10,6 @@ private const val TAG = "BlindNotificationFragment"
 class BlindNotificationFragment : BaseFragment<FragmentBlindNotificationBinding>(R.layout.fragment_blind_notification) {
 
     override fun init() {
-        TODO("Not yet implemented")
     }
 
 }

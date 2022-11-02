@@ -1,6 +1,7 @@
 package com.d201.eyeson.module
 
 
+import com.d201.data.api.ComplaintsApi
 import com.d201.data.api.UserApi
 import com.d201.eyeson.util.BASE_URL
 import com.d201.eyeson.util.XAccessTokenInterceptor
@@ -14,6 +15,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -63,5 +65,11 @@ object RemoteDataModule {
     @Singleton
     fun provideUserApi(@Named("mainRetrofit") retrofit: Retrofit): UserApi {
         return retrofit.create(UserApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideComplaintsApi(@Named("mainRetrofit")retrofit: Retrofit): ComplaintsApi{
+        return retrofit.create(ComplaintsApi::class.java)
     }
 }

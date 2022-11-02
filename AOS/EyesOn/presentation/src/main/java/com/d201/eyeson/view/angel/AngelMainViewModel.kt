@@ -3,20 +3,21 @@ package com.d201.eyeson.view.angel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.d201.domain.model.AngelInfo
+import com.d201.domain.model.Complaints
+import com.d201.domain.usecase.complaints.SelectAllCompUseCase
 import com.d201.domain.usecase.user.GetAngelInfoUseCase
 import com.d201.domain.utils.ResultType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG ="AngelMainViewModel"
 @HiltViewModel
-class AngelMainViewModel @Inject constructor(private val angelInfoUseCase: GetAngelInfoUseCase): ViewModel(){
+class AngelMainViewModel @Inject constructor(private val angelInfoUseCase: GetAngelInfoUseCase, private val selectAllCompUseCase: SelectAllCompUseCase): ViewModel(){
 
     private val _angelInfo: MutableStateFlow<AngelInfo?> = MutableStateFlow(null)
     val angelInfo get() = _angelInfo.asStateFlow()
@@ -33,4 +34,17 @@ class AngelMainViewModel @Inject constructor(private val angelInfoUseCase: GetAn
             }
         }
     }
+
+//    fun getCrewBoards(flag: Int): Flow<ResultType<PagingData<Complaints>>> {
+//        return selectAllCompUseCase.excute(flag).cachedIn(viewModelScope)
+//    }
+
+//    private val _complaintsList: MutableStateFlow<Int> = MutableStateFlow(0)
+//    val complaintsList = _complaintsList.switchMap {
+//        selectAllCompUseCase.excute(it).
+//    }
+//    fun selectComplaints(flag: Int){
+//
+//    }
+
 }

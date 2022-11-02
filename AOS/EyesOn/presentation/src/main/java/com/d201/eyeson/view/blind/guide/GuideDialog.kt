@@ -11,7 +11,6 @@ private const val TAG = "GuideDialog"
 class GuideDialog : BaseDialogFragment<DialogGuideBinding>(R.layout.dialog_guide) {
 
     override fun init() {
-        TODO("Not yet implemented")
     }
 
 }

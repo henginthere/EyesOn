@@ -85,13 +85,12 @@ class ComplaintsRepositoryImpl @Inject constructor(
     }
 
     override fun selectAllComplaints(flag: Int): Flow<ResultType<PagingData<Complaints>>> = flow {
-//        emit(ResultType.Loading)
-//        emit(ResultType.Success(
-//            Pager(
-//                config = PagingConfig(pageSize = 1, maxSize = 15, enablePlaceholders = false),
-//                pagingSourceFactory = { ComplaintsPagingSource(complaintsApi, 0)}
-//            ).flow
-//        ))
+        emit(ResultType.Loading)
+        Pager(
+            config = PagingConfig(pageSize = 1, maxSize = 15, enablePlaceholders = false),
+            pagingSourceFactory = { ComplaintsPagingSource(flag) }
+        ).flow
+
     }
 
     override fun selectComplaintsByAngel(flag: Int): Flow<ResultType<PagingData<Complaints>>> {
