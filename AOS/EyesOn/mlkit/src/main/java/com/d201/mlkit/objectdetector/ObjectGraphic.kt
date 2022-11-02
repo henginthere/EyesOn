@@ -20,6 +20,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.util.Log
 import com.d201.mlkit.GraphicOverlay
 import com.google.mlkit.vision.objects.DetectedObject
 import java.util.*
@@ -28,6 +29,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 /** Draw the detected object info in preview.  */
+private const val TAG = "ObjectGraphic"
 class ObjectGraphic constructor(
     overlay: GraphicOverlay,
     private val detectedObject: DetectedObject
@@ -84,6 +86,7 @@ class ObjectGraphic constructor(
 
         // Draws the bounding box.
         val rect = RectF(detectedObject.boundingBox)
+        Log.d(TAG,"88888left: "+rect.left.toString()+"right: "+rect.right+"top: "+rect.top+"bottom: "+rect.bottom)
         val x0 = translateX(rect.left)
         val x1 = translateX(rect.right)
         rect.left = min(x0, x1)
@@ -91,6 +94,7 @@ class ObjectGraphic constructor(
         rect.top = translateY(rect.top)
         rect.bottom = translateY(rect.bottom)
         canvas.drawRect(rect, boxPaints[colorID])
+        Log.d(TAG,"left: "+rect.left.toString()+"right: "+rect.right+"top: "+rect.top+"bottom: "+rect.bottom)
 
         // Draws other object info.
         canvas.drawRect(
@@ -100,6 +104,8 @@ class ObjectGraphic constructor(
             rect.top,
             labelPaints[colorID]
         )
+        Log.d(TAG,"left: "+(rect.left - STROKE_WIDTH).toString()+", right: "+(rect.left + textWidth + 2 * STROKE_WIDTH).toString()+", top: "+ (rect.top + yLabelOffset).toString()+", bottom: "+rect.top.toString())
+
         yLabelOffset += TEXT_SIZE
         canvas.drawText(
             "Tracking ID: " + detectedObject.trackingId,

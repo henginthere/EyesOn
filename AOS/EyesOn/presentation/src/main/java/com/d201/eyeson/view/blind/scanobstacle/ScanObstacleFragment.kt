@@ -43,7 +43,7 @@ private const val TAG = "ScanObstacleFragment"
 @AndroidEntryPoint
 class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.fragment_scan_obstacle),
     GLSurfaceView.Renderer, TextToSpeech.OnInitListener {
-    private lateinit var tts: TextToSpeech
+    //private lateinit var tts: TextToSpeech
 
     private var graphicOverlay: GraphicOverlay? = null
     private var imageProcessor: VisionProcessorBase<*>? = null
@@ -121,7 +121,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
         graphicOverlay = binding.graphicOverlay
         graphicOverlay!!.bringToFront()
-        tts = TextToSpeech(requireContext(), this)
+       // tts = TextToSpeech(requireContext(), this)
     }
 
     // MLKit
@@ -242,9 +242,9 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         surfaceView.onResume()
         displayRotationHelper!!.onResume()
 
-        objectImageProcessor!!.resultData.observe(this){
-            speakOut(it)
-        }
+//        objectImageProcessor!!.resultData.observe(this){
+//            speakOut(it)
+//        }
 
     }
 
@@ -257,7 +257,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             displayRotationHelper!!.onPause()
             surfaceView.onPause()
             session!!.pause()
-            tts.stop()
+       //     tts.stop()
         }
     }
 
@@ -309,12 +309,15 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     override fun onDrawFrame(gl: GL10?) {
         // Clear screen to notify driver it should not load any pixels from previous frame.
+        // 이전 프레임에서 픽셀을 로드하지 않도록 드라이버에 알리기 위해 화면을 지웁니다.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         if (session == null) {
             return
         }
         // Notify ARCore session that the view size changed so that the perspective matrix and
         // the video background can be properly adjusted.
+        // 뷰 크기가 변경되었음을 ARCore 세션에 알립니다.
+        // 비디오 배경을 적절하게 조정할 수 있습니다.
         displayRotationHelper!!.updateSessionIfNeeded(session!!)
         try {
             session!!.setCameraTextureName(backgroundRenderer.getTextureId())
@@ -322,28 +325,35 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // Obtain the current frame from ARSession. When the configuration is set to
             // UpdateMode.BLOCKING (it is by default), this will throttle the rendering to the
             // camera framerate.
+            //  ARSession에서 현재 프레임을 가져옵니다.
+            //  구성이 UpdateMode.BLOCKING(기본값)으로 설정되면 렌더링이 카메라 프레임 속도로 조절됩니다.
             val frame = session!!.update()
             val camera = frame.camera
 
             // Retrieves the latest depth image for this frame.
+            // 이 프레임의 최신 깊이 이미지를 검색합니다.
             if (isDepthSupported) {
                 depthTexture.update(frame)
 //                Log.d(TAG, "onDrawFrame: ${getMillimetersDepth(frame.acquireDepthImage16Bits(), 0, 0)}")
             }
 
             // Handle one tap per frame.
+            // 프레임당 하나의 탭을 처리합니다.
 //            handleTap(frame, camera)
 
             // If frame is ready, render camera preview image to the GL surface.
+            // 프레임이 준비되면 카메라 미리보기 이미지를 GL 표면으로 렌더링합니다.
             backgroundRenderer.draw(frame)
             if (showDepthMap) {
                 backgroundRenderer.drawDepth(frame)
             }
 
             // Keep the screen unlocked while tracking, but allow it to lock when tracking stops.
+            // 추적하는 동안 화면을 잠금 해제 상태로 유지하지만 추적이 중지되면 화면이 잠길 수 있습니다.
             trackingStateHelper.updateKeepScreenOnFlag(camera.trackingState)
 
             // If not tracking, don't draw 3D objects, show tracking failure reason instead.
+            // 추적하지 않는 경우 3D 개체를 그리지 않고 대신 추적 실패 이유를 표시합니다.
             if (camera.trackingState == TrackingState.PAUSED) {
                 messageSnackbarHelper.showMessage(
                     requireActivity(), TrackingStateHelper(requireActivity()).getTrackingFailureReasonString(camera)!!
@@ -362,6 +372,9 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // Compute lighting from average intensity of the image.
             // The first three components are color scaling factors.
             // The last one is the average pixel intensity in gamma space.
+            // 이미지의 평균 강도에서 조명을 계산합니다.
+            // 처음 세 가지 구성 요소는 색상 스케일링 요소입니다.
+            // 마지막은 감마 공간의 평균 픽셀 강도입니다.
             val colorCorrectionRgba = FloatArray(4)
             frame.lightEstimate.getColorCorrection(colorCorrectionRgba, 0)
 
@@ -395,16 +408,20 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             messageSnackbarHelper.showMessage(requireActivity(), messageToShow)
 
             // Visualize anchors created by touch.
+            // 터치로 생성된 앵커를 시각화합니다.
             val scaleFactor = 1.0f
             for (anchor in anchors) {
                 if (anchor.trackingState != TrackingState.TRACKING) {
                     continue
                 }
-                // Get the current pose of an Anchor in world space. The Anchor pose is updated
-                // during calls to session.update() as ARCore refines its estimate of the world.
+                // Get the current pose of an Anchor in world space.
+                // The Anchor pose is updated during calls to session.update() as ARCore refines its estimate of the world.
+                // 세계 공간에서 앵커의 현재 포즈를 가져옵니다.
+                // 앵커 포즈는 ARCore가 세계 추정치를 구체화함에 따라 session.update()를 호출하는 동안 업데이트됩니다.
                 anchor.pose.toMatrix(anchorMatrix, 0)
 
                 // Update and draw the model and its shadow.
+                // 모델과 그림자를 업데이트하고 그립니다.
                 virtualObject.updateModelMatrix(anchorMatrix, scaleFactor)
                 virtualObject.draw(
                     viewmtx,
@@ -417,6 +434,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
         } catch (t: Throwable) {
             // Avoid crashing the application due to unhandled exceptions.
+            // 처리되지 않은 예외로 인한 애플리케이션 충돌을 방지합니다.
             Log.e(
                 TAG,
                 "Exception on the OpenGL thread",
@@ -534,19 +552,19 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     }
 
     override fun onInit(p0: Int) {
-        if(p0 == TextToSpeech.SUCCESS) {
-            tts.setLanguage(Locale.KOREAN)
-            tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-                override fun onStart(p0: String?) {}
-                override fun onDone(p0: String?) {}
-                override fun onError(p0: String?) {}
-            })
-        }
+//        if(p0 == TextToSpeech.SUCCESS) {
+//            tts.setLanguage(Locale.KOREAN)
+//            tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+//                override fun onStart(p0: String?) {}
+//                override fun onDone(p0: String?) {}
+//                override fun onError(p0: String?) {}
+//            })
+//        }
     }
 
     fun speakOut(text: String) {
-        tts.setPitch(1f)
-        tts.setSpeechRate(1f)
-        tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
+//        tts.setPitch(1f)
+//        tts.setSpeechRate(1f)
+//        tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
     }
 }

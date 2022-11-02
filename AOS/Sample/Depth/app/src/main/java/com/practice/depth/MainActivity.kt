@@ -327,12 +327,14 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer, TextToSpeech.O
 
     override fun onDrawFrame(gl: GL10?) {
         // Clear screen to notify driver it should not load any pixels from previous frame.
+        // 이전 프레임에서 픽셀을 로드하지 않도록 드라이버에 알리기 위해 화면을 지웁니다.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         if (session == null) {
             return
         }
         // Notify ARCore session that the view size changed so that the perspective matrix and
         // the video background can be properly adjusted.
+        // ARCore 세션에 보기 크기가 변경되어 원근 매트릭스와 비디오 배경이 적절하게 조정될 수 있음을 알립니다.
         displayRotationHelper!!.updateSessionIfNeeded(session!!)
         try {
             session!!.setCameraTextureName(backgroundRenderer.getTextureId())
