@@ -42,8 +42,9 @@ public class ComplaintsController {
     @ApiParam(value = "신청 민원 전체 조회")
     @GetMapping(value = "/list")
     public ResponseEntity<?> listAll(@PageableDefault Pageable pageable) throws Exception{
+        System.out.println("######################################################################################");
         PagingResult result = compService.listAll(pageable);
-
+        System.out.println(result);
         return new ResponseEntity<>(ResponseFrame.of(result, "신청 민원 전체 조회"), HttpStatus.OK);
     }
 
@@ -51,7 +52,8 @@ public class ComplaintsController {
     @GetMapping(value = "/list/angel")
     public ResponseEntity<?> listAngel(@PageableDefault Pageable pageable) throws Exception{
         PagingResult result = compService.listAngel(pageable);
-
+        ResponseFrame res = ResponseFrame.of(result, "민원 조회");
+        System.out.println(res);
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 조회"), HttpStatus.OK);
     }
 
