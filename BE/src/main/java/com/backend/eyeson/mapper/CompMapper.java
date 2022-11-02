@@ -2,6 +2,7 @@ package com.backend.eyeson.mapper;
 
 import com.backend.eyeson.dto.ComplaintsDto;
 import com.backend.eyeson.dto.RequestCompDto;
+import com.backend.eyeson.dto.ResponseCompDto;
 import com.backend.eyeson.entity.ComplaintsEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,4 +24,7 @@ public interface CompMapper{
     @Mapping(target="compRegtime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target="compAddress", ignore = true)
     ComplaintsEntity toEntity(RequestCompDto requestCompDto);
+
+    ResponseCompDto toDto(ComplaintsEntity complaintsEntity);
+
 }

@@ -1,5 +1,6 @@
 package com.backend.eyeson.repository;
 
+import com.backend.eyeson.dto.ComplaintsDto;
 import com.backend.eyeson.entity.CompStateEnum;
 import com.backend.eyeson.entity.ComplaintsEntity;
 import com.backend.eyeson.entity.UserEntity;
@@ -14,7 +15,11 @@ import java.util.Optional;
 @Repository
 public interface CompRepository extends JpaRepository<ComplaintsEntity, Long> {
     Optional<ComplaintsEntity> findByAngelUser(UserEntity angelUser);
-    Page<ComplaintsEntity> findAllByCompStateOrderByCompSeq(CompStateEnum stateEnum, Pageable pageable);
+    Page<ComplaintsEntity> findAllByCompStateOrderByCompSeqAsc(CompStateEnum stateEnum, Pageable pageable);
+    Page<ComplaintsEntity> findAllByAngelUserOrderByCompSeqAsc(UserEntity angelUser, Pageable pageable);
+    Page<ComplaintsEntity> findAllByBlindUserOrderByCompSeqAsc(UserEntity blindUser, Pageable pageable);
+
+    Optional<ComplaintsEntity> findByCompSeq(long compSeq);
 
 
 }
