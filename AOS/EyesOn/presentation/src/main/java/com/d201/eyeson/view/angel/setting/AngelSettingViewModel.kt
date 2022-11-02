@@ -16,14 +16,14 @@ import javax.inject.Inject
 
 private const val TAG = "AngelSettingViewModel"
 @HiltViewModel
-class AngelSettingViewModel @Inject constructor(private val angelInfoUseCase: PutAngelInfoUseCase): ViewModel() {
+class AngelSettingViewModel @Inject constructor(private val putAngelInfoUseCase: PutAngelInfoUseCase): ViewModel() {
 
     private val _angelInfo: MutableStateFlow<AngelInfo?> = MutableStateFlow(null)
     val angelInfo get() = _angelInfo.asStateFlow()
 
     fun putAngelInfo(alarmStart: Int, alarmEnd: Int, alarmDay: Int, active: Boolean){
         viewModelScope.launch(Dispatchers.IO){
-            angelInfoUseCase.excute(AngelInfo(alarmStart, alarmEnd, alarmDay, active)).collectLatest {
+            putAngelInfoUseCase.execute(AngelInfo(alarmStart, alarmEnd, alarmDay, active)).collectLatest {
                 if(it is ResultType.Success && it.data.status == 200){
                     _angelInfo.value = it.data.data
                 }else{

@@ -7,6 +7,7 @@ import com.d201.eyeson.base.BaseActivity
 import com.d201.eyeson.databinding.ActivityBlindMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+private const val TAG = "BlindMainActivity"
 @AndroidEntryPoint
 class BlindMainActivity : BaseActivity<ActivityBlindMainBinding>(R.layout.activity_blind_main) {
     private lateinit var navHostFragment: NavHostFragment

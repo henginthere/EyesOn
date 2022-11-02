@@ -21,6 +21,7 @@ class SelectGenderFragment : BaseFragment<FragmentSelectGenderBinding>(R.layout.
 
     private val viewModel: SelectGenderViewModel by viewModels()
     private val args: SelectGenderFragmentArgs by navArgs()
+
     override fun init() {
         if(args.role.isEmpty()){
             startActivity(Intent(requireContext(), LoginActivity::class.java))
@@ -43,9 +44,9 @@ class SelectGenderFragment : BaseFragment<FragmentSelectGenderBinding>(R.layout.
 
     private fun initViewModel(){
         lifecycleScope.launch {
-            viewModel.login.collectLatest {
+            viewModel.info.collectLatest {
                 if(it != null) {
-                    findNavController().navigate(SelectGenderFragmentDirections.actionSelectGenderFragmentToJoinSuccessFragment())
+                    findNavController().navigate(SelectGenderFragmentDirections.actionSelectGenderFragmentToJoinSuccessFragment(it.role, it.gender))
                 }
             }
         }
