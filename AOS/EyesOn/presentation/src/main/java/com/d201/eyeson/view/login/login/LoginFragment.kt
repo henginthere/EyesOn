@@ -1,10 +1,15 @@
 package com.d201.eyeson.view.login.login
 
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -22,33 +27,66 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.ar.core.dependencies.e
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 private const val TAG = "LoginFragment"
+
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login) {
-    private val loginViewModel : LoginViewModel by viewModels()
-    private lateinit var mGoogleSignInClient : GoogleSignInClient
+    private val loginViewModel: LoginViewModel by viewModels()
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
+
+    private var fcmToken = ""
 
     override fun init() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel("EyesOn_id", "EyesOn")
+        }
+        initFirebaseTokenListener()
         initListener()
         initViewModelCallback()
+    }
+
+    private fun initFirebaseTokenListener() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d(TAG, "FCM Token: ${it.result}")
+                fcmToken = it.result
+            } else {
+                Log.d(TAG, "FCM 토큰 얻기 실패", it.exception)
+            }
+        })
     }
 
     private fun initViewModelCallback() {
         lifecycleScope.launch {
             loginViewModel.login.collectLatest {
-                when(it?.gender){
+                when (it?.gender) {
                     GENDER_DEFAULT -> {
                         Log.d(TAG, "initViewModel: ${it}")
                         findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSelectRoleFragment())
                     }
                     else -> {
-                        when(it?.role){
-                            BLIND -> startActivity(Intent(requireContext(), BlindMainActivity::class.java))
-                            ANGEL -> startActivity(Intent(requireContext(), AngelMainActivity::class.java))
+                        when (it?.role) {
+                            BLIND -> startActivity(
+                                Intent(
+                                    requireContext(),
+                                    BlindMainActivity::class.java
+                                )
+                            )
+                            ANGEL -> startActivity(
+                                Intent(
+                                    requireContext(),
+                                    AngelMainActivity::class.java
+                                )
+                            )
                             else -> return@collectLatest
                         }
                         requireActivity().finish()
@@ -58,13 +96,22 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         }
     }
 
-
-    private fun initListener(){
+    private fun initListener() {
         binding.apply {
             sbLogin.setOnClickListener {
                 initAuth()
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel(channelId: String, channelName: String) {
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelId, channelName, importance)
+
+        val notificationManager =
+            requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     private fun initAuth() {
@@ -74,8 +121,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             .requestEmail() // 인증 방식: gmail
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
-
-        //mAuth = FirebaseAuth.getInstance()
 
         // Google에서 제공되는 signInIntent를 이용해서 인증 시도
         val signInIntent = mGoogleSignInClient!!.signInIntent
@@ -93,14 +138,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             "GoogleLoginActivityResult : ${activityResult.resultCode}, RESULT_OK : ${AppCompatActivity.RESULT_OK}"
         )
         if (activityResult.resultCode == Activity.RESULT_OK) {
-            // 인증 결과 획득
+
+            // 구글 인증 결과 획득
             val task = GoogleSignIn.getSignedInAccountFromIntent(activityResult.data)
 
             try {
                 val account = task.getResult(ApiException::class.java)
-                Log.d(TAG, "IdToken: ${account.idToken}")
-                // 발급 받은 IdToken 을 서버로 전송
-                loginViewModel.login(account.idToken!!, "i")
+
+                Log.d(TAG, "Id Token: ${account.idToken}")
+
+                // 발급 받은 IdToken 과 FcmToken 을 서버로 전송
+                loginViewModel.login(account.idToken!!, fcmToken)
+
             } catch (e: ApiException) {
                 Log.e(TAG, "google sign in failed: ", e)
             }
