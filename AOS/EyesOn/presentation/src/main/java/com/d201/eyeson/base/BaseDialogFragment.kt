@@ -13,8 +13,7 @@ import androidx.fragment.app.DialogFragment
 import com.d201.arcore.depth.common.getDeviceSize
 
 abstract class BaseDialogFragment<T : ViewDataBinding>(
-    @LayoutRes val layoutResId: Int,
-    private val widthRatio : Double = 0.9
+    @LayoutRes val layoutResId: Int
 ) : DialogFragment() {
     private var _binding: T? = null
     protected val binding get() = _binding!!
@@ -41,8 +40,8 @@ abstract class BaseDialogFragment<T : ViewDataBinding>(
         // 앱을 실행한 디바이스의 가로, 세로 크기를 가져온다.
         val deviceWidth = getDeviceSize(requireActivity()).x
 
-        // 다이얼로그 크기를 디바이스 가로의 일정 비율로 설정한다.
-        params?.width = (deviceWidth * widthRatio).toInt()
+        // 다이얼로그 크기를 디바이스 가로의 90%로 설정한다.
+        params?.width = (deviceWidth * 0.9).toInt()
         dialog?.window?.attributes = params as WindowManager.LayoutParams
     }
 
