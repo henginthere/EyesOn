@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +35,9 @@ public class ComplaintsController {
     private final CompService compService;
 
     @ApiParam(value = "민원 등록")
-    @PostMapping(value = "/register")
-    public ResponseEntity<?> registerCom(@RequestBody RequestCompDto params, MultipartFile imgfile) throws Exception{
-        boolean result = compService.registerCom(params);
+    @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> registerCom(@RequestPart(value = "params", contentType = "") RequestCompDto params, @RequestPart(value="file", required = false) MultipartFile multipartFile) throws Exception{
+        boolean result = compService.registerCom(params, multipartFile);
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 등록 성공"), HttpStatus.OK);
     }
 
