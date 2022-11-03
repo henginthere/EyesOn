@@ -36,7 +36,7 @@ public class ComplaintsController {
 
     @ApiParam(value = "민원 등록")
     @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> registerCom(@RequestPart(value = "params", contentType = "") RequestCompDto params, @RequestPart(value="file", required = false) MultipartFile multipartFile) throws Exception{
+    public ResponseEntity<?> registerCom(@RequestPart(value = "params") RequestCompDto params, @RequestPart(value="file", required = false) MultipartFile multipartFile) throws Exception{
         boolean result = compService.registerCom(params, multipartFile);
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 등록 성공"), HttpStatus.OK);
     }
