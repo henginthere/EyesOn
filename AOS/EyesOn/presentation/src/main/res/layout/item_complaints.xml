@@ -5,9 +5,12 @@
             name="data"
             type="com.d201.domain.model.Complaints" />
     </data>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="400dp">
+    android:layout_height="400dp"
+    android:id="@+id/layout_complaints"
+    >
 
     <TextView
         android:id="@+id/tv_address"

@@ -1,6 +1,5 @@
 package com.d201.eyeson.view.angel
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -10,10 +9,13 @@ import com.d201.domain.model.Complaints
 import com.d201.eyeson.databinding.ItemComplaintsBinding
 
 private const val TAG ="AngelMainAdapter"
-class AngelMainAdapter: PagingDataAdapter<Complaints, AngelMainAdapter.ViewHolder>(diffUtil) {
+class AngelMainAdapter(private val complaintsClickListener: ComplaintsClickListener): PagingDataAdapter<Complaints, AngelMainAdapter.ViewHolder>(diffUtil) {
     inner class ViewHolder(private val binding: ItemComplaintsBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(complaints: Complaints){
-            binding.data = complaints
+            binding.apply {
+                data = complaints
+                layoutComplaints.setOnClickListener { complaintsClickListener.onClick(complaints.seq) }
+            }
         }
     }
 

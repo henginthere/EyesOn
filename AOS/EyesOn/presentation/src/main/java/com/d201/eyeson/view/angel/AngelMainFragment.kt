@@ -42,7 +42,7 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
     }
 
     private fun initView() {
-        angelMainAdapter = AngelMainAdapter()
+        angelMainAdapter = AngelMainAdapter(complaintsClickListener)
         binding.apply {
             ryComplaints.apply {
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -66,6 +66,12 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         }
         
 
+    }
+
+    private val complaintsClickListener = object : ComplaintsClickListener{
+        override fun onClick(complaintsSeq: Long) {
+            findNavController().navigate(AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsDetailFragment(complaintsSeq))
+        }
     }
 
 }
