@@ -9,3 +9,7 @@ interface ComplaintsClickListener{
 interface ReturnConfirmListener{
     fun onClick(complaints: Complaints)
 }
+
+interface ComplaintsImageClickListener{
+    fun onClick(image: String)
+}

@@ -34,17 +34,14 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             btnSetting.setOnClickListener {
                 findNavController().navigate(AngelMainFragmentDirections.actionAngelMainFragmentToAngelSettingFragment())
             }
-            btnComplaintsList.setOnClickListener {
-                findNavController().navigate(AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsListFragment())
-            }
         }
     }
 
     private fun initView() {
         angelMainAdapter = AngelMainAdapter(complaintsClickListener)
         binding.apply {
-            ryComplaints.apply {
-                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            vm = angelMainViewModel
+            rvComplaintsList.apply {
                 adapter = angelMainAdapter
             }
         }
@@ -59,7 +56,6 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         lifecycleScope.launch{
             angelMainViewModel.apply {
                 angelInfo.collectLatest {
-                    binding.tvTest.text = it.toString()
                 }
             }
         }
