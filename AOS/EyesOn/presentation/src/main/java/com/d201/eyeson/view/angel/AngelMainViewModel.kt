@@ -25,7 +25,6 @@ class AngelMainViewModel @Inject constructor(private val angelInfoUseCase: GetAn
     fun getAngelInfo(){
         viewModelScope.launch(Dispatchers.IO){
             angelInfoUseCase.excute().collectLatest {
-                Log.d(TAG, "getAngelInfo: ${it}")
                 if(it is ResultType.Success && it.data.status == 200){
                     _angelInfo.value = it.data.data
                 }else{
@@ -35,7 +34,7 @@ class AngelMainViewModel @Inject constructor(private val angelInfoUseCase: GetAn
         }
     }
 
-    fun getCrewBoards(flag: Int): Flow<PagingData<Complaints>> {
+    fun getComplaintsList(flag: Int): Flow<PagingData<Complaints>> {
         return selectAllCompUseCase.excute(flag)
     }
 

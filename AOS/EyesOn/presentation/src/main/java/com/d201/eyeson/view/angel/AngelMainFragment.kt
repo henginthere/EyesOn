@@ -5,6 +5,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.d201.data.utils.SELELCT_ALL
 import com.d201.domain.utils.ResultType
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
@@ -23,7 +24,6 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
     private lateinit var angelMainAdapter: AngelMainAdapter
 
     override fun init() {
-        Log.d(TAG, "init: ####################################")
         initListener()
         initView()
         initViewModelCallback()
@@ -53,14 +53,13 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
 
     private fun initViewModelCallback(){
         job = lifecycleScope.launch { 
-            angelMainViewModel.getCrewBoards(0).collectLatest {
+            angelMainViewModel.getComplaintsList(SELELCT_ALL).collectLatest {
                 angelMainAdapter.submitData(it)
             }
         }
         lifecycleScope.launch{
             angelMainViewModel.apply {
                 angelInfo.collectLatest {
-                    Log.d(TAG, "initViewModel: $it")
                     binding.tvTest.text = it.toString()
                 }
             }

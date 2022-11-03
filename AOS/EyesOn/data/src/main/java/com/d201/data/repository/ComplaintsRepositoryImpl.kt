@@ -89,18 +89,10 @@ class ComplaintsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun selectAllComplaints() =
+    override fun selectAllComplaints(flag: Int) =
         Pager(
             config = PagingConfig(pageSize = 1, maxSize = 15, enablePlaceholders = false),
-            pagingSourceFactory = { ComplaintsPagingSource(complaintsApi) }
+            pagingSourceFactory = { ComplaintsPagingSource(complaintsApi, flag) }
         ).flow
 
-
-    override fun selectComplaintsByAngel(flag: Int): Flow<ResultType<PagingData<Complaints>>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun selectComplaintsByBlind(flag: Int): Flow<ResultType<PagingData<Complaints>>> {
-        TODO("Not yet implemented")
-    }
 }

@@ -70,7 +70,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             loginViewModel.login.collectLatest {
                 when (it?.gender) {
                     GENDER_DEFAULT -> {
-                        Log.d(TAG, "initViewModel: ${it}")
                         findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSelectRoleFragment())
                     }
                     else -> {

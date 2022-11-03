@@ -13,7 +13,6 @@ private const val TAG ="AngelMainAdapter"
 class AngelMainAdapter: PagingDataAdapter<Complaints, AngelMainAdapter.ViewHolder>(diffUtil) {
     inner class ViewHolder(private val binding: ItemComplaintsBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(complaints: Complaints){
-            Log.d(TAG, "bind: ${complaints}")
             binding.data = complaints
         }
     }
