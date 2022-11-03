@@ -3,7 +3,6 @@ package com.d201.eyeson.view.angel.main
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.d201.data.utils.SELELCT_ALL
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
@@ -44,6 +43,9 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             rvComplaintsList.apply {
                 adapter = angelMainAdapter
             }
+
+            cvComplaintsList.setOnClickListener {  }
+            cvResponseHelp.setOnClickListener {  }
         }
     }
 
@@ -55,7 +57,7 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         }
         lifecycleScope.launch{
             angelMainViewModel.apply {
-                angelInfo.collectLatest {
+                angelInfoData.collectLatest {
                 }
             }
         }

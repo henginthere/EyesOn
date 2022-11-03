@@ -119,7 +119,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
         // Google에서 제공되는 signInIntent를 이용해서 인증 시도
-        val signInIntent = mGoogleSignInClient!!.signInIntent
+        val signInIntent = mGoogleSignInClient.signInIntent
 
         //콜백함수 부르며 launch
         requestActivity.launch(signInIntent)

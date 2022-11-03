@@ -23,7 +23,7 @@ private const val TAG ="AngelMainViewModel"
 class AngelMainViewModel @Inject constructor(private val angelInfoUseCase: GetAngelInfoUseCase, private val selectAllCompUseCase: SelectAllCompUseCase): ViewModel(){
 
     private val _angelInfo: MutableStateFlow<AngelInfo?> = MutableStateFlow(null)
-    val angelInfo get() = _angelInfo.asStateFlow()
+    val angelInfoData get() = _angelInfo.asStateFlow()
 
     fun getAngelInfo(){
         viewModelScope.launch(Dispatchers.IO){
