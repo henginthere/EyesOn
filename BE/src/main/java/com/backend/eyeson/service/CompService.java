@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -46,12 +47,16 @@ public class CompService {
     @Autowired
     private final CompRepository compRepository;
     private final UserRepository userRepository;
+    private final FileService fileService;
 
-    public boolean registerCom(RequestCompDto params) throws IOException {
+    public boolean registerCom(RequestCompDto params, MultipartFile multipartFile) throws IOException {
         ComplaintsEntity complaints = CompMapper.INSTANCE.toEntity(params);
         complaints.setCompAddress(ReverseGeocoding.getAddress(params.getCompAddress()));
         complaints.setCompState(CompStateEnum.PROGRESS_IN);
         UserEntity user = UserMapper.INSTANCE.toEntity(getLoginUser());
+
+        String url = fileService.fileUpload(multipartFile);
+        complaints.setCompImage(url);
 
         complaints.setBlindUser(user);
         compRepository.save(complaints);
