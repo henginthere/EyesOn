@@ -1,14 +1,18 @@
 package com.d201.data.repository
 
 import com.d201.data.datasource.UserRemoteDataSource
+import com.d201.data.mapper.mapperToAngelInfo
+import com.d201.data.mapper.mapperToAngelRequest
 import com.d201.data.mapper.mapperToToken
 import com.d201.data.model.request.UserRequest
-import com.d201.data.model.response.LoginResponse
+import com.d201.data.model.request.UserRoleRequest
 import com.d201.domain.base.BaseResponse
+import com.d201.domain.model.AngelInfo
 import com.d201.domain.model.Login
 import com.d201.domain.repository.UserRepository
 import com.d201.domain.utils.ResultType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,5 +34,40 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getAngelInfo(): Flow<ResultType<BaseResponse<AngelInfo>>> = flow{
+        emit(ResultType.Loading)
+        userRemoteDataSource.getAngelInfo().collect{
+            emit(ResultType.Success(
+                BaseResponse(
+                    it.message,
+                    it.status,
+                    it.data.mapperToAngelInfo()
+                )))
+        }
+    }
 
+    override fun putUserRole( role: String, gender: String): Flow<ResultType<BaseResponse<Login>>> = flow {
+        emit(ResultType.Loading)
+        userRemoteDataSource.putUserRole(UserRoleRequest(gender, role)).collect{
+            emit(ResultType.Success(
+                BaseResponse(
+                    it.message,
+                    it.status,
+                    it.data.mapperToToken()
+                )
+            ))
+        }
+    }
+
+    override fun putAngelInfo(angelInfo: AngelInfo): Flow<ResultType<BaseResponse<AngelInfo>>> = flow {
+        emit(ResultType.Loading)
+        userRemoteDataSource.putAngelInfo(angelInfo.mapperToAngelRequest()).collect{
+            emit(ResultType.Success(
+                BaseResponse(
+                    it.message,
+                    it.status,
+                    it.data.mapperToAngelInfo()
+                )))
+        }
+    }
 }

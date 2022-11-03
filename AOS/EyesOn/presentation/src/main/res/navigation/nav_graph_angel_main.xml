@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_angel_main"
+    app:startDestination="@id/angelMainFragment">
+
+    <fragment
+        android:id="@+id/angelMainFragment"
+        android:name="com.d201.eyeson.view.angel.AngelMainFragment"
+        android:label="AngelMainFragment" >
+        <action
+            android:id="@+id/action_angelMainFragment_to_angelSettingFragment"
+            app:destination="@id/angelSettingFragment" />
+        <action
+            android:id="@+id/action_angelMainFragment_to_complaintsListFragment"
+            app:destination="@id/complaintsListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/angelSettingFragment"
+        android:name="com.d201.eyeson.view.angel.setting.AngelSettingFragment"
+        android:label="AngelSettingFragment" />
+    <fragment
+        android:id="@+id/complaintsListFragment"
+        android:name="com.d201.eyeson.view.angel.complaints.ComplaintsListFragment"
+        android:label="ComplaintsListFragment" >
+        <action
+            android:id="@+id/action_complaintsListFragment_to_complaintsDetailFragment"
+            app:destination="@id/complaintsDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/complaintsDetailFragment"
+        android:name="com.d201.eyeson.view.angel.complaints.ComplaintsDetailFragment"
+        android:label="ComplaintsDetailFragment" />
+</navigation>

@@ -46,6 +46,7 @@ dependencies {
     implementation project(':data')
     implementation project(':mlkit')
     implementation project(':arcore')
+    implementation project(':webrtc')
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -96,4 +97,11 @@ dependencies {
     // Object detection feature with custom classifier support
     implementation 'com.google.mlkit:object-detection:17.0.0'
     implementation 'com.google.mlkit:object-detection-custom:17.0.0'
+
+    // FCM
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.0'
+
+    // Paging 3
+    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
+    implementation 'androidx.paging:paging-common-ktx:3.1.1'
 }

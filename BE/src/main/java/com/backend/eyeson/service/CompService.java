@@ -62,40 +62,42 @@ public class CompService {
     public PagingResult<ComplaintsDto> listAll(Pageable pageable) {
         Page<ComplaintsEntity> complaintsPage = null;
         complaintsPage = compRepository.findAllByCompStateOrderByCompSeqAsc(CompStateEnum.PROGRESS_IN, pageable);
-        List<ComplaintsDto> compList = new ArrayList<>();
+        List<ResponseCompDto> compList = new ArrayList<>();
 
         for(ComplaintsEntity complaintsEntity: complaintsPage) {
-            compList.add(new ComplaintsDto(complaintsEntity));
+            compList.add(CompMapper.INSTANCE.toDto(complaintsEntity));
         }
-        PagingResult result =new PagingResult<ComplaintsDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
+        System.out.println(compList);
+        System.out.println(pageable);
+        PagingResult result =new PagingResult<ResponseCompDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
         return result;
 
     }
 
-    public PagingResult<ComplaintsDto> listAngel(Pageable pageable) {
+    public PagingResult<ResponseCompDto> listAngel(Pageable pageable) {
         Page<ComplaintsEntity> complaintsPage = null;
         UserEntity loginUser = UserMapper.INSTANCE.toEntity(getLoginUser());
         complaintsPage = compRepository.findAllByAngelUserOrderByCompSeqAsc(loginUser, pageable);
-        List<ComplaintsDto> compList = new ArrayList<>();
+        List<ResponseCompDto> compList = new ArrayList<>();
 
         for(ComplaintsEntity complaintsEntity: complaintsPage) {
-            compList.add(new ComplaintsDto(complaintsEntity));
+            compList.add(CompMapper.INSTANCE.toDto(complaintsEntity));
         }
-        PagingResult result =new PagingResult<ComplaintsDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
+        PagingResult result =new PagingResult<ResponseCompDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
         return result;
 
     }
 
-    public PagingResult<ComplaintsDto> listBlind(Pageable pageable) {
+    public PagingResult<ResponseCompDto> listBlind(Pageable pageable) {
         Page<ComplaintsEntity> complaintsPage = null;
         UserEntity loginUser = UserMapper.INSTANCE.toEntity(getLoginUser());
         complaintsPage = compRepository.findAllByBlindUserOrderByCompSeqAsc(loginUser, pageable);
-        List<ComplaintsDto> compList = new ArrayList<>();
+        List<ResponseCompDto> compList = new ArrayList<>();
 
         for(ComplaintsEntity complaintsEntity: complaintsPage) {
-            compList.add(new ComplaintsDto(complaintsEntity));
+            compList.add(CompMapper.INSTANCE.toDto(complaintsEntity));
         }
-        PagingResult result =new PagingResult<ComplaintsDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
+        PagingResult result =new PagingResult<ResponseCompDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
         return result;
 
     }

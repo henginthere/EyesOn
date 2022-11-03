@@ -9,13 +9,13 @@
         tools:context=".view.login.LoginActivity">
 
         <androidx.fragment.app.FragmentContainerView
-            android:name="androidx.navigation.fragment.NavHostFragment"
             android:id="@+id/frame_login"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             app:defaultNavHost="true"
-            app:navGraph="@navigation/nav_graph_main"
+            app:navGraph="@navigation/nav_graph_login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            />
+            tools:layout="@layout/fragment_login" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

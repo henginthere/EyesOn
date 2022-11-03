@@ -10,7 +10,8 @@
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_selectRoleFragment"
-            app:destination="@id/selectRoleFragment" />
+            app:destination="@id/selectRoleFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/selectRoleFragment"
@@ -27,6 +28,20 @@
         <argument
             android:name="role"
             app:argType="string"
+            android:defaultValue=""
             />
+        <action
+            android:id="@+id/action_selectGenderFragment_to_joinSuccessFragment"
+            app:destination="@id/joinSuccessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/joinSuccessFragment"
+        android:name="com.d201.eyeson.view.login.join.JoinSuccessFragment"
+        android:label="JoinSuccessFragment" >
+        <argument
+            android:name="role"
+            app:argType="string" />
+        <argument android:name="gender"
+            app:argType="string" />
     </fragment>
 </navigation>

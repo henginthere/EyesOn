@@ -1,6 +1,8 @@
 package com.backend.eyeson.dto;
 
 import com.backend.eyeson.entity.CompStateEnum;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,7 @@ public class ResponseCompDto {
     private String compAddress;
     private String compContent;
     private String compImage;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime compRegtime;
     private String compResultContent;
     private String compReturn;

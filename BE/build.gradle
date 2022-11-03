@@ -53,6 +53,8 @@ dependencies {
 	// MapStruct
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+	// aws s3
+	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
 
 
 
