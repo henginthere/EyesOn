@@ -1,4 +1,4 @@
-package com.d201.eyeson.view.angel
+package com.d201.eyeson.view.angel.main
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -11,7 +11,10 @@ import com.d201.domain.usecase.user.GetAngelInfoUseCase
 import com.d201.domain.utils.ResultType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.d201.eyeson.view.angel
+package com.d201.eyeson.view.angel.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.d201.domain.model.Complaints
 import com.d201.eyeson.databinding.ItemComplaintsBinding
+import com.d201.eyeson.view.angel.ComplaintsClickListener
 
 private const val TAG ="AngelMainAdapter"
 class AngelMainAdapter(private val complaintsClickListener: ComplaintsClickListener): PagingDataAdapter<Complaints, AngelMainAdapter.ViewHolder>(diffUtil) {

@@ -17,7 +17,7 @@ class ComplaintsRemoteDataSource @Inject constructor(private val complaintsApi: 
         emit(complaintsApi.insertComp(complaintsRequest))
     }
 
-    fun selectComplaintsBySeq(seq: Int): Flow<BaseResponse<ComplaintsResponse>> = flow {
+    fun selectComplaintsBySeq(seq: Long): Flow<BaseResponse<ComplaintsResponse>> = flow {
         emit(complaintsApi.selectComplaintsBySeq(seq))
     }
 

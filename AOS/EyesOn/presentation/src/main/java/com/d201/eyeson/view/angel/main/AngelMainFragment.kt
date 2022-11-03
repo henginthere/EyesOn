@@ -1,15 +1,14 @@
-package com.d201.eyeson.view.angel
+package com.d201.eyeson.view.angel.main
 
-import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.d201.data.utils.SELELCT_ALL
-import com.d201.domain.utils.ResultType
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelMainBinding
+import com.d201.eyeson.view.angel.ComplaintsClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -68,7 +67,7 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
 
     }
 
-    private val complaintsClickListener = object : ComplaintsClickListener{
+    private val complaintsClickListener = object : ComplaintsClickListener {
         override fun onClick(complaintsSeq: Long) {
             findNavController().navigate(AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsDetailFragment(complaintsSeq))
         }

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/angelMainFragment"
-        android:name="com.d201.eyeson.view.angel.AngelMainFragment"
+        android:name="com.d201.eyeson.view.angel.main.AngelMainFragment"
         android:label="AngelMainFragment" >
         <action
             android:id="@+id/action_angelMainFragment_to_angelSettingFragment"

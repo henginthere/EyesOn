@@ -21,7 +21,7 @@ interface ComplaintsApi {
     suspend fun selectComplaintsByBlind(@Query("page") page: Int, @Query("size") size: Int): BaseResponse<PagingResult<ComplaintsResponse>>
 
     @GET("complaints/{complaintsSeq}")
-    suspend fun selectComplaintsBySeq(@Path("complaintsSeq") seq: Int): BaseResponse<ComplaintsResponse>
+    suspend fun selectComplaintsBySeq(@Path("complaintsSeq") seq: Long): BaseResponse<ComplaintsResponse>
 
     @PUT("complaints/return")
     suspend fun returnComplaints(@Body complaintsRequest: ComplaintsRequest): BaseResponse<Void>

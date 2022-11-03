@@ -40,7 +40,7 @@ class ComplaintsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun selectComplaintsBySeq(seq: Int): Flow<ResultType<BaseResponse<Complaints>>> = flow {
+    override fun selectComplaintsBySeq(seq: Long): Flow<ResultType<BaseResponse<Complaints>>> = flow {
         emit(ResultType.Loading)
         complaintsRemoteDataSource.selectComplaintsBySeq(seq).collect{
             emit(ResultType.Success(

@@ -20,7 +20,7 @@ import com.d201.eyeson.databinding.FragmentLoginBinding
 import com.d201.eyeson.util.ANGEL
 import com.d201.eyeson.util.BLIND
 import com.d201.eyeson.util.GENDER_DEFAULT
-import com.d201.eyeson.view.angel.AngelMainActivity
+import com.d201.eyeson.view.angel.main.AngelMainActivity
 import com.d201.eyeson.view.blind.BlindMainActivity
 import com.d201.eyeson.view.login.LoginViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -28,13 +28,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.ar.core.dependencies.e
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 private const val TAG = "LoginFragment"
 
