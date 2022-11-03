@@ -44,7 +44,7 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         angelMainAdapter = AngelMainAdapter(complaintsClickListener)
         binding.apply {
             ryComplaints.apply {
-                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = angelMainAdapter
             }
         }
