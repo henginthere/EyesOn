@@ -21,7 +21,6 @@ import java.util.Optional;
 @Transactional
 public class HelpService {
 
-    private final UserRepository userRepository;
 
     private final AngelRepository angelRepository;
 
@@ -31,7 +30,14 @@ public class HelpService {
     // 도움 요청
     public boolean requestHelp(char gender) throws IOException {
         // gender가 같은 엔젤들 가져오기
-        Optional<List<AngelInfoEntity>> angelList = angelRepository.findAllByAngelGender(gender);
+        Optional<List<AngelInfoEntity>> angelList;
+
+        // 만약 모든 사용자를 원할 경우
+        if(gender == 'd'){
+            angelList = Optional.ofNullable(angelRepository.findAll());
+        }else{
+            angelList = angelRepository.findAllByAngelGender(gender);
+        }
 
         // 현재 시간
         int hour = LocalDateTime.now().getHour();
