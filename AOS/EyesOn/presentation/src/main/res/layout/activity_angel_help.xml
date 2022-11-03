@@ -9,17 +9,17 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/rl_container"
+            android:id="@+id/views_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/peer_container"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <FrameLayout
-                android:id="@+id/fl_peer_container_remote"
+                android:id="@+id/peer_container_remote"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:translationZ="90dp"
@@ -27,31 +27,39 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <org.webrtc.SurfaceViewRenderer
-                    android:id="@+id/svr_remote"
+                    android:id="@+id/remote_gl_surface_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="visible" />
             </FrameLayout>
 
+
         </RelativeLayout>
+
 
         <FrameLayout
             android:id="@+id/peer_container"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="300dp"
-            android:layout_marginBottom="600dp"
+            android:layout_width="155dp"
+            android:layout_height="200dp"
+            android:layout_margin="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/rl_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/rl_container">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <org.webrtc.SurfaceViewRenderer
-                android:id="@+id/svr_local"
+                android:id="@+id/local_gl_surface_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"/>
+                android:visibility="visible" />
         </FrameLayout>
+
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시작"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

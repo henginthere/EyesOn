@@ -42,31 +42,34 @@ class AngelHelpActivity : BaseActivity<ActivityAngelHelpBinding>(R.layout.activi
 
     override fun init() {
         checkPermission()
+        binding.btnStart.setOnClickListener {
+            if (allPermissionsGranted()) {
+                initView()
+                httpClient = CustomHttpClient(
+                    OPENVIDU_URL, "Basic " + Base64.encodeToString(
+                        "OPENVIDUAPP:$OPENVIDU_SECRET".toByteArray(), Base64.DEFAULT
+                    ).trim()
+                )
+
+                val sessionId = "customerId" + "-session"
+                getToken(sessionId)
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (allPermissionsGranted()) {
-            initView()
-            httpClient = CustomHttpClient(
-                OPENVIDU_URL, "Basic " + Base64.encodeToString(
-                    "OPENVIDUAPP:$OPENVIDU_SECRET".toByteArray(), Base64.DEFAULT
-                ).trim()
-            )
 
-            val sessionId = "customerId" + "-session"
-            getToken(sessionId)
-        }
     }
 
     fun initView() {
         binding.apply {
             val rootEgleBase = EglBase.create()
-            svrLocal.init(rootEgleBase.eglBaseContext, null)
-            svrLocal.setMirror(true)
-            svrLocal.setEnableHardwareScaler(true)
-            svrLocal.setZOrderMediaOverlay(true)
+            binding.localGlSurfaceView.init(rootEgleBase.eglBaseContext, null)
+            binding.localGlSurfaceView.setMirror(true)
+            binding.localGlSurfaceView.setEnableHardwareScaler(true)
+            binding.localGlSurfaceView.setZOrderMediaOverlay(true)
         }
     }
 
@@ -139,7 +142,7 @@ class AngelHelpActivity : BaseActivity<ActivityAngelHelpBinding>(R.layout.activi
 
     private fun getTokenSuccess(token: String, sessionId: String) {
         // Initialize our session
-        session = Session(sessionId, token, this, binding.rlContainer)
+        session = Session(sessionId, token, this, binding.viewsContainer)
 
         // Initialize our local participant and start local camera
         val participantName: String = "customerName"
@@ -148,7 +151,7 @@ class AngelHelpActivity : BaseActivity<ActivityAngelHelpBinding>(R.layout.activi
                 participantName,
                 session,
                 this.applicationContext,
-                binding.svrLocal
+                binding.localGlSurfaceView
             )
         localParticipant.startCamera()
 
@@ -159,8 +162,8 @@ class AngelHelpActivity : BaseActivity<ActivityAngelHelpBinding>(R.layout.activi
     fun viewToDisconnectedState() {
         runOnUiThread {
             binding.apply {
-                svrLocal.clearImage()
-                svrLocal.release()
+                localGlSurfaceView.clearImage()
+                localGlSurfaceView.release()
             }
         }
     }

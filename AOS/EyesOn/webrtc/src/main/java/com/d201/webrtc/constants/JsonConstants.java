@@ -1,6 +1,6 @@
-package com.d201.webrtc.observers.constants;
+package com.d201.webrtc.constants;
 
-public final class  JsonConstants {
+public final class JsonConstants {
 
     // RPC incoming methods
     public static final String PARTICIPANT_JOINED = "participantJoined";
