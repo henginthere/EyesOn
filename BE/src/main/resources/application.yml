@@ -19,10 +19,10 @@ spring:
 #          google:
 #            client-id:
 #            scope: profile, email
-#  servlet:
-#    multipart:
-#      max-file-size: 20MB
-#      max-request-size: 20MB
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
   # jpa ??
   jpa:
@@ -49,6 +49,10 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
+
+
+
 
 
 
