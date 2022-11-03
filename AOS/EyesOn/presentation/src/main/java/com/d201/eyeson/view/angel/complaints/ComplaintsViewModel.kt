@@ -5,8 +5,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d201.domain.model.Complaints
+import com.d201.domain.usecase.complaints.ReturnCompUseCase
 import com.d201.domain.usecase.complaints.SelectCompBySeqUseCase
 import com.d201.domain.utils.ResultType
+import com.d201.eyeson.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +19,16 @@ import javax.inject.Inject
 
 private const val TAG = "ComplaintsViewModel"
 @HiltViewModel
-class ComplaintsViewModel @Inject constructor(private val selectCompBySeqUseCase: SelectCompBySeqUseCase) : ViewModel() {
+class ComplaintsViewModel @Inject constructor(
+    private val selectCompBySeqUseCase: SelectCompBySeqUseCase,
+    private val returnCompUseCase: ReturnCompUseCase
+    ) : ViewModel() {
+
+    private val _successResultEvent = SingleLiveEvent<String>()
+    val successResultEvent get() = _successResultEvent
+
+    private val _errorResultEvent = SingleLiveEvent<String>()
+    val errorResultEvent get() = _errorResultEvent
 
     private val _complaints: MutableStateFlow<Complaints?> = MutableStateFlow(null)
     val complaints get() = _complaints.asStateFlow()
@@ -29,6 +40,18 @@ class ComplaintsViewModel @Inject constructor(private val selectCompBySeqUseCase
                         _complaints.value = it.data.data
                     }
                     else -> Log.d(TAG, "getComplaints: ${it}")
+                }
+            }
+        }
+    }
+
+    fun returnComplaints(returnComplaints: Complaints){
+        viewModelScope.launch(Dispatchers.IO){
+            returnCompUseCase.excute(returnComplaints).collectLatest {
+                when(it){
+                    is ResultType.Success -> { _successResultEvent.postValue(it.data.message) }
+                    is ResultType.Error -> { _successResultEvent.postValue(it.exception.message)}
+                    else -> { Log.d(TAG, "returnComplaints: ${it}")}
                 }
             }
         }
