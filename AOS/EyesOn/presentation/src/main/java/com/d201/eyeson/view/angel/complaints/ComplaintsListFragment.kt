@@ -33,7 +33,6 @@ class ComplaintsListFragment : BaseFragment<FragmentComplaintsListBinding>(R.lay
         binding.apply {
             rvComplaintsList.apply {
                 adapter = complaintsAdapter
-                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             }
         }
     }

@@ -43,7 +43,7 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             rvComplaintsList.apply {
                 adapter = angelMainAdapter
             }
-
+            tvTitleComplaints.setOnClickListener { findNavController().navigate(AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsListFragment()) }
             cvComplaintsList.setOnClickListener {  }
             cvResponseHelp.setOnClickListener {  }
         }

@@ -95,17 +95,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="민원 신청 수"
-                            app:layout_constraintTop_toBottomOf="@id/iv_graph"
-                            android:layout_marginVertical="8dp"
-                            app:layout_constraintStart_toStartOf="parent"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@id/tv_help_cnt_title"
-                            />
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/iv_graph"
+                            app:layout_constraintVertical_bias="0.3" />
 
                         <TextView
                             android:id="@+id/tv_complaints_cnt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             tools:text="10"
+                            android:textSize="20sp"
                             android:text="@{vm.angelInfoData.compCnt + ``}"
                             app:layout_constraintStart_toStartOf="@id/tv_complaints_cnt_title"
                             app:layout_constraintEnd_toEndOf="@id/tv_complaints_cnt_title"
@@ -116,6 +118,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="도움 응답 수"
+                            android:textSize="20sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@id/tv_complaints_cnt_title"
                             app:layout_constraintStart_toEndOf="@id/tv_complaints_cnt_title"/>
@@ -125,6 +128,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             tools:text="100"
+                            android:textSize="20sp"
                             android:text="@{vm.angelInfoData.helpCnt + ``}"
                             app:layout_constraintTop_toTopOf="@id/tv_complaints_cnt"
                             app:layout_constraintStart_toStartOf="@id/tv_help_cnt_title"
@@ -137,9 +141,10 @@
                 <TextView
                     android:id="@+id/tv_title_complaints"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:textSize="18sp"
                     android:text="complaints"
+                    android:gravity="center|start"
                     android:textColor="@color/angel_text"
                     app:layout_constraintTop_toBottomOf="@id/cv_history"
                     android:layout_marginVertical="24dp"/>

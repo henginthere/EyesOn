@@ -1,25 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="data"
             type="com.d201.domain.model.Complaints" />
+        <import type="android.view.View"/>
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="wrap_content"
     android:id="@+id/layout_complaints"
+    android:layout_marginVertical="8dp"
+    android:layout_marginHorizontal="16dp"
     >
-
-    <TextView
-        android:id="@+id/tv_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="@{data.address}"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="4dp"
+        app:cardCornerRadius="16dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_complaints_image"
+                android:layout_width="90dp"
+                android:layout_height="120dp"
+                app:cardCornerRadius="12dp"
+                android:layout_marginHorizontal="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                >
+                <ImageView
+                    android:id="@+id/iv_complaints_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/img_graph"
+                    app:circularflow_radiusInDP="16"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:scaleType="fitXY"
+                    />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tv_complaints_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{data.title}"
+                android:textSize="20sp"
+                tools:text="민원 제목"
+                app:layout_constraintTop_toTopOf="@id/cv_complaints_image"
+                app:layout_constraintStart_toEndOf="@id/cv_complaints_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="24dp"
+                android:visibility="@{data.title == null ? View.GONE : View.VISIBLE}"
+                />
+
+
+
+            <TextView
+                android:id="@+id/tv_complaints_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                tools:text="민원 내용 민원 내용 민원 내용 민원 내용"
+                android:text="@{data.content}"
+                android:textSize="@{data.title == null ? 24 : 16}"
+                android:gravity="start|center"
+                app:layout_constraintTop_toBottomOf="@id/tv_complaints_title"
+                app:layout_constraintStart_toEndOf="@id/cv_complaints_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tv_complaints_address"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginVertical="8dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                />
+
+            <TextView
+                android:id="@+id/tv_complaints_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="2022-01-01 10:10"
+                android:text="@{data.regTime}"
+                app:layout_constraintStart_toEndOf="@id/cv_complaints_image"
+                app:layout_constraintBottom_toBottomOf="@id/cv_complaints_image"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginVertical="8dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
