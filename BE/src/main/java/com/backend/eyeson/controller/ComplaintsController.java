@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.google.api.client.json.JsonFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -34,7 +35,7 @@ public class ComplaintsController {
 
     @ApiParam(value = "민원 등록")
     @PostMapping(value = "/register")
-    public ResponseEntity<?> registerCom(@RequestBody RequestCompDto params) throws Exception{
+    public ResponseEntity<?> registerCom(@RequestBody RequestCompDto params, MultipartFile imgfile) throws Exception{
         boolean result = compService.registerCom(params);
         return new ResponseEntity<>(ResponseFrame.of(HttpStatus.OK, "민원 등록 성공"), HttpStatus.OK);
     }
