@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.mlkit.vision.demo.kotlin.objectdetector
+package com.d201.mlkit.objectdetector
 
 import android.graphics.Canvas
 import android.graphics.Color
@@ -29,7 +29,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 /** Draw the detected object info in preview.  */
-private const val TAG = "ObjectGraphic"
+const val TAG = "ObjectGraphic__"
 class ObjectGraphic constructor(
     overlay: GraphicOverlay,
     private val detectedObject: DetectedObject
@@ -40,7 +40,10 @@ class ObjectGraphic constructor(
     private val boxPaints = Array(numColors) { Paint() }
     private val textPaints = Array(numColors) { Paint() }
     private val labelPaints = Array(numColors) { Paint() }
+    var centerX : Float = 0.0f
+    var centerY : Float = 0.0f
 
+//    private val scanObstacleViewModel by viewModels<ScanObstacleViewModel>()
     init {
         for (i in 0 until numColors) {
             textPaints[i] = Paint()
@@ -86,7 +89,7 @@ class ObjectGraphic constructor(
 
         // Draws the bounding box.
         val rect = RectF(detectedObject.boundingBox)
-        Log.d(TAG,"88888left: "+rect.left.toString()+"right: "+rect.right+"top: "+rect.top+"bottom: "+rect.bottom)
+        //Log.d(TAG,"88888left: "+rect.left.toString()+"right: "+rect.right+"top: "+rect.top+"bottom: "+rect.bottom)
         val x0 = translateX(rect.left)
         val x1 = translateX(rect.right)
         rect.left = min(x0, x1)
@@ -95,6 +98,15 @@ class ObjectGraphic constructor(
         rect.bottom = translateY(rect.bottom)
         canvas.drawRect(rect, boxPaints[colorID])
         Log.d(TAG,"left: "+rect.left.toString()+"right: "+rect.right+"top: "+rect.top+"bottom: "+rect.bottom)
+        // left : 사각형 기준의 왼쪽 x좌표
+        // top : 사각형 기준의 위쪽 y좌표
+        // right : 사각형 기준의 오른쪽 x좌표
+        // bottom : 사각형 기준의 아래쪽 y좌표
+        // 사각형 중심 좌표 : ((right-left)/2 + left, (bottom-top)/2 + top))
+//
+//        centerX = (rect.right-rect.left)/2 + rect.left
+//        centerY = (rect.bottom-rect.top)/2 + rect.top
+//        Log.d(TAG, "centerPoint ( $centerX ,$centerY)")
 
         // Draws other object info.
         canvas.drawRect(
@@ -104,7 +116,7 @@ class ObjectGraphic constructor(
             rect.top,
             labelPaints[colorID]
         )
-        Log.d(TAG,"left: "+(rect.left - STROKE_WIDTH).toString()+", right: "+(rect.left + textWidth + 2 * STROKE_WIDTH).toString()+", top: "+ (rect.top + yLabelOffset).toString()+", bottom: "+rect.top.toString())
+     //   Log.d(TAG,"left: "+(rect.left - STROKE_WIDTH).toString()+", right: "+(rect.left + textWidth + 2 * STROKE_WIDTH).toString()+", top: "+ (rect.top + yLabelOffset).toString()+", bottom: "+rect.top.toString())
 
         yLabelOffset += TEXT_SIZE
         canvas.drawText(

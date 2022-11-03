@@ -1,4 +1,4 @@
-package com.d201.depth.depth
+package com.d201.arcore.depth
 
 import android.content.Context
 import android.media.Image
@@ -8,10 +8,12 @@ import com.google.ar.core.Frame
 import com.google.ar.core.exceptions.NotYetAvailableException
 import java.nio.ByteOrder
 
+const val TAG = "DepthTextureHandler__"
 class DepthTextureHandler(var context: Context) {
     private var depthTextureId = -1
     private var depthTextureWidth = -1
     private var depthTextureHeight = -1
+    var distance:Int = 0
 
     /**
      * Creates and initializes the depth texture. This method needs to be called on a
@@ -40,7 +42,8 @@ class DepthTextureHandler(var context: Context) {
      * Updates the depth texture with the content from acquireDepthImage().
      * This method needs to be called on a thread with a EGL context attached.
      */
-    fun update(frame: Frame) {
+    // centerX, centerY : MLKit의 객체 박스의 중간 지점
+    fun update(frame: Frame, centerX: Float, centerY: Float) {
         try {
             val depthImage = frame.acquireDepthImage16Bits()
             depthTextureWidth = depthImage.width
@@ -57,10 +60,13 @@ class DepthTextureHandler(var context: Context) {
                 GLES20.GL_UNSIGNED_BYTE,
                 depthImage.planes[0].buffer
             )
-            val distance = getMillimetersDepth(depthImage, depthTextureWidth/2, depthTextureHeight/2)
+
+            // 좌표에서 depthImage의 깊이를 밀리미터 단위로 가져옵니다
+            distance = getMillimetersDepth(depthImage, centerX.toInt(), centerY.toInt())
 //            onDepthImageUpdateListener.onUpdateDepthImage(distance)
 //            (context as MainActivity).onUpdateDepthImage(distance)
             depthImage.close()
+
         } catch (e: NotYetAvailableException) {
             // This normally means that depth data is not available yet.
         }

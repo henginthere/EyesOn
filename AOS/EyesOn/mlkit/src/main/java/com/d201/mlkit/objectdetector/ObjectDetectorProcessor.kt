@@ -17,10 +17,12 @@
 package com.google.mlkit.vision.demo.kotlin.objectdetector
 
 import android.content.Context
+import android.graphics.*
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.d201.mlkit.GraphicOverlay
 import com.d201.mlkit.VisionProcessorBase
+import com.d201.mlkit.objectdetector.ObjectGraphic
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.objects.DetectedObject
@@ -28,14 +30,20 @@ import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.ObjectDetector
 import com.google.mlkit.vision.objects.ObjectDetectorOptionsBase
 import java.io.IOException
+import kotlin.math.max
+import kotlin.math.min
 
 /** A processor to run object detector.  */
+const val TAG = "ObjectDetectorProcessor__"
 class ObjectDetectorProcessor(context: Context, options: ObjectDetectorOptionsBase) :
-  VisionProcessorBase<List<DetectedObject>>(context) {
+  VisionProcessorBase<List<DetectedObject>>(context){
 
   private val detector: ObjectDetector = ObjectDetection.getClient(options)
   val resultData = MutableLiveData<String>()
-
+  private var _centerX = MutableLiveData<Float>()
+  val centerX get() = _centerX
+  private var _centerY = MutableLiveData<Float>()
+  val centerY get() = _centerY
   override fun stop() {
     super.stop()
     try {
@@ -55,9 +63,24 @@ class ObjectDetectorProcessor(context: Context, options: ObjectDetectorOptionsBa
 
   override fun onSuccess(results: List<DetectedObject>, graphicOverlay: GraphicOverlay) {
     for (result in results) {
+      var objectGraphic  = ObjectGraphic(graphicOverlay, result)
       graphicOverlay.add(ObjectGraphic(graphicOverlay, result))
+
       if(result.labels.isNotEmpty()) {
         resultData.postValue(result.labels[0].text)
+        Log.d(TAG, "postValue___centerX : ${objectGraphic.centerX}, centerY : ${objectGraphic.centerY}")
+
+        val rect = RectF(result.boundingBox)
+        val x0 = graphicOverlay.translationX(rect.left)
+        val x1 = translateX(rect.right)
+        rect.left = min(x0, x1)
+        rect.right = max(x0, x1)
+        rect.top = translateY(rect.top)
+        rect.bottom = translateY(rect.bottom)
+
+        _centerX.postValue((rect.right-rect.left)/2 + rect.left)
+        _centerY.postValue((rect.bottom-rect.top)/2 + rect.top)
+        Log.d(TAG, "centerX : ${_centerX.value}, centerY : ${_centerY.value}");
       }
     }
   }
@@ -66,7 +89,4 @@ class ObjectDetectorProcessor(context: Context, options: ObjectDetectorOptionsBa
     Log.e(TAG, "Object detection failed!", e)
   }
 
-  companion object {
-    private const val TAG = "ObjectDetectorProcessor"
-  }
 }

@@ -4,15 +4,17 @@ import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.speech.tts.TextToSpeech
-import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import com.d201.arcore.depth.common.OBJECT_DETECTION_CUSTOM
 import com.d201.arcore.depth.common.TEXT_RECOGNITION_KOREAN
 import com.d201.arcore.depth.common.getDeviceSize
-import com.d201.depth.depth.DepthTextureHandler
+import com.d201.arcore.depth.DepthTextureHandler
+import com.d201.mlkit.objectdetector.ObjectGraphic
 import com.d201.depth.depth.common.*
 import com.d201.depth.depth.rendering.BackgroundRenderer
 import com.d201.depth.depth.rendering.ObjectRenderer
@@ -39,12 +41,13 @@ import java.util.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-private const val TAG = "ScanObstacleFragment"
+private const val TAG = "ScanObstacleFragment__"
 @AndroidEntryPoint
 class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.fragment_scan_obstacle),
     GLSurfaceView.Renderer, TextToSpeech.OnInitListener {
     //private lateinit var tts: TextToSpeech
 
+    private val scanObstacleViewModel by viewModels<ScanObstacleViewModel>()
     private var graphicOverlay: GraphicOverlay? = null
     private var imageProcessor: VisionProcessorBase<*>? = null
     private var objectImageProcessor: ObjectDetectorProcessor? = null
@@ -86,9 +89,14 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     private var showDepthMap = false
 
-
+    // 바운딩 박스 중심점
+//    private val centerX = MutableLiveData<Float>()
+//    private val centerY = MutableLiveData<Float>()
+    private var centerX : Float = 0.0f
+    private var centerY : Float = 0.0f
     override fun init() {
         initView()
+        initObserver()
     }
 
     private fun initView(){
@@ -121,11 +129,17 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
         graphicOverlay = binding.graphicOverlay
         graphicOverlay!!.bringToFront()
+
+
        // tts = TextToSpeech(requireContext(), this)
     }
 
+    private fun initObserver(){
+
+    }
     // MLKit
     private fun processFrame(frame: Bitmap) {
+        Log.d(TAG, "processFrame")
         lastFrame = frame
         if (imageProcessor != null) {
             pending = processing
@@ -153,6 +167,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     override fun onResume() {
         super.onResume()
+        Log.d(TAG, "onResume")
         val params: ViewGroup.LayoutParams? = requireActivity().window.attributes
         val deviceWidth = getDeviceSize(requireActivity()).x
         val deviceHeight = deviceWidth / 3 * 4
@@ -249,6 +264,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     }
 
     override fun onPause() {
+        Log.d(TAG, "onPause")
         super.onPause()
         if (session != null) {
             // Note that the order matters - GLSurfaceView is paused first so that it does not try
@@ -266,6 +282,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        Log.d(TAG, "onRequestPermissionsResult")
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (!CameraPermissionHelper.hasCameraPermission(requireActivity())) {
             Toast.makeText(
@@ -281,6 +298,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+        Log.d(TAG, " onSurfaceCreated")
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
 
         // Prepare the rendering objects. This involves reading shaders, so may throw an IOException.
@@ -303,11 +321,13 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        Log.d(TAG, "onSurfaceChanged")
         displayRotationHelper!!.onSurfaceChanged(width, height)
         GLES20.glViewport(0, 0, width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
+        Log.d(TAG, "onDrawFrame")
         // Clear screen to notify driver it should not load any pixels from previous frame.
         // 이전 프레임에서 픽셀을 로드하지 않도록 드라이버에 알리기 위해 화면을 지웁니다.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
@@ -333,7 +353,12 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // Retrieves the latest depth image for this frame.
             // 이 프레임의 최신 깊이 이미지를 검색합니다.
             if (isDepthSupported) {
-                depthTexture.update(frame)
+                Log.d(TAG, "centerX: $centerX, centerY: $centerY, distance: ${depthTexture.distance}")
+                if(centerX!= null && centerY!=null)
+                depthTexture.update(frame, centerX, centerY)
+                Log.d(TAG, "depthTexture__centerX: $centerX, centerY: $centerY, distance: ${depthTexture.distance}")
+                onUpdateDepthImage(depthTexture.distance)
+
 //                Log.d(TAG, "onDrawFrame: ${getMillimetersDepth(frame.acquireDepthImage16Bits(), 0, 0)}")
             }
 
@@ -478,6 +503,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     // Checks if we detected at least one plane.
     private fun hasTrackingPlane(): Boolean {
+        Log.d(TAG, "hasTrackingPlane()")
         for (plane in session!!.getAllTrackables(Plane::class.java)) {
             if (plane.trackingState == TrackingState.TRACKING) {
                 return true
@@ -489,6 +515,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     // Calculate the normal distance to plane from cameraPose, the given planePose should have y axis
     // parallel to plane's normal, for example plane's center pose or hit test pose.
     private fun calculateDistanceToPlane(planePose: Pose, cameraPose: Pose): Float {
+        Log.d(TAG, "calculateDistanceToPlane")
         val normal = FloatArray(3)
         val cameraX = cameraPose.tx()
         val cameraY = cameraPose.ty()
@@ -500,7 +527,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     }
 
 
-    fun onUpdateDepthImage(distance: Int) {
+    private fun onUpdateDepthImage(distance: Int) {
+        Log.d(TAG, "onUpdateDepthImage")
         var cm = (distance / 10.0).toFloat()
         if(cm > 100){
             cm /= 100
@@ -511,6 +539,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     }
 
     private fun createImageProcessor() {
+        Log.d(TAG, "createImageProcessor()")
         stopImageProcessor()
         imageProcessor =
             try {
@@ -522,6 +551,12 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                         val customObjectDetectorOptions =
                             PreferenceUtils.getCustomObjectDetectorOptionsForLivePreview(requireContext(), localModel)
                         objectImageProcessor = ObjectDetectorProcessor(requireContext(), customObjectDetectorOptions)
+                        objectImageProcessor!!.centerX.observe(viewLifecycleOwner){
+                            centerX = it
+                        }
+                        objectImageProcessor!!.centerY.observe(viewLifecycleOwner){
+                            centerY = it
+                        }
                         objectImageProcessor
                     }
                     TEXT_RECOGNITION_KOREAN -> {
@@ -543,6 +578,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     }
 
     private fun stopImageProcessor() {
+        Log.d(TAG, "stopImageProcessor()")
         if (imageProcessor != null) {
             imageProcessor!!.stop()
             imageProcessor = null
