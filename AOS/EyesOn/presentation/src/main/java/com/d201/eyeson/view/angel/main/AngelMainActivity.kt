@@ -1,11 +1,10 @@
-package com.d201.eyeson.view.angel
+package com.d201.eyeson.view.angel.main
 
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseActivity
 import com.d201.eyeson.databinding.ActivityAngelMainBinding
-import com.d201.eyeson.view.blind.BlindMainFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "AngelMainActivity"

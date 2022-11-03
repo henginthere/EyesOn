@@ -5,26 +5,28 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.d201.data.api.ComplaintsApi
 import com.d201.data.mapper.mapperToListComplaints
+import com.d201.data.model.response.ComplaintsResponse
+import com.d201.data.utils.COMPLAINTS_PAGE_SIZE
+import com.d201.data.utils.SELELCT_ALL
+import com.d201.data.utils.SELELCT_BY_ANGEL
+import com.d201.data.utils.SELELCT_BY_BLIND
+import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.Complaints
+import com.d201.domain.model.PagingResult
+import javax.inject.Inject
 
 private const val TAG ="ComplaintsPagingSource"
-class ComplaintsPagingSource(private val complaintsApi: ComplaintsApi): PagingSource<Int, Complaints>() {
+class ComplaintsPagingSource(private val complaintsApi: ComplaintsApi, private val flag: Int): PagingSource<Int, Complaints>() {
 
-    var flag = 0
     override suspend fun load(params: LoadParams<Int>): PagingSource.LoadResult<Int, Complaints> {
         return try {
-            Log.d(TAG, "load: %%%%%%%%%%%%%%%%%%%")
             val page = params.key ?: 0
-//            var response : BaseResponse<PagingResult<ComplaintsResponse>>? = null
-//            when(flag){
-//                0 -> response = complaintsApi.selectAllComplaints(page, 10)
-//                1 -> response = complaintsApi.selectComplaintsByAngel(page, 10)
-//                2 -> response = complaintsApi.selectComplaintsByBlind(page, 10)
-//            }
-            val response = complaintsApi.selectAllComplaints(page, 1)
-            Log.d(TAG, "load: totalPage ${response!!.data.totalPage}")
-            Log.d(TAG, "load: list ${response!!.data.result}")
-
+            var response : BaseResponse<PagingResult<ComplaintsResponse>>? = null
+            when(flag){
+                SELELCT_ALL -> response = complaintsApi.selectAllComplaints(page, COMPLAINTS_PAGE_SIZE)
+                SELELCT_BY_ANGEL -> response = complaintsApi.selectComplaintsByAngel(page, COMPLAINTS_PAGE_SIZE)
+                SELELCT_BY_BLIND -> response = complaintsApi.selectComplaintsByBlind(page, COMPLAINTS_PAGE_SIZE)
+            }
             PagingSource.LoadResult.Page(
                 data = response!!.data.result.mapperToListComplaints(),
                 prevKey = if(page == 0) null else page - 1,

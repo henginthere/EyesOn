@@ -1,20 +1,22 @@
-package com.d201.eyeson.view.angel
+package com.d201.eyeson.view.angel.main
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.d201.domain.model.Complaints
-import com.d201.eyeson.databinding.ItemComplaintsBinding
+import com.d201.eyeson.databinding.ItemComplaintsHorizontalBinding
+import com.d201.eyeson.view.angel.ComplaintsClickListener
 
 private const val TAG ="AngelMainAdapter"
-class AngelMainAdapter: PagingDataAdapter<Complaints, AngelMainAdapter.ViewHolder>(diffUtil) {
-    inner class ViewHolder(private val binding: ItemComplaintsBinding): RecyclerView.ViewHolder(binding.root){
+class AngelMainAdapter(private val complaintsClickListener: ComplaintsClickListener): PagingDataAdapter<Complaints, AngelMainAdapter.ViewHolder>(diffUtil) {
+    inner class ViewHolder(private val binding: ItemComplaintsHorizontalBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(complaints: Complaints){
-            Log.d(TAG, "bind: ${complaints}")
-            binding.data = complaints
+            binding.apply {
+                data = complaints
+                layoutComplaints.setOnClickListener { complaintsClickListener.onClick(complaints.seq) }
+            }
         }
     }
 
@@ -26,7 +28,7 @@ class AngelMainAdapter: PagingDataAdapter<Complaints, AngelMainAdapter.ViewHolde
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemComplaintsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemComplaintsHorizontalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

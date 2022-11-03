@@ -40,7 +40,7 @@ class ComplaintsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun selectComplaintsBySeq(seq: Int): Flow<ResultType<BaseResponse<Complaints>>> = flow {
+    override fun selectComplaintsBySeq(seq: Long): Flow<ResultType<BaseResponse<Complaints>>> = flow {
         emit(ResultType.Loading)
         complaintsRemoteDataSource.selectComplaintsBySeq(seq).collect{
             emit(ResultType.Success(
@@ -89,18 +89,10 @@ class ComplaintsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun selectAllComplaints() =
+    override fun selectAllComplaints(flag: Int) =
         Pager(
             config = PagingConfig(pageSize = 1, maxSize = 15, enablePlaceholders = false),
-            pagingSourceFactory = { ComplaintsPagingSource(complaintsApi) }
+            pagingSourceFactory = { ComplaintsPagingSource(complaintsApi, flag) }
         ).flow
 
-
-    override fun selectComplaintsByAngel(flag: Int): Flow<ResultType<PagingData<Complaints>>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun selectComplaintsByBlind(flag: Int): Flow<ResultType<PagingData<Complaints>>> {
-        TODO("Not yet implemented")
-    }
 }

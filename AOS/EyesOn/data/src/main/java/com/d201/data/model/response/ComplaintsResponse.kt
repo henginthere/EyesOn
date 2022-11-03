@@ -1,9 +1,8 @@
 package com.d201.data.model.response
 
 import com.google.gson.annotations.SerializedName
-import java.time.LocalDateTime
 
-data class ResponseCompDto(
+data class ComplaintsResponse(
     @SerializedName("compSeq") val seq: Long,
     @SerializedName("compAddress") val address: String?,
     @SerializedName("compContent") val content: String?,

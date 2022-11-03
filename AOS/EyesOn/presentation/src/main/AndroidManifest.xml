@@ -32,7 +32,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".view.angel.AngelMainActivity"
+            android:name=".view.angel.main.AngelMainActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

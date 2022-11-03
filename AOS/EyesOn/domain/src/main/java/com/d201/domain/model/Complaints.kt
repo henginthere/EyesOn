@@ -10,7 +10,7 @@ data class Complaints(
     val image: String?,
     val regTime: String?,
     val resultContent: String?,
-    val returnContent: String?,
+    var returnContent: String?,
     val state: String?,
     val title: String?
 )

@@ -2,7 +2,7 @@ package com.d201.data.datasource
 
 import com.d201.data.api.ComplaintsApi
 import com.d201.data.model.request.ComplaintsRequest
-import com.d201.data.model.response.ResponseCompDto
+import com.d201.data.model.response.ComplaintsResponse
 import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.PagingResult
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +17,7 @@ class ComplaintsRemoteDataSource @Inject constructor(private val complaintsApi: 
         emit(complaintsApi.insertComp(complaintsRequest))
     }
 
-    fun selectComplaintsBySeq(seq: Int): Flow<BaseResponse<ResponseCompDto>> = flow {
+    fun selectComplaintsBySeq(seq: Long): Flow<BaseResponse<ComplaintsResponse>> = flow {
         emit(complaintsApi.selectComplaintsBySeq(seq))
     }
 
@@ -33,7 +33,7 @@ class ComplaintsRemoteDataSource @Inject constructor(private val complaintsApi: 
         emit(complaintsApi.completeComplaints(complaintsRequest))
     }
 
-    fun selectAllComplaints(page: Int, size: Int): Flow<BaseResponse<PagingResult<ResponseCompDto>>> = flow {
+    fun selectAllComplaints(page: Int, size: Int): Flow<BaseResponse<PagingResult<ComplaintsResponse>>> = flow {
         emit(complaintsApi.selectAllComplaints(page, size))
     }
 

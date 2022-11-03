@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface ComplaintsRepository {
     fun insertComp(complaintsRequest: Complaints): Flow<ResultType<BaseResponse<Void>>>
 
-    fun selectComplaintsBySeq(seq: Int): Flow<ResultType<BaseResponse<Complaints>>>
+    fun selectComplaintsBySeq(seq: Long): Flow<ResultType<BaseResponse<Complaints>>>
 
     fun returnComplaints(complaintsRequest: Complaints): Flow<ResultType<BaseResponse<Void>>>
 
@@ -17,10 +17,6 @@ interface ComplaintsRepository {
 
     fun completeComplaints(complaintsRequest: Complaints): Flow<ResultType<BaseResponse<Void>>>
 
-    fun selectAllComplaints(): Flow<PagingData<Complaints>>
-
-    fun selectComplaintsByAngel(flag: Int): Flow<ResultType<PagingData<Complaints>>>
-
-    fun selectComplaintsByBlind(flag: Int): Flow<ResultType<PagingData<Complaints>>>
+    fun selectAllComplaints(flag: Int): Flow<PagingData<Complaints>>
 
 }
