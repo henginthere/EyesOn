@@ -42,15 +42,8 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompatActivity?, private val joinListener : JoinListener , private val leftListener : LeftListener) :
+class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompatActivity?) :
     AsyncTask<AppCompatActivity?, Void?, Void?>(), WebSocketListener {
-    interface JoinListener {
-        fun joinEvent()
-    }
-
-    interface LeftListener {
-        fun leftEvent()
-    }
 
     private val TAG = "CustomWebSocketListener"
     private val PING_MESSAGE_INTERVAL = 5
@@ -358,9 +351,6 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
 
     @Throws(JSONException::class)
     private fun participantJoinedEvent(params: JSONObject) {
-        Log.d(TAG, "participantJoinedEvent: 1")
-        joinListener.joinEvent()
-        Log.d(TAG, "participantJoinedEvent: 2")
         newRemoteParticipantAux(params)
     }
 
@@ -379,8 +369,6 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
 
     @Throws(JSONException::class)
     private fun participantLeftEvent(params: JSONObject) {
-        Log.d(TAG, "participantLeftEvent: ")
-        leftListener.leftEvent()
         val remoteParticipant: RemoteParticipant =
             session!!.removeRemoteParticipant(params.getString("connectionId"))!!
         remoteParticipant.dispose()
@@ -395,7 +383,6 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
 
     @Throws(JSONException::class)
     private fun newRemoteParticipantAux(participantJson: JSONObject): RemoteParticipant {
-        Log.d(TAG, "newRemoteParticipantAux: ")
         val connectionId = participantJson.getString(JsonConstants.ID)
         var participantName: String? = ""
         if (participantJson.getString(JsonConstants.METADATA) != null) {
@@ -737,4 +724,3 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
     }
 
 }
-

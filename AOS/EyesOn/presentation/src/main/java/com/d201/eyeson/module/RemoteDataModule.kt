@@ -2,6 +2,7 @@ package com.d201.eyeson.module
 
 
 import com.d201.data.api.ComplaintsApi
+import com.d201.data.api.HelpApi
 import com.d201.data.api.UserApi
 import com.d201.eyeson.util.BASE_URL
 import com.d201.eyeson.util.XAccessTokenInterceptor
@@ -69,7 +70,13 @@ object RemoteDataModule {
 
     @Provides
     @Singleton
-    fun provideComplaintsApi(@Named("mainRetrofit")retrofit: Retrofit): ComplaintsApi{
+    fun provideComplaintsApi(@Named("mainRetrofit") retrofit: Retrofit): ComplaintsApi {
         return retrofit.create(ComplaintsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHelpApi(@Named("mainRetrofit") retrofit: Retrofit): HelpApi {
+        return retrofit.create(HelpApi::class.java)
     }
 }
