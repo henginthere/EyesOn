@@ -26,10 +26,9 @@ class BlindHelpViewModel @Inject constructor(
     fun requestHelp(gender: String) {
         viewModelScope.launch(Dispatchers.IO) {
             requestHelpUseCase.execute(gender).collectLatest {
-                Log.d(TAG, "requestHelp: ${it.javaClass}")
                 if(it is ResultType.Success){
-                    Log.d(TAG, "requestHelp: ${it.data.data}")
                     _sessionId.value = it.data.data
+                    Log.d(TAG, "request Help: ${it.data.data}")
                 } else {
                     Log.d(TAG, "requestHelp: $it")
                 }

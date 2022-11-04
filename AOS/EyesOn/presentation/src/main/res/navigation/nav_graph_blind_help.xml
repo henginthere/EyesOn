@@ -16,9 +16,5 @@
     <fragment
         android:id="@+id/blindHelpFragment"
         android:name="com.d201.eyeson.view.blind.help.BlindHelpFragment"
-        android:label="BlindHelpFragment" >
-        <argument
-            android:name="sessionId"
-            app:argType="integer" />
-    </fragment>
+        android:label="BlindHelpFragment" />
 </navigation>

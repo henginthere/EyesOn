@@ -2,6 +2,8 @@ package com.d201.eyeson.view.blind.help
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.d201.eyeson.R
@@ -12,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val TAG = "BlindHelpActivity"
 @AndroidEntryPoint
 class BlindHelpActivity : BaseActivity<ActivityAngelHelpBinding>(R.layout.activity_blind_help){
+
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
 

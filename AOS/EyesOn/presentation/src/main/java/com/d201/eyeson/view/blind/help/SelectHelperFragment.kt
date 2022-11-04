@@ -1,5 +1,6 @@
 package com.d201.eyeson.view.blind.help
 
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,7 +15,7 @@ private const val TAG = "SelectHelperFragment"
 @AndroidEntryPoint
 class SelectHelperFragment : BaseFragment<FragmentSelectHelperBinding>(R.layout.fragment_select_helper) {
 
-    private val blindHelpViewModel : BlindHelpViewModel by viewModels()
+    private val blindHelpViewModel : BlindHelpViewModel by activityViewModels()
 
     override fun init() {
         initListener()
@@ -37,7 +38,7 @@ class SelectHelperFragment : BaseFragment<FragmentSelectHelperBinding>(R.layout.
         lifecycleScope.launch{
             blindHelpViewModel.sessionId.collectLatest {
                 if(it != -1){
-                    findNavController().navigate(SelectHelperFragmentDirections.actionSelectHelperFragmentToBlindHelpFragment(it))
+                    findNavController().navigate(SelectHelperFragmentDirections.actionSelectHelperFragmentToBlindHelpFragment())
                 }
             }
         }

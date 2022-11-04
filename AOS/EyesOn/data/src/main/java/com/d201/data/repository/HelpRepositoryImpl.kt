@@ -20,7 +20,8 @@ class HelpRepositoryImpl @Inject constructor(
         helpRemoteDataSource.requestHelp(gender).collect {
             Log.d(TAG, "requestHelp: ${it.data}")
             when (it.status) {
-                200 -> ResultType.Success(it)
+                200 -> emit(ResultType.Success(it))
+                else -> emit(ResultType.InputError)
             }
         }
     }
