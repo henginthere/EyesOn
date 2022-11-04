@@ -3,7 +3,6 @@ package com.d201.webrtc.openvidu
 import android.view.View
 import android.widget.TextView
 import org.webrtc.SurfaceViewRenderer
-import org.webrtc.VideoTrack
 
 class RemoteParticipant(
     connectionId: String,

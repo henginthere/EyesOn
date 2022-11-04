@@ -7,9 +7,8 @@ import android.util.Log
 import android.util.Pair
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.neovisionaries.ws.client.*
-import com.d201.webrtc.observers.constants.JsonConstants
-import com.d201.webrtc.observers.constants.JsonConstants.*
+import com.d201.webrtc.constants.JsonConstants
+import com.d201.webrtc.constants.JsonConstants.*
 import com.d201.webrtc.observers.CustomSdpObserver
 import com.d201.webrtc.openvidu.LocalParticipant
 import com.d201.webrtc.openvidu.Participant
@@ -18,6 +17,7 @@ import com.d201.webrtc.openvidu.Session
 import com.d201.webrtc.utils.createRemoteParticipantVideo
 import com.d201.webrtc.utils.createRemoteScreenVideo
 import com.d201.webrtc.utils.resizeView
+import com.neovisionaries.ws.client.*
 import org.json.JSONException
 import org.json.JSONObject
 import org.webrtc.IceCandidate
@@ -42,8 +42,15 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompatActivity?) :
+class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompatActivity?, private val joinListener : JoinListener , private val leftListener : LeftListener) :
     AsyncTask<AppCompatActivity?, Void?, Void?>(), WebSocketListener {
+    interface JoinListener {
+        fun joinEvent()
+    }
+
+    interface LeftListener {
+        fun leftEvent()
+    }
 
     private val TAG = "CustomWebSocketListener"
     private val PING_MESSAGE_INTERVAL = 5
@@ -94,7 +101,6 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
     private fun handleServerResponse(json: JSONObject) {
         val rpcId = json.getInt(JsonConstants.ID)
         val result = JSONObject(json.getString(JsonConstants.RESULT))
-        Log.d(TAG, "handleServerResponse: $result")
         if (result.has("value") && result.getString("value") == "pong") {
             // Response to ping
             Log.i(TAG, "pong")
@@ -201,14 +207,14 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
 
     fun publishVideo(sessionDescription: SessionDescription) {
         val publishVideoParams: MutableMap<String, String> = HashMap()
-        publishVideoParams["audioActive"] = "false"
+        publishVideoParams["audioActive"] = "true"
         publishVideoParams["videoActive"] = "true"
         publishVideoParams["doLoopback"] = "false"
         publishVideoParams["frameRate"] = "30"
-        publishVideoParams["hasAudio"] = "false"
+        publishVideoParams["hasAudio"] = "true"
         publishVideoParams["hasVideo"] = "true"
         publishVideoParams["typeOfVideo"] = "CAMERA"
-        publishVideoParams["videoDimensions"] = "{\"width\":800, \"height\":1200}"
+        publishVideoParams["videoDimensions"] = "{\"width\":320, \"height\":240}"
         publishVideoParams["sdpOffer"] = sessionDescription.description
         ID_PUBLISHVIDEO.set(this.sendJson(JsonConstants.PUBLISHVIDEO_METHOD, publishVideoParams))
     }
@@ -270,7 +276,6 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
                 JsonConstants.PARTICIPANT_JOINED -> participantJoinedEvent(params)
                 JsonConstants.PARTICIPANT_PUBLISHED -> participantPublishedEvent(params)
                 JsonConstants.PARTICIPANT_LEFT -> participantLeftEvent(params)
-                JsonConstants.SEND_MESSAGE -> Log.d(TAG, "handleServerEvent: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 else -> throw JSONException("Unknown method: $method")
             }
         }
@@ -278,36 +283,6 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
 
     fun sendJson(method: String?): Int {
         return this.sendJson(method, HashMap())
-    }
-
-    fun sendTextMessage(message: String){
-        Log.d(TAG, "sendTextMessage: ${session!!.getLocalParticipant()}")
-        val msg = JSONObject()
-        msg.put("message", message)
-        val m = msg.toString().replace("\\","")
-        val map = mapOf<String, String>("data" to m)
-        Log.d(TAG, "sendTextMessage: ${m}")
-        Log.d(TAG, "sendTextMessage: ${map}")
-
-        sendJson(JsonConstants.SENDMESSAGE_ROOM_METHOD, map)
-
-        val id = RPC_ID.get()
-        val jsonObject = JSONObject()
-        val paramsJson = JSONObject()
-        val string = """message":"{${message}}""".replace("\\","")
-        paramsJson.put("data", string)
-        try {
-            jsonObject.put("jsonrpc", JsonConstants.JSON_RPCVERSION)
-            jsonObject.put("method", SENDMESSAGE_ROOM_METHOD)
-            jsonObject.put("id", id)
-            jsonObject.put("params", paramsJson)
-        } catch (e: JSONException) {
-            Log.e(TAG, "JSONException raised on sendJson", e)
-        }
-        val msge = jsonObject.toString()
-        val test = """{"id" : "23","method":"sendMessage","params":{"message":{"message":"test###############"}},"jsonrpc":"2.0"}"""
-        websocket!!.sendText(test)
-        RPC_ID.incrementAndGet()
     }
 
     @Synchronized
@@ -327,8 +302,7 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
             Log.e(TAG, "JSONException raised on sendJson", e)
             return -1
         }
-        val msg = jsonObject.toString()
-        websocket!!.sendText(msg)
+        websocket!!.sendText(jsonObject.toString())
         RPC_ID.incrementAndGet()
         return id
     }
@@ -384,6 +358,9 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
 
     @Throws(JSONException::class)
     private fun participantJoinedEvent(params: JSONObject) {
+        Log.d(TAG, "participantJoinedEvent: 1")
+        joinListener.joinEvent()
+        Log.d(TAG, "participantJoinedEvent: 2")
         newRemoteParticipantAux(params)
     }
 
@@ -402,6 +379,8 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
 
     @Throws(JSONException::class)
     private fun participantLeftEvent(params: JSONObject) {
+        Log.d(TAG, "participantLeftEvent: ")
+        leftListener.leftEvent()
         val remoteParticipant: RemoteParticipant =
             session!!.removeRemoteParticipant(params.getString("connectionId"))!!
         remoteParticipant.dispose()
@@ -416,6 +395,7 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
 
     @Throws(JSONException::class)
     private fun newRemoteParticipantAux(participantJson: JSONObject): RemoteParticipant {
+        Log.d(TAG, "newRemoteParticipantAux: ")
         val connectionId = participantJson.getString(JsonConstants.ID)
         var participantName: String? = ""
         if (participantJson.getString(JsonConstants.METADATA) != null) {
@@ -757,3 +737,4 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
     }
 
 }
+
