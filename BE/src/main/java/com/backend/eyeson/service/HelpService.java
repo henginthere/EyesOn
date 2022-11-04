@@ -90,6 +90,8 @@ public class HelpService {
                 for(int j=0;j<binaryDay.length();j++){
                     res += binaryDay.charAt(j);
                 }
+            }else{
+                res = binaryDay;
             }
             
             char[] chArray = res.toCharArray();
