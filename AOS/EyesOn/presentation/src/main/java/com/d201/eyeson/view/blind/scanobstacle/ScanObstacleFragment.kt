@@ -141,6 +141,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     private fun processFrame(frame: Bitmap) {
         Log.d(TAG, "processFrame")
         lastFrame = frame
+        Log.d(TAG, "processFrame: ${lastFrame!!.width}")
         if (imageProcessor != null) {
             pending = processing
             if (!processing) {
@@ -349,12 +350,11 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             //  구성이 UpdateMode.BLOCKING(기본값)으로 설정되면 렌더링이 카메라 프레임 속도로 조절됩니다.
             val frame = session!!.update()
             val camera = frame.camera
-
             // Retrieves the latest depth image for this frame.
             // 이 프레임의 최신 깊이 이미지를 검색합니다.
             if (isDepthSupported) {
                 Log.d(TAG, "centerX: $centerX, centerY: $centerY, distance: ${depthTexture.distance}")
-                if(centerX!= null && centerY!=null)
+          //      if(centerX!= null && centerY!=null)
                 depthTexture.update(frame, centerX, centerY)
                 Log.d(TAG, "depthTexture__centerX: $centerX, centerY: $centerY, distance: ${depthTexture.distance}")
                 onUpdateDepthImage(depthTexture.distance)

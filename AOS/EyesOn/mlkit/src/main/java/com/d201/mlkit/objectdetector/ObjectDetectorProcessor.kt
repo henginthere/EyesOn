@@ -21,6 +21,7 @@ import android.graphics.*
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.d201.mlkit.GraphicOverlay
+import com.d201.mlkit.GraphicOverlay.Graphic
 import com.d201.mlkit.VisionProcessorBase
 import com.d201.mlkit.objectdetector.ObjectGraphic
 import com.google.android.gms.tasks.Task
@@ -71,12 +72,12 @@ class ObjectDetectorProcessor(context: Context, options: ObjectDetectorOptionsBa
         Log.d(TAG, "postValue___centerX : ${objectGraphic.centerX}, centerY : ${objectGraphic.centerY}")
 
         val rect = RectF(result.boundingBox)
-        val x0 = graphicOverlay.translationX(rect.left)
-        val x1 = translateX(rect.right)
+        val x0 = objectGraphic.translateX(rect.left)
+        val x1 = objectGraphic.translateX(rect.right)
         rect.left = min(x0, x1)
         rect.right = max(x0, x1)
-        rect.top = translateY(rect.top)
-        rect.bottom = translateY(rect.bottom)
+        rect.top = objectGraphic.translateY(rect.top)
+        rect.bottom = objectGraphic.translateY(rect.bottom)
 
         _centerX.postValue((rect.right-rect.left)/2 + rect.left)
         _centerY.postValue((rect.bottom-rect.top)/2 + rect.top)

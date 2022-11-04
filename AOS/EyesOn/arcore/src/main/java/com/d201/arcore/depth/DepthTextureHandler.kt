@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.Image
 import android.opengl.GLES20
 import android.opengl.GLES30
+import android.util.Log
 import com.google.ar.core.Frame
 import com.google.ar.core.exceptions.NotYetAvailableException
 import java.nio.ByteOrder
@@ -45,7 +46,11 @@ class DepthTextureHandler(var context: Context) {
     // centerX, centerY : MLKit의 객체 박스의 중간 지점
     fun update(frame: Frame, centerX: Float, centerY: Float) {
         try {
+            var x = (centerX*2/9)
+            var y = (centerY*2/9)
+            Log.d(TAG, "x: $x, centerY$y, distance: ${distance}")
             val depthImage = frame.acquireDepthImage16Bits()
+            Log.d(TAG, depthImage.width.toString())
             depthTextureWidth = depthImage.width
             depthTextureHeight = depthImage.height
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, depthTextureId)
@@ -62,7 +67,7 @@ class DepthTextureHandler(var context: Context) {
             )
 
             // 좌표에서 depthImage의 깊이를 밀리미터 단위로 가져옵니다
-            distance = getMillimetersDepth(depthImage, centerX.toInt(), centerY.toInt())
+            distance = getMillimetersDepth(depthImage, x.toInt(), y.toInt())
 //            onDepthImageUpdateListener.onUpdateDepthImage(distance)
 //            (context as MainActivity).onUpdateDepthImage(distance)
             depthImage.close()
