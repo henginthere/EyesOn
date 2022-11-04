@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="vm"
+            type="com.d201.eyeson.view.angel.complaints.ComplaintsViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,7 +18,7 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="민원 목록 상세 페이지"
+            android:text="@{vm.complaints.title}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -38,6 +44,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_title_address"
             app:layout_constraintStart_toStartOf="parent"
+            android:text="@{vm.complaints.address}"
             tools:text="주소"/>
 
         <TextView
@@ -54,6 +61,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_title_content"
             app:layout_constraintStart_toStartOf="parent"
+            android:text="@{vm.complaints.content}"
             tools:text="내용"/>
 
         <Button

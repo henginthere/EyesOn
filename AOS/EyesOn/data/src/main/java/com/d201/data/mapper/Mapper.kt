@@ -62,13 +62,37 @@ fun AngelInfo.mapperToAngelRequest(): AngelRequest{
 fun Complaints.mapperToComplaintsRequest(): ComplaintsRequest{
     return this.let {
         ComplaintsRequest(
+            it.seq,
             it.address,
             it.image,
-            it.content
+            it.content,
+            it.returnContent,
+            it.title,
+            it.resultContent
         )
     }
 }
 
 fun ComplaintsResponse.mapperToComplaints(): Complaints{
-    return Complaints(seq, blindUser, angelUser, state, returnContent, address, image, title, content, regTime, resultContent)
+    return this.let {
+        Complaints(
+            it.seq,
+            it.address,
+            it.content,
+            it.image,
+            it.regTime,
+            it.resultContent,
+            it.returnContent,
+            it.state,
+            it.title
+        )
+    }
+}
+
+fun List<ComplaintsResponse>.mapperToListComplaints(): List<Complaints>{
+    return this.let {
+        it.map {
+            it.mapperToComplaints()
+        }
+    }
 }

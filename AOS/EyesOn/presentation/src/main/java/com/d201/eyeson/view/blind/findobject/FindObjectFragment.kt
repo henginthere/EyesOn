@@ -10,7 +10,6 @@ private const val TAG = "FindObjectFragment"
 class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(R.layout.fragment_find_object) {
 
     override fun init() {
-        TODO("Not yet implemented")
     }
 
 }

@@ -10,7 +10,6 @@ private const val TAG = "BlindSettingFragment"
 class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.fragment_blind_setting) {
 
     override fun init() {
-        TODO("Not yet implemented")
     }
 
 }

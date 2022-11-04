@@ -10,7 +10,6 @@ private const val TAG = "MyComplaintsFragment"
 class MyComplaintsFragment : BaseFragment<FragmentMyComplaintsBinding>(R.layout.fragment_my_complaints) {
 
     override fun init() {
-        TODO("Not yet implemented")
     }
 
 }

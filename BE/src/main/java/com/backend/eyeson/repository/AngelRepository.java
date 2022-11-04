@@ -11,4 +11,5 @@ public interface AngelRepository extends JpaRepository<AngelInfoEntity, Long> {
     Optional<AngelInfoEntity> findByUserEntity_UserSeq(long userSeq);
 
     Optional<List<AngelInfoEntity>> findAllByAngelGender(char gender);
+    List<AngelInfoEntity> findAll();
 }

@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d201.domain.model.Login
-import com.d201.domain.usecase.LoginUseCase
+import com.d201.domain.usecase.user.LoginUseCase
 import com.d201.domain.utils.ResultType
 import com.d201.eyeson.util.JWT
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -10,7 +10,6 @@ private const val TAG = "ScanTextFragment"
 class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment_scan_text) {
 
     override fun init() {
-        TODO("Not yet implemented")
     }
 
 }

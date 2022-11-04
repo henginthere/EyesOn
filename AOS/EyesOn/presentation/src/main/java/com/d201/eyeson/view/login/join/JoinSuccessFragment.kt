@@ -6,7 +6,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentJoinSuccessBinding
 import com.d201.eyeson.util.*
-import com.d201.eyeson.view.angel.AngelMainActivity
+import com.d201.eyeson.view.angel.main.AngelMainActivity
 import com.d201.eyeson.view.blind.BlindMainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
