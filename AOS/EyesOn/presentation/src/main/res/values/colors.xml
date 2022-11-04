@@ -9,4 +9,9 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="angel_text">#181B68</color>
+    <color name="gradient_start">#DCF5FF</color>
+    <color name="gradient_center">#F9FBFF</color>
+    <color name="gradient_end">#D1D9FF</color>
+    <color name="angel_blue">#7B9CFF</color>
+    <color name="angel_red">#F57474</color>
 </resources>

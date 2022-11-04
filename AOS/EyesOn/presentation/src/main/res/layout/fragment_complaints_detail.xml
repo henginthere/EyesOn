@@ -12,7 +12,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.angel.complaints.ComplaintsDetailFragment">
+        tools:context=".view.angel.complaints.ComplaintsDetailFragment"
+        android:background="@drawable/gradient_angel"
+        >
 
         <TextView
             android:id="@+id/tv_title"

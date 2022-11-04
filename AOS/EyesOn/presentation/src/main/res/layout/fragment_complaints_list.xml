@@ -6,7 +6,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.angel.complaints.help.ComplaintsListFragment">
+        tools:context=".view.angel.complaints.help.ComplaintsListFragment"
+        android:background="@drawable/gradient_angel"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_top"
@@ -47,7 +49,7 @@
             <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="#00000000">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
@@ -85,6 +87,7 @@
                                 android:id="@+id/tab_angel_complaints_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:background="#00000000"
                                 app:layout_constraintBottom_toBottomOf="parent">
 
                                 <com.google.android.material.tabs.TabItem
