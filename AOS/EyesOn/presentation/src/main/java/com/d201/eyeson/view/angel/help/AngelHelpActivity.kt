@@ -29,7 +29,6 @@ import org.webrtc.EglBase
 import java.io.IOException
 
 private const val TAG = "AngelHelpActivity"
-
 @AndroidEntryPoint
 class AngelHelpActivity : BaseActivity<ActivityAngelHelpBinding>(R.layout.activity_angel_help) {
 
@@ -54,6 +53,24 @@ class AngelHelpActivity : BaseActivity<ActivityAngelHelpBinding>(R.layout.activi
 
                 val sessionId = "customerId" + "-session"
                 getToken(sessionId)
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        leaveSession()
+    }
+
+    private fun leaveSession() {
+        session.leaveSession()
+        httpClient.dispose()
+        runOnUiThread {
+            binding.apply {
+                localGlSurfaceView.clearImage()
+                localGlSurfaceView.release()
+                remoteGlSurfaceView.clearImage()
+                remoteGlSurfaceView.release()
             }
         }
     }
@@ -164,20 +181,7 @@ class AngelHelpActivity : BaseActivity<ActivityAngelHelpBinding>(R.layout.activi
     }
 
     private fun startWebSocket() {
-        val joinListener = object : CustomWebSocket.JoinListener {
-            override fun joinEvent() {
-                showToast("join")
-                Log.d(TAG, "joinEvent: ")
-            }
-        }
-
-        val leftListener = object : CustomWebSocket.LeftListener {
-            override fun leftEvent() {
-                showToast("left")
-                Log.d(TAG, "leftEvent: ")
-            }
-        }
-        val webSocket = CustomWebSocket(session, OPENVIDU_URL, this, joinListener, leftListener)
+        val webSocket = CustomWebSocket(session, OPENVIDU_URL, this)
         webSocket.execute()
         session.setWebSocket(webSocket)
     }
