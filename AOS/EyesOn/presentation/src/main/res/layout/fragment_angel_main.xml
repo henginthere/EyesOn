@@ -236,7 +236,7 @@
                             android:layout_height="wrap_content"
                             android:text="도움 응답"
                             android:gravity="center"
-                            app:lay답ut_constraintTop_toBottomOf="@id/iv_response_help"
+                            app:layout_constraintTop_toBottomOf="@id/iv_response_help"
                             app:layout_constraintStart_toStartOf="@id/iv_response_help"
                             app:layout_constraintEnd_toEndOf="@id/iv_response_help"
                             app:layout_constraintBottom_toBottomOf="parent"
