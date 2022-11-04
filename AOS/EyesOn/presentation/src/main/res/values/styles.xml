@@ -15,10 +15,5 @@
         <item name="android:colorForeground">#42221f1f
         </item>
 
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
-        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
     </style>
 </resources>
