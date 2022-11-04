@@ -46,13 +46,19 @@ class DepthTextureHandler(var context: Context) {
     // centerX, centerY : MLKit의 객체 박스의 중간 지점
     fun update(frame: Frame, centerX: Float, centerY: Float) {
         try {
+
+            Log.d(TAG, "DepthTextureHandler.update")
             var x = (centerX*2/9)
             var y = (centerY*2/9)
-            Log.d(TAG, "x: $x, centerY$y, distance: ${distance}")
+            Log.d(TAG, "*****x: $x, centerY$y, distance: ${distance}")
+
             val depthImage = frame.acquireDepthImage16Bits()
+
             Log.d(TAG, depthImage.width.toString())
+
             depthTextureWidth = depthImage.width
             depthTextureHeight = depthImage.height
+
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, depthTextureId)
             GLES20.glTexImage2D(
                 GLES20.GL_TEXTURE_2D,
@@ -68,12 +74,14 @@ class DepthTextureHandler(var context: Context) {
 
             // 좌표에서 depthImage의 깊이를 밀리미터 단위로 가져옵니다
             distance = getMillimetersDepth(depthImage, x.toInt(), y.toInt())
+            Log.d(TAG, "distance: ${distance}")
 //            onDepthImageUpdateListener.onUpdateDepthImage(distance)
 //            (context as MainActivity).onUpdateDepthImage(distance)
             depthImage.close()
 
         } catch (e: NotYetAvailableException) {
             // This normally means that depth data is not available yet.
+            Log.d(TAG,"This normally means that depth data is not available yet.")
         }
     }
 
@@ -83,12 +91,15 @@ class DepthTextureHandler(var context: Context) {
     lateinit var onDepthImageUpdateListener: OnDepthImageUpdateListener
 
     fun getMillimetersDepth(depthImage: Image, x: Int, y: Int): Int {
-        // The depth image has a single plane, which stores depth for each
-        // pixel as 16-bit unsigned integers.
+        // The depth image has a single plane, which stores depth for each pixel as 16-bit unsigned integers.
+        Log.d(TAG,"getMillimetersDepth")
         val plane = depthImage.planes[0]
         val byteIndex = x * plane.pixelStride + y * plane.rowStride
         val buffer = plane.buffer.order(ByteOrder.nativeOrder())
         val depthSample = buffer.getShort(byteIndex)
+        Log.d(TAG,"byteIndex: $byteIndex")
+        Log.d(TAG,"buffer: $buffer")
+        Log.d(TAG,"depthSample: $depthSample")
         return depthSample.toInt()
     }
 

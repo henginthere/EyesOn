@@ -333,6 +333,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         // 이전 프레임에서 픽셀을 로드하지 않도록 드라이버에 알리기 위해 화면을 지웁니다.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         if (session == null) {
+            Log.d(TAG,"SESSION IS NULL")
             return
         }
         // Notify ARCore session that the view size changed so that the perspective matrix and
@@ -353,7 +354,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // Retrieves the latest depth image for this frame.
             // 이 프레임의 최신 깊이 이미지를 검색합니다.
             if (isDepthSupported) {
-                Log.d(TAG, "centerX: $centerX, centerY: $centerY, distance: ${depthTexture.distance}")
+          //      Log.d(TAG, "centerX: $centerX, centerY: $centerY, distance: ${depthTexture.distance}")
           //      if(centerX!= null && centerY!=null)
                 depthTexture.update(frame, centerX, centerY)
                 Log.d(TAG, "depthTexture__centerX: $centerX, centerY: $centerY, distance: ${depthTexture.distance}")
