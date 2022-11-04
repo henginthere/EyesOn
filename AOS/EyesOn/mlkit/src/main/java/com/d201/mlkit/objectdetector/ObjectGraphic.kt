@@ -20,7 +20,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import android.util.Log
 import com.d201.mlkit.GraphicOverlay
 import com.google.mlkit.vision.objects.DetectedObject
 import java.util.*
@@ -29,7 +28,10 @@ import kotlin.math.max
 import kotlin.math.min
 
 /** Draw the detected object info in preview.  */
+<<<<<<< HEAD
 const val TAG = "ObjectGraphic__"
+=======
+>>>>>>> parent of 853ce35 ([S07P31D201-80] UPDATE : 좌표 구하기)
 class ObjectGraphic constructor(
     overlay: GraphicOverlay,
     private val detectedObject: DetectedObject
@@ -89,7 +91,10 @@ class ObjectGraphic constructor(
 
         // Draws the bounding box.
         val rect = RectF(detectedObject.boundingBox)
+<<<<<<< HEAD
         //Log.d(TAG,"88888left: "+rect.left.toString()+"right: "+rect.right+"top: "+rect.top+"bottom: "+rect.bottom)
+=======
+>>>>>>> parent of 853ce35 ([S07P31D201-80] UPDATE : 좌표 구하기)
         val x0 = translateX(rect.left)
         val x1 = translateX(rect.right)
         rect.left = min(x0, x1)
@@ -97,6 +102,7 @@ class ObjectGraphic constructor(
         rect.top = translateY(rect.top)
         rect.bottom = translateY(rect.bottom)
         canvas.drawRect(rect, boxPaints[colorID])
+<<<<<<< HEAD
         Log.d(TAG,"left: "+rect.left.toString()+"right: "+rect.right+"top: "+rect.top+"bottom: "+rect.bottom)
         // left : 사각형 기준의 왼쪽 x좌표
         // top : 사각형 기준의 위쪽 y좌표
@@ -107,6 +113,8 @@ class ObjectGraphic constructor(
 //        centerX = (rect.right-rect.left)/2 + rect.left
 //        centerY = (rect.bottom-rect.top)/2 + rect.top
 //        Log.d(TAG, "centerPoint ( $centerX ,$centerY)")
+=======
+>>>>>>> parent of 853ce35 ([S07P31D201-80] UPDATE : 좌표 구하기)
 
         // Draws other object info.
         canvas.drawRect(
@@ -116,8 +124,11 @@ class ObjectGraphic constructor(
             rect.top,
             labelPaints[colorID]
         )
+<<<<<<< HEAD
      //   Log.d(TAG,"left: "+(rect.left - STROKE_WIDTH).toString()+", right: "+(rect.left + textWidth + 2 * STROKE_WIDTH).toString()+", top: "+ (rect.top + yLabelOffset).toString()+", bottom: "+rect.top.toString())
 
+=======
+>>>>>>> parent of 853ce35 ([S07P31D201-80] UPDATE : 좌표 구하기)
         yLabelOffset += TEXT_SIZE
         canvas.drawText(
             "Tracking ID: " + detectedObject.trackingId,
