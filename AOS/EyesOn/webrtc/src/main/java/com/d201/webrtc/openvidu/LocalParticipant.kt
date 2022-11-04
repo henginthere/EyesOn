@@ -55,7 +55,7 @@ class LocalParticipant(
         val devicenames = enumerator.deviceNames
 
         for(i in devicenames.iterator()){
-            if(enumerator.isBackFacing(i)){
+            if(enumerator.isFrontFacing(i)){
                 videoCapturer = enumerator.createCapturer(i, null)
                 if(videoCapturer != null){
                     return videoCapturer
@@ -63,14 +63,6 @@ class LocalParticipant(
             }
         }
 
-        for(i in devicenames.iterator()){
-            if(enumerator.isFrontFacing(i)){
-                videoCapturer = enumerator.createCapturer(i, null)
-                if(videoCapturer !=null){
-                    return videoCapturer
-                }
-            }
-        }
         return null
     }
 
