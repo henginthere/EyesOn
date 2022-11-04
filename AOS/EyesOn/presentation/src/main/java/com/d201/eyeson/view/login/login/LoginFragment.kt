@@ -75,13 +75,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                                 Intent(
                                     requireContext(),
                                     BlindMainActivity::class.java
-                                )
+                                ).apply {
+                                    putExtra("Gender", it.gender)
+                                }
                             )
                             ANGEL -> startActivity(
                                 Intent(
                                     requireContext(),
                                     AngelMainActivity::class.java
-                                )
+                                ).apply {
+                                    putExtra("Gender", it.gender)
+                                }
                             )
                             else -> return@collectLatest
                         }

@@ -7,6 +7,7 @@ import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentBlindMainBinding
 import com.d201.eyeson.view.blind.findobject.FindObjectActivity
 import com.d201.eyeson.view.blind.findobject.FindObjectFragment
+import com.d201.eyeson.view.blind.help.BlindHelpActivity
 import com.d201.eyeson.view.blind.scanobstacle.ScanObstacleActivity
 import com.d201.eyeson.view.blind.scantext.ScanTextActivity
 import com.d201.eyeson.view.blind.scantext.ScanTextFragment
@@ -40,10 +41,13 @@ class BlindMainFragment : BaseFragment<FragmentBlindMainBinding>(R.layout.fragme
                 startActivity(Intent(requireContext(), ScanObstacleActivity::class.java))
             }
             btnHelp.setOnClickListener {
-                findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToHelperSelectFragment())
+                startActivity(Intent(requireContext(), BlindHelpActivity::class.java).apply {
+                    val gender = requireActivity().intent.getStringExtra("Gender")
+                    putExtra("Gender", gender)
+                })
             }
             btnComplaints.setOnClickListener {
-                findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToHelperSelectFragment())
+                findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToComplaintsFragment())
             }
         }
     }

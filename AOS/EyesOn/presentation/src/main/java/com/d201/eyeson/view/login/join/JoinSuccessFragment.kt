@@ -41,8 +41,12 @@ class JoinSuccessFragment : BaseFragment<FragmentJoinSuccessBinding>(R.layout.fr
         binding.apply {
             btnContinue.setOnClickListener {
                 when(args.role){
-                    BLIND -> startActivity(Intent(requireContext(), BlindMainActivity::class.java))
-                    ANGEL -> startActivity(Intent(requireContext(), AngelMainActivity::class.java))
+                    BLIND -> startActivity(Intent(requireContext(), BlindMainActivity::class.java).apply {
+                        putExtra("Gender", args.gender)
+                    })
+                    ANGEL -> startActivity(Intent(requireContext(), AngelMainActivity::class.java).apply {
+                        putExtra("Gender", args.gender)
+                    })
                     else -> return@setOnClickListener
                 }
                 requireActivity().finish()

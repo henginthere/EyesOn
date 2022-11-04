@@ -9,9 +9,6 @@
         android:name="com.d201.eyeson.view.blind.BlindMainFragment"
         android:label="BlindMainFragment" >
         <action
-            android:id="@+id/action_blindMainFragment_to_helperSelectFragment"
-            app:destination="@id/helperSelectFragment" />
-        <action
             android:id="@+id/action_blindMainFragment_to_blindNotificationFragment"
             app:destination="@id/blindNotificationFragment" />
         <action
@@ -29,18 +26,6 @@
         android:id="@+id/blindSettingFragment"
         android:name="com.d201.eyeson.view.blind.setting.BlindSettingFragment"
         android:label="BlindSettingFragment" />
-    <fragment
-        android:id="@+id/helperSelectFragment"
-        android:name="com.d201.eyeson.view.blind.help.HelperSelectFragment"
-        android:label="HelperSelectFragment" >
-        <action
-            android:id="@+id/action_helperSelectFragment_to_helpLoadingFragment"
-            app:destination="@id/helpLoadingFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/helpLoadingFragment"
-        android:name="com.d201.eyeson.view.blind.help.HelpLoadingFragment"
-        android:label="HelpLoadingFragment" />
     <fragment
         android:id="@+id/complaintsFragment"
         android:name="com.d201.eyeson.view.blind.complaints.ComplaintsFragment"
