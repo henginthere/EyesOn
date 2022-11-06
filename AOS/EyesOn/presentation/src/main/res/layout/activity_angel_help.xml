@@ -6,7 +6,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_angel"
+        >
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/frame_angel_help"
@@ -15,6 +17,8 @@
             app:navGraph="@navigation/nav_graph_angel_help"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="32dp"
+            tools:layout="@layout/fragment_angel_help"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

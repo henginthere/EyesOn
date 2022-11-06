@@ -6,12 +6,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.blind.scantext.ScanTextActivity">
+        tools:context=".view.blind.scantext.ScanTextActivity"
+        android:background="@drawable/gradient_user"
+        >
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/frame_scan_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="32dp"
+            tools:layout="@layout/fragment_scan_text"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
