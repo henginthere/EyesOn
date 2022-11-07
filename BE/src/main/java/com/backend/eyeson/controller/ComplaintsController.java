@@ -42,7 +42,7 @@ public class ComplaintsController {
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 등록 성공"), HttpStatus.OK);
     }
 
-    @ApiParam(value = "민원 조회")
+    @ApiParam(value = "민원 조회 Flag| 0:전체 1:엔젤 2:블라인드")
     @GetMapping(value = "/list/{flag}")
     public ResponseEntity<?> getList(@PageableDefault Pageable pageable, @PathVariable int flag) throws Exception{
         switch (flag){
