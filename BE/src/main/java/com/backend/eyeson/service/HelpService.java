@@ -106,16 +106,18 @@ public class HelpService {
             }
         }
 
-        // 알림 보내기
-        for(int i=0; i<canAngelList.size(); i++){
-            // fcm 토큰
-            String fcmToken = canAngelList.get(i).getUserEntity().getUserFcm();
             // 알림 제목
             String title = "도움 요청이 도착했어요 !";
             // 알림 내용
             String body = "사용자를 따뜻한 마음으로 도와주세요 !";
+            //
+            String click_action = "AngleHelp";
 
-            firebaseService.sendMessageTo(fcmToken, title, body);
+        // 알림 보내기
+        for(int i=0; i<canAngelList.size(); i++){
+            // fcm 토큰
+            String fcmToken = canAngelList.get(i).getUserEntity().getUserFcm();
+            firebaseService.sendMessageTo(fcmToken, title, body, click_action);
         }
 
         if(canAngelList.size() == 0) return false;
