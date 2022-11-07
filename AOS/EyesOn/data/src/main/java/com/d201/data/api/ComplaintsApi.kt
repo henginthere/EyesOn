@@ -11,7 +11,7 @@ interface ComplaintsApi {
 
     @Multipart
     @POST("complaints/register")
-    suspend fun insertComp(@Part complaintsRequest: MultipartBody.Part, @Part imageFile: MultipartBody.Part): BaseResponse<Void>
+    suspend fun insertComp(@Part complaintsRequest: MultipartBody.Part, @Part imageFile: MultipartBody.Part): BaseResponse<Boolean>
 
     @GET("complaints/list/{flag}")
     suspend fun selectComplaintsList(@Path("flag")flag: Int, @Query("page") page: Int, @Query("size") size: Int): BaseResponse<PagingResult<ComplaintsResponse>>

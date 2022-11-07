@@ -29,7 +29,7 @@ class ComplaintsRepositoryImpl @Inject constructor(
 )
     : ComplaintsRepository {
 
-    override fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<ResultType<BaseResponse<Void>>> = flow {
+    override fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<ResultType<BaseResponse<Boolean>>> = flow {
         emit(ResultType.Loading)
         complaintsRemoteDataSource.insertComp(complaintsRequest, imageFile).collect{
             emit(ResultType.Success(

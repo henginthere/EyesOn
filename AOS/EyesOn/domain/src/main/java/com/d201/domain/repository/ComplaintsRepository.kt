@@ -9,7 +9,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 interface ComplaintsRepository {
-    fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<ResultType<BaseResponse<Void>>>
+    fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<ResultType<BaseResponse<Boolean>>>
 
     fun selectComplaintsBySeq(seq: Long): Flow<ResultType<BaseResponse<Complaints>>>
 
