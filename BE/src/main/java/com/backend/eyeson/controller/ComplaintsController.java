@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import com.google.api.client.json.JsonFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 
 
@@ -39,6 +40,17 @@ public class ComplaintsController {
     public ResponseEntity<?> registerCom(@RequestPart(value = "params") RequestCompDto params, @RequestPart(value="file", required = false) MultipartFile multipartFile) throws Exception{
         boolean result = compService.registerCom(params, multipartFile);
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 등록 성공"), HttpStatus.OK);
+    }
+
+    @ApiParam(value = "민원 조회")
+    @GetMapping(value = "/list/{flag}")
+    public ResponseEntity<?> getList(@PageableDefault Pageable pageable, @PathVariable int flag) throws Exception{
+        switch (flag){
+            case 0: {return new ResponseEntity<>(ResponseFrame.of(compService.listAll(pageable), "신청 민원 전체 조회"), HttpStatus.OK);}
+            case 1: {return new ResponseEntity<>(ResponseFrame.of(compService.listAngel(pageable), "엔젤 민원 조회"), HttpStatus.OK);}
+            case 2: {return new ResponseEntity<>(ResponseFrame.of(compService.listBlind(pageable), "블라인드 신청 민원 조회"), HttpStatus.OK);}
+        }
+        return new ResponseEntity<>(ResponseFrame.of(HttpStatus.BAD_REQUEST, "조회 실패"), HttpStatus.OK);
     }
 
     @ApiParam(value = "신청 민원 전체 조회")
