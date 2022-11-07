@@ -42,8 +42,8 @@ public class FirebaseService {
     }
 
     // 메세지 생성
-    private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
-        FcmMessage.Notification noti = new FcmMessage.Notification(title, body, null);
+    private String makeMessage(String targetToken, String title, String body, String click_action) throws JsonProcessingException {
+        FcmMessage.Notification noti = new FcmMessage.Notification(title, body, null, click_action);
         FcmMessage.Message message = new FcmMessage.Message(noti, targetToken);
         FcmMessage fcmMessage = new FcmMessage(false, message);
 
@@ -53,10 +53,10 @@ public class FirebaseService {
 
 
     // targetToken에 해당하는 device로 FCM 푸시 알림 전송
-    public void sendMessageTo(String targetToken, String title, String body) throws IOException {
+    public void sendMessageTo(String targetToken, String title, String body, String click_action) throws IOException {
         // 엔젤 정보 받아서 시간 확인
         LocalDateTime str = LocalDateTime.now();
-        String message = makeMessage(targetToken, title, body);
+        String message = makeMessage(targetToken, title, body, click_action);
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
         Request request = new Request.Builder()

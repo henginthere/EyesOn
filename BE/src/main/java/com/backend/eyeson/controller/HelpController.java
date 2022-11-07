@@ -111,7 +111,7 @@ public class HelpController {
     @ApiOperation(value = "알림 테스트")
     @PostMapping("/alarm")
     public void checkAlarm(@RequestBody Token token) throws IOException {
-        firebaseService.sendMessageTo(token.getFcmToken(), token.getTitle(), token.getBody());
+        firebaseService.sendMessageTo(token.getFcmToken(), token.getTitle(), token.getBody(), token.getClickAction());
     }
 }
 

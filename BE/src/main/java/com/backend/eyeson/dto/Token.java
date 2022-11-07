@@ -13,4 +13,5 @@ public class Token {
     private String fcmToken;
     private String title;
     private String body;
+    private String clickAction;
 }
