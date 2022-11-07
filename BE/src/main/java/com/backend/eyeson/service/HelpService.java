@@ -116,8 +116,7 @@ public class HelpService {
             String title = "도움 요청이 도착했어요 !";
             // 알림 내용
             String body = "사용자를 따뜻한 마음으로 도와주세요 !";
-            String click_action = "AngleHelp";
-            firebaseService.sendMessageTo(fcmToken, title, body, click_action);
+            firebaseService.sendMessageTo(fcmToken, title, body);
         }
 
         if(canAngelList.size() == 0) return false;
