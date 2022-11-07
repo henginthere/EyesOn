@@ -42,7 +42,7 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     private lateinit var session: Session
 
     override fun init() {
-        initView()
+        initListener()
         checkPermission()
         initWebRTC()
     }
@@ -53,7 +53,7 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     }
 
 
-    private fun initView() {
+    private fun initListener() {
         binding.apply {
             btnChangeCamera.setOnClickListener {
                 session.getLocalParticipant()!!.switchCamera()
@@ -188,7 +188,9 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     }
 
     private fun leaveSession() {
-        this.session.leaveSession()
+        if(::session.isInitialized){
+            this.session.leaveSession()
+        }
         this.httpClient.dispose()
         requireActivity().runOnUiThread {
             binding.localGlSurfaceView.clearImage()
