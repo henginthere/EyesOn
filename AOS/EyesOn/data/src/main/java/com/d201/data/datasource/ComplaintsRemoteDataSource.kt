@@ -35,8 +35,8 @@ class ComplaintsRemoteDataSource @Inject constructor(private val complaintsApi: 
         emit(complaintsApi.completeComplaints(complaintsRequest))
     }
 
-    fun selectAllComplaints(page: Int, size: Int): Flow<BaseResponse<PagingResult<ComplaintsResponse>>> = flow {
-        emit(complaintsApi.selectAllComplaints(page, size))
+    fun selectComplaintsList(flag: Int, page: Int, size: Int): Flow<BaseResponse<PagingResult<ComplaintsResponse>>> = flow {
+        emit(complaintsApi.selectComplaintsList(flag, page, size))
     }
 
 }

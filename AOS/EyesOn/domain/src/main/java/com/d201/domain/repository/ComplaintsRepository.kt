@@ -19,6 +19,6 @@ interface ComplaintsRepository {
 
     fun completeComplaints(complaintsRequest: Complaints): Flow<ResultType<BaseResponse<Void>>>
 
-    fun selectAllComplaints(flag: Int): Flow<PagingData<Complaints>>
+    fun selectComplaintsList(flag: Int): Flow<PagingData<Complaints>>
 
 }

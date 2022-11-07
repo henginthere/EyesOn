@@ -25,8 +25,7 @@ import javax.inject.Singleton
 private const val TAG ="ComplaintsRepositoryImpl"
 @Singleton
 class ComplaintsRepositoryImpl @Inject constructor(
-    private val complaintsRemoteDataSource: ComplaintsRemoteDataSource,
-    private val complaintsApi: ComplaintsApi,
+    private val complaintsRemoteDataSource: ComplaintsRemoteDataSource
 )
     : ComplaintsRepository {
 
@@ -91,10 +90,10 @@ class ComplaintsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun selectAllComplaints(flag: Int) =
+    override fun selectComplaintsList(flag: Int) =
         Pager(
             config = PagingConfig(pageSize = 1, maxSize = 15, enablePlaceholders = false),
-            pagingSourceFactory = { ComplaintsPagingSource(complaintsApi, flag) }
+            pagingSourceFactory = { ComplaintsPagingSource(complaintsRemoteDataSource, flag) }
         ).flow
 
 }
