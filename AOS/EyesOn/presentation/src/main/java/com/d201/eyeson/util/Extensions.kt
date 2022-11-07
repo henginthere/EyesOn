@@ -2,6 +2,8 @@ package com.d201.eyeson.util
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.widget.ImageButton
@@ -9,6 +11,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.accessibility.AccessibilityEventCompat
 import com.d201.eyeson.R
+import com.google.gson.Gson
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 
 private const val TAG ="EXTENSIONS"
 
@@ -66,4 +75,20 @@ fun accessibilityEvent(view: View, context: Context) = object : View.Accessibili
             }
         }
     }
+}
+
+fun Any.objectToPartBody(key: String, value: Any): MultipartBody.Part{
+    return MultipartBody.Part.createFormData(
+        name = key,
+        value = "application/json; charset=utf-8"
+    )
+}
+
+fun Uri.imageUriToPartBody(key: String, file: File): MultipartBody.Part{
+    Log.d(TAG, "imageUriToPartBody: ${file}")
+    return MultipartBody.Part.createFormData(
+        name = key,
+        filename = file.name,
+        body = file.asRequestBody("image/*".toMediaType())
+    )
 }

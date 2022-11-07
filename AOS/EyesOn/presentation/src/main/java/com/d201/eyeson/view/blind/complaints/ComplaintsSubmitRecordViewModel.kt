@@ -2,36 +2,48 @@ package com.d201.eyeson.view.blind.complaints
 
 import android.content.Context
 import android.content.Intent
+import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d201.domain.model.Complaints
+import com.d201.domain.usecase.complaints.InsertCompUseCase
 import com.d201.domain.usecase.complaints.SubmitCompUseCase
 import com.d201.domain.utils.ResultType
+import com.d201.eyeson.util.LocationService
 import com.d201.eyeson.util.SingleLiveEvent
+import com.d201.eyeson.util.imageUriToPartBody
+import com.d201.eyeson.util.objectToPartBody
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import java.io.File
 import java.util.*
 import javax.inject.Inject
 
 private const val TAG ="ComplaintsSubmitRecordViewModel"
 @HiltViewModel
-class ComplaintsSubmitRecordViewModel @Inject constructor(private val submitCompUseCase: SubmitCompUseCase) : ViewModel(), TextToSpeech.OnInitListener{
+class ComplaintsSubmitRecordViewModel @Inject constructor(private val insertCompUseCase: InsertCompUseCase) : ViewModel(), TextToSpeech.OnInitListener{
 
     private val _successResultEvent = SingleLiveEvent<String>()
     val successResultEvent get() = _successResultEvent
 
-    fun submitComplaints(complaints: Complaints){
+    fun submitComplaints(complaints: Complaints, imageUri: Uri){
         viewModelScope.launch(Dispatchers.IO){
-            submitCompUseCase.excute(complaints).collectLatest {
+            Log.d(TAG, "submitComplaints: #########################${imageUri.path}")
+            val file = File("/data/user/0/com.d201.eyeson/cache/image/20221107_1729254083986542103703830.jpg")
+            insertCompUseCase.excute(complaints.objectToPartBody("params", complaints), imageUri.imageUriToPartBody("file", file)).collectLatest {
                 when(it){
                     is ResultType.Success -> _successResultEvent.postValue(it.data.message)
                     else -> Log.d(TAG, "submitComplaints: ${it}")
@@ -40,9 +52,31 @@ class ComplaintsSubmitRecordViewModel @Inject constructor(private val submitComp
         }
     }
 
+    // GPS
+    private val _location: MutableLiveData<Location>? = MutableLiveData<Location>()
+    val location: LiveData<Location>?
+        get() = _location
+    var locationRepository: LocationService? = null
+
+    fun setLocationRepository(context: Context) {
+        locationRepository = LocationService.getInstance(context)
+    }
+
+    fun setLocationItem(location: Location){
+        _location!!.value = location
+    }
+
+    fun enableLocationServices(){
+        locationRepository?.let {
+            it.startService()
+        }
+    }
+
+
+    //STT
     private lateinit var speechRecognizer: SpeechRecognizer
 
-    private val _recordText: MutableStateFlow<String> = MutableStateFlow("")
+    private val _recordText: MutableStateFlow<String> = MutableStateFlow("안녕하세요")
     val recordText get() = _recordText
 
     private val _statusSTT: MutableStateFlow<Boolean> = MutableStateFlow(false)

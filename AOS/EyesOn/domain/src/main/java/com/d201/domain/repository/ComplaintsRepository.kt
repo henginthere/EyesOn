@@ -5,9 +5,10 @@ import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.Complaints
 import com.d201.domain.utils.ResultType
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
 
 interface ComplaintsRepository {
-    fun insertComp(complaintsRequest: Complaints): Flow<ResultType<BaseResponse<Void>>>
+    fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<ResultType<BaseResponse<Void>>>
 
     fun selectComplaintsBySeq(seq: Long): Flow<ResultType<BaseResponse<Complaints>>>
 

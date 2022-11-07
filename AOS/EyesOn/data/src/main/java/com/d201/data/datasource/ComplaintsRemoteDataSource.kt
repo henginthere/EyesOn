@@ -7,14 +7,15 @@ import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.PagingResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ComplaintsRemoteDataSource @Inject constructor(private val complaintsApi: ComplaintsApi) {
 
-    fun insertComp(complaintsRequest: ComplaintsRequest): Flow<BaseResponse<Void>> = flow {
-        emit(complaintsApi.insertComp(complaintsRequest))
+    fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<BaseResponse<Void>> = flow {
+        emit(complaintsApi.insertComp(complaintsRequest, imageFile))
     }
 
     fun selectComplaintsBySeq(seq: Long): Flow<BaseResponse<ComplaintsResponse>> = flow {

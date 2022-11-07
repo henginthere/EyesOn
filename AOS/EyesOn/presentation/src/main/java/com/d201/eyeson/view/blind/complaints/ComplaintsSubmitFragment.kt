@@ -1,13 +1,13 @@
 package com.d201.eyeson.view.blind.complaints
 
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
@@ -15,13 +15,16 @@ import com.d201.eyeson.databinding.FragmentComplaintsSubmitBinding
 import com.d201.eyeson.util.accessibilityEvent
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import java.io.FileOutputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val TAG = "ComplaintsSubmitFragment"
 @AndroidEntryPoint
 class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R.layout.fragment_complaints_submit) {
 
     private var bitmap: Bitmap? = null
+    private var photoURI: Uri? = null
     override fun init() {
         takePicture()
         initView()
@@ -44,9 +47,9 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
             btnSubmit.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
-                    val fileName = saveBitmap()
-                    if(saveBitmap().isNotBlank()){
-                        findNavController().navigate(ComplaintsSubmitFragmentDirections.actionComplaintsSubmitFragmentToComplaintsSubmitRecordFragment(fileName))
+                    if(!currentPhotoPath.isNullOrEmpty()){
+                        Log.d(TAG, "initView: ${currentPhotoPath}")
+                        findNavController().navigate(ComplaintsSubmitFragmentDirections.actionComplaintsSubmitFragmentToComplaintsSubmitRecordFragment(photoURI!!))
                     }else{
                         showToast("사진을 촬영해 주세요")
                     }
@@ -55,36 +58,48 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
         }
     }
 
-    private fun takePicture(){
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { photoIntent ->
-            photoIntent.resolveActivity(requireContext().packageManager)?.also {
-                cameraIntentLauncher.launch(photoIntent)
+    private val cameraIntentLauncher: ActivityResultLauncher<Uri> = registerForActivityResult(ActivityResultContracts.TakePicture()){
+        if(it){
+            photoURI?.let {
+                binding.ivSelectedImage.setImageURI(it)
+                Log.d(TAG, "photoURI = ${photoURI!!.path}")
             }
         }
     }
 
-    private val cameraIntentLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        if(it.resultCode == RESULT_OK){
-            val bitmap = it.data!!.extras!!.get("data") as Bitmap
-            binding.ivSelectedImage.setImageBitmap(bitmap)
-            this.bitmap = bitmap
+    private fun takePicture() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(requireContext().packageManager)?.also {
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (e: IOException) {
+                    null
+                }
+                photoFile?.also {
+                    photoURI = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}", photoFile)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    cameraIntentLauncher.launch(photoURI)
+                }
+            }
         }
     }
 
-    private fun saveBitmap(): String{
-        if(bitmap != null){
-            try {
-                val file = File(requireContext().cacheDir, "${System.currentTimeMillis()}.jpg")
-                file.createNewFile()
-                val fos = FileOutputStream(file)
-                bitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, fos)
-                fos.close()
-                return file.name
-            }catch (e: Exception){
-                Log.d(TAG, "initView: ${e.message}")
-            }
+    private var currentPhotoPath: String? = null
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir = File("${requireContext().cacheDir}/image")
+        if(!storageDir.exists()){
+            storageDir.mkdirs()
         }
-        return ""
+        return File.createTempFile(
+            "${timeStamp}",
+            ".jpg",
+            storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
+        }
     }
 
 }

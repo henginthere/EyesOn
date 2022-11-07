@@ -17,6 +17,7 @@ import com.d201.domain.utils.ResultType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,9 +29,9 @@ class ComplaintsRepositoryImpl @Inject constructor(
 )
     : ComplaintsRepository {
 
-    override fun insertComp(complaints: Complaints): Flow<ResultType<BaseResponse<Void>>> = flow {
+    override fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<ResultType<BaseResponse<Void>>> = flow {
         emit(ResultType.Loading)
-        complaintsRemoteDataSource.insertComp(complaints.mapperToComplaintsRequest()).collect{
+        complaintsRemoteDataSource.insertComp(complaintsRequest, imageFile).collect{
             emit(ResultType.Success(
                 BaseResponse(
                     it.message,

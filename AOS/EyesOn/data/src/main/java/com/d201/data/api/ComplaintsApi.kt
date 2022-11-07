@@ -4,12 +4,14 @@ import com.d201.data.model.request.ComplaintsRequest
 import com.d201.data.model.response.ComplaintsResponse
 import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.PagingResult
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface ComplaintsApi {
 
+    @Multipart
     @POST("complaints/register")
-    suspend fun insertComp(@Body complaintsRequest: ComplaintsRequest): BaseResponse<Void>
+    suspend fun insertComp(@Part complaintsRequest: MultipartBody.Part , @Part imageFile: MultipartBody.Part): BaseResponse<Void>
 
     @GET("complaints/list")
     suspend fun selectAllComplaints(@Query("page") page: Int, @Query("size") size: Int): BaseResponse<PagingResult<ComplaintsResponse>>
