@@ -57,7 +57,7 @@
         android:name="com.d201.eyeson.view.blind.complaints.ComplaintsSubmitRecordFragment"
         android:label="ComplaintsSubmitRecordFragment">
         <argument
-            app:argType="android.net.Uri"
+            app:argType="string"
             android:name="image"
             app:nullable="false"
             />

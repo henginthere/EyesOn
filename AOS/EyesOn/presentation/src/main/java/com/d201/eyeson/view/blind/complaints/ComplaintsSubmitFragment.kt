@@ -25,6 +25,8 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
 
     private var bitmap: Bitmap? = null
     private var photoURI: Uri? = null
+    private var currentPhotoPath: String? = null
+
     override fun init() {
         takePicture()
         initView()
@@ -48,8 +50,7 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
                     if(!currentPhotoPath.isNullOrEmpty()){
-                        Log.d(TAG, "initView: ${currentPhotoPath}")
-                        findNavController().navigate(ComplaintsSubmitFragmentDirections.actionComplaintsSubmitFragmentToComplaintsSubmitRecordFragment(photoURI!!))
+                        findNavController().navigate(ComplaintsSubmitFragmentDirections.actionComplaintsSubmitFragmentToComplaintsSubmitRecordFragment(currentPhotoPath!!))
                     }else{
                         showToast("사진을 촬영해 주세요")
                     }
@@ -84,7 +85,6 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
         }
     }
 
-    private var currentPhotoPath: String? = null
 
     @Throws(IOException::class)
     private fun createImageFile(): File {

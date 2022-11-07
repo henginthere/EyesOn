@@ -14,14 +14,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.d201.data.mapper.mapperToComplaintsRequest
 import com.d201.domain.model.Complaints
 import com.d201.domain.usecase.complaints.InsertCompUseCase
 import com.d201.domain.usecase.complaints.SubmitCompUseCase
 import com.d201.domain.utils.ResultType
-import com.d201.eyeson.util.LocationService
-import com.d201.eyeson.util.SingleLiveEvent
-import com.d201.eyeson.util.imageUriToPartBody
-import com.d201.eyeson.util.objectToPartBody
+import com.d201.eyeson.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,11 +37,10 @@ class ComplaintsSubmitRecordViewModel @Inject constructor(private val insertComp
     private val _successResultEvent = SingleLiveEvent<String>()
     val successResultEvent get() = _successResultEvent
 
-    fun submitComplaints(complaints: Complaints, imageUri: Uri){
+    fun submitComplaints(complaints: Complaints, imagePath: String){
         viewModelScope.launch(Dispatchers.IO){
-            Log.d(TAG, "submitComplaints: #########################${imageUri.path}")
-            val file = File("/data/user/0/com.d201.eyeson/cache/image/20221107_1729254083986542103703830.jpg")
-            insertCompUseCase.excute(complaints.objectToPartBody("params", complaints), imageUri.imageUriToPartBody("file", file)).collectLatest {
+            val file = File(imagePath)
+            insertCompUseCase.excute(complaints.objectToMultipartPart(complaints.mapperToComplaintsRequest()), imagePath.imagePathToPartBody("file", file)).collectLatest {
                 when(it){
                     is ResultType.Success -> _successResultEvent.postValue(it.data.message)
                     else -> Log.d(TAG, "submitComplaints: ${it}")

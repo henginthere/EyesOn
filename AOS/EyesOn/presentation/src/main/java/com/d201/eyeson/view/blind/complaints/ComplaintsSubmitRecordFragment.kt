@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.d201.data.mapper.mapperToComplaintsRequest
 import com.d201.domain.model.Complaints
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
@@ -64,23 +65,17 @@ class ComplaintsSubmitRecordFragment : BaseFragment<FragmentComplaintsSubmitReco
         binding.apply {
             vm = viewModel
 
-            ivTest.setImageURI(args.image)
-            Log.d(TAG, "initView: ${args.image}")
-            val file = File("/data/user/0/com.d201.eyeson/cache/image/20221107_1729254083986542103703830.jpg")
-            if(file.exists()){
-                Log.d(TAG, "initView: $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-            }
-            
             btnRecord.setOnClickListener {
                 record()
             }
             btnSubmit.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
-                    Log.d(TAG, "initView: ${location.longitude},${location.latitude}")
-                    ivTest.setImageURI(args.image)
-                    viewModel.submitComplaints(Complaints("${location.longitude},${location.latitude}",viewModel.recordText.value), args.image)
-
+                    val comp = Complaints("${location.longitude},${location.latitude}",viewModel.recordText.value)
+                    Log.d(TAG, "initView: $comp")
+                    val c = comp.mapperToComplaintsRequest()
+                    Log.d(TAG, "initView: $c ${c.address} ${c.content} ${c.seq}")
+                    viewModel.submitComplaints(comp, args.image)
                 }
             }
             btnBack.apply {
