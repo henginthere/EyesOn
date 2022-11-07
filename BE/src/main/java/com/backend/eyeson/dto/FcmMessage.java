@@ -40,6 +40,6 @@ public class FcmMessage {
         private String title;
         private String body;
         private String image;
-        private String clickAction;
+        private String click_action;
     }
 }
