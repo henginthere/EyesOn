@@ -43,9 +43,9 @@ public class FirebaseService {
 
     // 메세지 생성
     private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
-        FcmMessage.Notification noti = new FcmMessage.Notification(title, body, null);
-        FcmMessage.Data data = new FcmMessage.Data("AngelHelp");
-        FcmMessage.Message message = new FcmMessage.Message(noti, data, targetToken);
+        FcmMessage.Notification noti = new FcmMessage.Notification(title, body, null, "AngelHelp");
+//        FcmMessage.Data data = new FcmMessage.Data("AngelHelp");
+        FcmMessage.Message message = new FcmMessage.Message(noti, targetToken);
         FcmMessage fcmMessage = new FcmMessage(false, message);
 
         // 직렬화
