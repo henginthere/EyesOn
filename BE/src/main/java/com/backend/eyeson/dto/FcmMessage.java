@@ -29,6 +29,6 @@ public class FcmMessage {
     public static class Notification{
         private String title;
         private String body;
-        private String clickAction;
+        private String click_action;
     }
 }
