@@ -19,7 +19,17 @@ public class FcmMessage {
     @Getter
     public static class Message{
         private Notification notification;
+        private Data data;
         private String token;
+    }
+
+
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class Data{
+        private String click_action;
     }
 
     @Builder
@@ -30,6 +40,6 @@ public class FcmMessage {
         private String title;
         private String body;
         private String image;
-        private String click_action;
+//        private String click_action;
     }
 }
