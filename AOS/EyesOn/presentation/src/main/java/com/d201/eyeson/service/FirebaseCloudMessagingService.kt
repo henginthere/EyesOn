@@ -30,7 +30,10 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
             val mainIntent = Intent(this, AngelHelpActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
-            val mainPendingIntent = PendingIntent.getActivity(this, 0, mainIntent, 0)
+            val mainPendingIntent = PendingIntent.getActivity(
+                this, 0, mainIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
             val builder = NotificationCompat.Builder(this, "EyesOn_id")
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle(messageTitle)
