@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,8 +26,10 @@ public class ReverseGeocoding {
 
     public static <MultiValuemap> String getAddress(String address) throws IOException {
 
+
         String client_id = "avlfvma0aj";
         String client_secret = "K257cf4j3Tr8vsVohZFnWP5YKDYkglKn4TmkcEFa";
+
         String endpoint = "https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc";
         String coords = address;
         String output = "json";

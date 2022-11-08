@@ -53,16 +53,14 @@ public class CompService {
         ComplaintsEntity complaints = CompMapper.INSTANCE.toEntity(params);
         complaints.setCompAddress(ReverseGeocoding.getAddress(params.getCompAddress()));
         complaints.setCompState(CompStateEnum.PROGRESS_IN);
+
         UserEntity user = UserMapper.INSTANCE.toEntity(getLoginUser());
-
         String url = fileService.fileUpload(multipartFile);
-        System.out.println(url);
         complaints.setCompImage(multipartFile.getOriginalFilename());
-
         complaints.setBlindUser(user);
         compRepository.save(complaints);
-        return true;
 
+        return true;
     }
 
     public PagingResult<ComplaintsDto> listAll(Pageable pageable) {
@@ -73,11 +71,10 @@ public class CompService {
         for(ComplaintsEntity complaintsEntity: complaintsPage) {
             compList.add(CompMapper.INSTANCE.toDto(complaintsEntity));
         }
-        System.out.println(compList);
-        System.out.println(pageable);
-        PagingResult result =new PagingResult<ResponseCompDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
-        return result;
 
+        PagingResult result =new PagingResult<ResponseCompDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
+
+        return result;
     }
 
     public PagingResult<ResponseCompDto> listAngel(Pageable pageable) {
@@ -89,9 +86,10 @@ public class CompService {
         for(ComplaintsEntity complaintsEntity: complaintsPage) {
             compList.add(CompMapper.INSTANCE.toDto(complaintsEntity));
         }
-        PagingResult result =new PagingResult<ResponseCompDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
-        return result;
 
+        PagingResult result =new PagingResult<ResponseCompDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
+
+        return result;
     }
 
     public PagingResult<ResponseCompDto> listBlind(Pageable pageable) {
@@ -99,10 +97,13 @@ public class CompService {
         UserEntity loginUser = UserMapper.INSTANCE.toEntity(getLoginUser());
         complaintsPage = compRepository.findAllByBlindUserOrderByCompSeqAsc(loginUser, pageable);
         List<ResponseCompDto> compList = new ArrayList<>();
+
         for(ComplaintsEntity complaintsEntity: complaintsPage) {
             compList.add(CompMapper.INSTANCE.toDto(complaintsEntity));
         }
+
         PagingResult result =new PagingResult<ResponseCompDto>(pageable.getPageNumber(), complaintsPage.getTotalPages() -1, compList);
+
         return result;
 
     }
@@ -110,8 +111,8 @@ public class CompService {
     public ResponseCompDto detailCom(long compSeq) {
         ComplaintsEntity complaintsEntity = compRepository.findByCompSeq(compSeq).get();
         ResponseCompDto complaintsDto = CompMapper.INSTANCE.toDto(complaintsEntity);
-        return complaintsDto;
 
+        return complaintsDto;
     }
 
     public ResponseCompDto returnCom(RequestCompDto requestCompDto) {
@@ -120,10 +121,11 @@ public class CompService {
         complaintsEntity.setCompReturn(requestCompDto.getCompReturn());
         complaintsEntity.setCompState(CompStateEnum.RETURN);
         complaintsEntity.setAngelUser(UserMapper.INSTANCE.toEntity(getLoginUser()));
+
         compRepository.save(complaintsEntity);
         ResponseCompDto result = CompMapper.INSTANCE.toDto(complaintsEntity);
-        return result;
 
+        return result;
     }
 
     public ResponseCompDto submitCom(RequestCompDto requestCompDto) {
@@ -132,10 +134,11 @@ public class CompService {
         complaintsEntity.setCompTitle(requestCompDto.getCompTitle());
         complaintsEntity.setCompState(CompStateEnum.REGIST_DONE);
         complaintsEntity.setAngelUser(UserMapper.INSTANCE.toEntity(getLoginUser()));
+
         compRepository.save(complaintsEntity);
         ResponseCompDto result = CompMapper.INSTANCE.toDto(complaintsEntity);
-        return result;
 
+        return result;
     }
 
     public ResponseCompDto completeCom(RequestCompDto requestCompDto) {
@@ -144,9 +147,10 @@ public class CompService {
         complaintsEntity.setCompResultContent(requestCompDto.getCompResultContent());
         complaintsEntity.setCompState(CompStateEnum.PROGRESS_DONE);
         complaintsEntity.setAngelUser(UserMapper.INSTANCE.toEntity(getLoginUser()));
+
         compRepository.save(complaintsEntity);
         ResponseCompDto result = CompMapper.INSTANCE.toDto(complaintsEntity);
-        return result;
 
+        return result;
     }
 }
