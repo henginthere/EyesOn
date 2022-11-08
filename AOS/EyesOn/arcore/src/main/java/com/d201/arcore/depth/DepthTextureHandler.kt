@@ -4,15 +4,18 @@ import android.content.Context
 import android.media.Image
 import android.opengl.GLES20
 import android.opengl.GLES30
+import android.util.Log
+import com.google.ar.core.Coordinates2d
 import com.google.ar.core.Frame
 import com.google.ar.core.exceptions.NotYetAvailableException
 import java.nio.ByteOrder
-
+private const val TAG = "DepthTextureHandler"
 class DepthTextureHandler(var context: Context) {
     private var depthTextureId = -1
     private var depthTextureWidth = -1
     private var depthTextureHeight = -1
-
+  var distance1 = 0
+  var distance2 = 0
     /**
      * Creates and initializes the depth texture. This method needs to be called on a
      * thread with a EGL context attached.
@@ -45,6 +48,12 @@ class DepthTextureHandler(var context: Context) {
             val depthImage = frame.acquireDepthImage16Bits()
             depthTextureWidth = depthImage.width
             depthTextureHeight = depthImage.height
+            Log.d(TAG, "depthTextureWidthSSSS : $depthTextureWidth  ${depthImage.planes[0].pixelStride}" )
+            Log.d(TAG, "depthTextureWidthRRRR : $depthTextureWidth  ${depthImage.planes[0].rowStride}" )
+            Log.d(TAG, "depthTextureHeightSSSS : $depthTextureHeight   ${depthImage.planes[0].pixelStride}" )
+            Log.d(TAG, "depthTextureHeighRRRR : $depthTextureHeight   ${depthImage.planes[0].rowStride}" )
+            Log.d(TAG, "depthTextureStride :${(depthTextureWidth*depthImage.planes[0].rowStride)} :  ${(depthTextureHeight*depthImage.planes[0].rowStride)}" )
+            Log.d(TAG, "depthTexturePixelStride : ${(depthTextureWidth*depthImage.planes[0].pixelStride)} : ${(depthTextureHeight*depthImage.planes[0].pixelStride)}" )
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, depthTextureId)
             GLES20.glTexImage2D(
                 GLES20.GL_TEXTURE_2D,
@@ -57,9 +66,9 @@ class DepthTextureHandler(var context: Context) {
                 GLES20.GL_UNSIGNED_BYTE,
                 depthImage.planes[0].buffer
             )
-            val distance = getMillimetersDepth(depthImage, depthTextureWidth/2, depthTextureHeight/2)
+//            distance1 = getMillimetersDepth(depthImage, (depthTextureWidth*depthImage.planes[0].rowStride), (depthTextureHeight*depthImage.planes[0].rowStride))
+//            distance2 = getMillimetersDepth(depthImage, (depthTextureWidth*depthImage.planes[0].pixelStride), (depthTextureHeight*depthImage.planes[0].pixelStride))
 //            onDepthImageUpdateListener.onUpdateDepthImage(distance)
-//            (context as MainActivity).onUpdateDepthImage(distance)
             depthImage.close()
         } catch (e: NotYetAvailableException) {
             // This normally means that depth data is not available yet.
@@ -72,8 +81,8 @@ class DepthTextureHandler(var context: Context) {
     lateinit var onDepthImageUpdateListener: OnDepthImageUpdateListener
 
     fun getMillimetersDepth(depthImage: Image, x: Int, y: Int): Int {
-        // The depth image has a single plane, which stores depth for each
-        // pixel as 16-bit unsigned integers.
+        // The depth image has a single plane, which stores depth for each pixel as 16-bit unsigned integers.
+        // 깊이 이미지에는 각 픽셀의 깊이를 16비트 부호 없는 정수로 저장하는 단일 평면이 있습니다.
         val plane = depthImage.planes[0]
         val byteIndex = x * plane.pixelStride + y * plane.rowStride
         val buffer = plane.buffer.order(ByteOrder.nativeOrder())
@@ -81,6 +90,22 @@ class DepthTextureHandler(var context: Context) {
         return depthSample.toInt()
     }
 
+    fun pointConverter(frame: Frame, depthImage: Image,cpuCoordinateX: Int,cpuCoordinateY: Int): Pair<Int, Int>? {
+        val cpuCoordinates = floatArrayOf(cpuCoordinateX.toFloat(), cpuCoordinateY.toFloat())
+        val textureCoordinates = FloatArray(2)
+        frame.transformCoordinates2d(
+            Coordinates2d.IMAGE_PIXELS,
+            cpuCoordinates,
+            Coordinates2d.TEXTURE_NORMALIZED,
+            textureCoordinates
+        )
+        if (textureCoordinates[0] < 0 || textureCoordinates[1] < 0) {
+            // CPU 이미지의 좌표가 깊이 이미지의 잘린 영역에 있기 때문에 유효한 깊이 좌표가 없습니다.
+            return null
+        }
+        return (textureCoordinates[0] * depthImage.width).toInt() to
+                (textureCoordinates[1] * depthImage.height).toInt()
+    }
     fun getDepthTexture(): Int {
         return depthTextureId
     }

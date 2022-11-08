@@ -59,9 +59,9 @@ class DepthTextureHandler(var context: Context) {
                 GLES20.GL_UNSIGNED_BYTE,
                 depthImage.planes[0].buffer
             )
-            val distance = getMillimetersDepth(depthImage, depthTextureWidth/2, depthTextureHeight/2)
+//            val distance = getMillimetersDepth(depthImage, depthTextureWidth/2, depthTextureHeight/2)
 //            onDepthImageUpdateListener.onUpdateDepthImage(distance)
-            (context as MainActivity).onUpdateDepthImage(distance)
+//            (context as MainActivity).onUpdateDepthImage(distance)
             depthImage.close()
         } catch (e: NotYetAvailableException) {
             // This normally means that depth data is not available yet.

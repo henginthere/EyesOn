@@ -9,11 +9,12 @@
 
         <android.opengl.GLSurfaceView
             android:id="@+id/surfaceview"
-            android:layout_width="200dp"
-            android:layout_height="400dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             />
 
         <ImageView
@@ -23,25 +24,27 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintDimensionRatio="H,3:4"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+         />
 
-        <Button
-            android:id="@+id/toggle_depth_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:gravity="center"
-            android:text="깊이 보기"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--        <Button-->
+<!--            android:id="@+id/toggle_depth_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="20dp"-->
+<!--            android:gravity="center"-->
+<!--            android:text="깊이 보기"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <TextView
             android:id="@+id/tv_distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="20cm"
-            android:textSize="24sp"
+            tools:text="- m"
+            android:textSize="32sp"
             android:textColor="@color/white"
+            android:textStyle="bold"
             android:gravity="center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

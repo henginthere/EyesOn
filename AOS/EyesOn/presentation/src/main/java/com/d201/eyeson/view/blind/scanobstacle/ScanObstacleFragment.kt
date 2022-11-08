@@ -1,6 +1,7 @@
 package com.d201.eyeson.view.blind.scanobstacle
 
 import android.graphics.*
+import android.media.Image
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.speech.tts.TextToSpeech
@@ -23,6 +24,7 @@ import com.d201.eyeson.util.imageToBitmap
 import com.google.ar.core.*
 import com.google.ar.core.Camera
 import com.google.ar.core.Point
+import com.google.ar.core.dependencies.e
 import com.google.ar.core.exceptions.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -79,6 +81,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     private var showDepthMap = false
 
+    private var centerX: Int = 0
+    private var centerY: Int = 0
 
     override fun init() {
         initView()
@@ -101,29 +105,29 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
         installRequested = false
 
-        val toggleDepthButton = binding.toggleDepthButton
-        toggleDepthButton.setOnClickListener { view: View? ->
-            if (isDepthSupported) {
-                showDepthMap = !showDepthMap
-                toggleDepthButton.setText(if (showDepthMap) "숨기기" else "보기")
-            } else {
-                showDepthMap = false
-                toggleDepthButton.setText("깊이이용불가")
-            }
-        }
+//        val toggleDepthButton = binding.toggleDepthButton
+//        toggleDepthButton.setOnClickListener { view: View? ->
+//            if (isDepthSupported) {
+//                showDepthMap = !showDepthMap
+//                toggleDepthButton.setText(if (showDepthMap) "숨기기" else "보기")
+//            } else {
+//                showDepthMap = false
+//                toggleDepthButton.setText("깊이이용불가")
+//            }
+//        }
 
         tts = TextToSpeech(requireContext(), this)
     }
 
     override fun onResume() {
         super.onResume()
-        val params: ViewGroup.LayoutParams? = requireActivity().window.attributes
-        val deviceWidth = getDeviceSize(requireActivity()).x
-        val deviceHeight = deviceWidth / 3 * 4
-        params?.width = deviceWidth
-        params?.height = deviceHeight
-        binding.surfaceview.layoutParams = params
-        binding.surfaceview.layout(0, 0,deviceWidth,deviceHeight)
+//        val params: ViewGroup.LayoutParams? = requireActivity().window.attributes
+//        val deviceWidth = getDeviceSize(requireActivity()).x
+//        val deviceHeight = deviceWidth / 3 * 4
+//        params?.width = deviceWidth
+//        params?.height = deviceHeight
+//        binding.surfaceview.layoutParams = params
+//        binding.surfaceview.layout(0, 0,deviceWidth,deviceHeight)
 
         if (session == null) {
             var exception: Exception? = null
@@ -189,8 +193,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                 )
                 return
             }
-            binding.tvDistance.bringToFront()
             binding.inputImageView.bringToFront()
+            binding.tvDistance.bringToFront()
 
         }
 
@@ -216,7 +220,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // to query the session. If Session is paused before GLSurfaceView, GLSurfaceView may
             // still call session.update() and get a SessionPausedException.
             displayRotationHelper!!.onPause()
-            surfaceView.onPause()
+            //surfaceView.onPause()
             session!!.pause()
             tts.stop()
         }
@@ -291,7 +295,6 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                 depthTexture.update(frame)
 //                Log.d(TAG, "onDrawFrame: ${getMillimetersDepth(frame.acquireDepthImage16Bits(), 0, 0)}")
             }
-
             // Handle one tap per frame.
 //            handleTap(frame, camera)
 
@@ -327,15 +330,24 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             frame.lightEstimate.getColorCorrection(colorCorrectionRgba, 0)
 
             try {
+
                 val image = frame.acquireCameraImage()
                 val bitmap = RotateBitmap(imageToBitmap(image, requireContext())!!, 90f)
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    runObjectDetection(bitmap!!)
+                    runObjectDetection(bitmap!!, image)
+                    //Log.d(TAG, "onDrawFrame: ${centerX} : ${centerY}")
+                    //onUpdateDepthImage(distance)
                     image.close()
                     bitmap.recycle()
                 }
-
+                Log.d(TAG, "*****onDrawFrame: ${centerX} : ${centerY}")
+                //val pos = depthTexture.pointConverter(frame, image, centerX, centerY)
+                val distance = depthTexture.getMillimetersDepth(image,centerX, centerY*2)
+                onUpdateDepthImage(distance)
+               // Log.d(TAG, "DISTANCE1 : ${depthTexture.distance1}")
+               // Log.d(TAG, "DISTANCE2 : ${depthTexture.distance2}")
+                image.close()
             }catch (e: Exception){
                 Log.d(TAG, "onDrawFrame: ${e.message}")
             }
@@ -388,38 +400,6 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         }
     }
 
-    // Handle only one tap per frame, as taps are usually low frequency compared to frame rate.
-    private fun handleTap(frame: Frame, camera: Camera) {
-        val tap = tapHelper!!.poll()
-        if (tap != null && camera.trackingState == TrackingState.TRACKING) {
-            for (hit in frame.hitTest(tap)) {
-                // Check if any plane was hit, and if it was hit inside the plane polygon
-                val trackable = hit.trackable
-                // Creates an anchor if a plane or an oriented point was hit.
-                if ((trackable is Plane
-                            && trackable.isPoseInPolygon(hit.hitPose)
-                            && calculateDistanceToPlane(hit.hitPose, camera.pose) > 0)
-                    || (trackable is Point
-                            && trackable.orientationMode
-                            == Point.OrientationMode.ESTIMATED_SURFACE_NORMAL)
-                ) {
-                    // Hits are sorted by depth. Consider only closest hit on a plane or oriented point.
-                    // Cap the number of objects created. This avoids overloading both the
-                    // rendering system and ARCore.
-                    if (anchors.size >= 20) {
-                        anchors[0].detach()
-                        anchors.removeAt(0)
-                    }
-
-                    // Adding an Anchor tells ARCore that it should track this position in
-                    // space. This anchor is created on the Plane to place the 3D model
-                    // in the correct position relative both to the world and to the plane.
-                    anchors.add(hit.createAnchor())
-                    break
-                }
-            }
-        }
-    }
 
     // Checks if we detected at least one plane.
     private fun hasTrackingPlane(): Boolean {
@@ -444,7 +424,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
     }
 
-    private fun runObjectDetection(bitmap: Bitmap) {
+    private fun runObjectDetection(bitmap: Bitmap, imageb: Image) {
         // Step 1: Create TFLite's TensorImage object
         val image = TensorImage.fromBitmap(bitmap)
 
@@ -455,24 +435,31 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             .build()
         val detector = ObjectDetector.createFromFileAndOptions(
             requireContext(),
-            "custom_models/best-fp16.tflite",
+            "custom_models/test.tflite",
             options
         )
 
-        // Step 3: Feed given image to the detector
+        // Step 3:주어진 이미지를 감지기에 공급
         val results = detector.detect(image)
 
-        // Step 4: Parse the detection result and show it
+        // Step 4: 탐지 결과를 파싱하여 보여줍니다.
         val resultToDisplay = results.map {
             // Get the top-1 category and craft the display text
             val category = it.categories.first()
-            val text = "${category.label}, ${category.score.times(100).toInt()}%"
+            val text = "${category.label}, ${category.score.times(100).toInt()}%"//100
 
-            // Create a data object to display the detection result
+            // 탐지 결과를 표시할 데이터 객체 생성
             DetectionResult(it.boundingBox, text)
+//
+
         }
-        // Draw the detection result on the bitmap and show it.
-        val imgWithResult = drawDetectionResult(bitmap, resultToDisplay)
+
+        // 비트맵에 검출 결과를 그려서 보여줍니다
+        val imgWithResult = drawDetectionResult(bitmap, resultToDisplay,imageb)
+//        val deviceWidth = getDeviceSize(requireActivity()).x
+//        val deviceHeight = deviceWidth / 3 * 4
+//        Log.d(TAG, "deviceWidth: ${deviceWidth}, deviceHeight: ${deviceHeight}")
+
         requireActivity().runOnUiThread {
             binding.inputImageView.setImageBitmap(imgWithResult)
         }
@@ -480,12 +467,17 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     private fun drawDetectionResult(
         bitmap: Bitmap,
-        detectionResults: List<DetectionResult>
+        detectionResults: List<DetectionResult>,imageb:Image
     ): Bitmap {
         val outputBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(outputBitmap)
         val pen = Paint()
+
+        val pen2 = Paint()
+
+
         pen.textAlign = Paint.Align.LEFT
+
 
         detectionResults.forEach {
             // draw bounding box
@@ -494,8 +486,14 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             pen.style = Paint.Style.STROKE
             val box = it.boundingBox
             canvas.drawRect(box, pen)
-
-
+            canvas.drawCircle(it.boundingBox.centerX(),it.boundingBox.centerY() ,8F, pen)
+            centerX = it.boundingBox.centerX().toInt()
+            centerY = it.boundingBox.centerY().toInt()
+//            val distance = depthTexture.getMillimetersDepth(imageb, it.boundingBox.centerX().toInt(),  it.boundingBox.centerY().toInt())
+//            onUpdateDepthImage(distance)
+//            Log.d(TAG, "DISTANCE : $distance")
+//            Log.d(TAG, "centerX: ${centerX}, centerY: ${centerY}")
+//            Log.d(TAG, "boxcenterX: ${box.centerX()}, centerY: ${box.centerY()}")
             val tagSize = Rect(0, 0, 0, 0)
 
             // calculate the right font size
@@ -516,18 +514,22 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                 it.text, box.left + margin,
                 box.top + tagSize.height().times(1F), pen
             )
+
         }
         return outputBitmap
     }
 
 
     fun onUpdateDepthImage(distance: Int) {
-        var cm = (distance / 10.0).toFloat()
-        if(cm > 100){
-            cm /= 100
-            binding.tvDistance.text = "%.1f m".format(cm)
-        }else{
-            binding.tvDistance.text = "${cm.toInt()} cm"
+        requireActivity().runOnUiThread {
+            var cm = (distance / 10.0).toFloat()
+            if(cm > 100){
+                cm /= 100
+                binding.tvDistance.text = "%.1f m".format(cm)
+            }
+            else{
+                binding.tvDistance.text = "${cm.toInt()} cm"
+            }
         }
     }
 
