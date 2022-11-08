@@ -1,6 +1,6 @@
 package com.d201.eyeson.view.blind.scanobstacle
 
-import android.graphics.Bitmap
+import android.graphics.*
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.speech.tts.TextToSpeech
@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.d201.arcore.depth.common.OBJECT_DETECTION_CUSTOM
-import com.d201.arcore.depth.common.TEXT_RECOGNITION_KOREAN
 import com.d201.arcore.depth.common.getDeviceSize
 import com.d201.depth.depth.DepthTextureHandler
 import com.d201.depth.depth.common.*
@@ -19,35 +18,29 @@ import com.d201.depth.depth.rendering.ObjectRenderer
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentScanObstacleBinding
-import com.d201.mlkit.BitmapUtils.RotateBitmap
-import com.d201.mlkit.BitmapUtils.imageToBitmap
-import com.d201.mlkit.GraphicOverlay
-import com.d201.mlkit.PreferenceUtils
-import com.d201.mlkit.VisionProcessorBase
+import com.d201.eyeson.util.RotateBitmap
+import com.d201.eyeson.util.imageToBitmap
 import com.google.ar.core.*
+import com.google.ar.core.Camera
+import com.google.ar.core.Point
 import com.google.ar.core.exceptions.*
-import com.google.mlkit.common.model.LocalModel
-import com.google.mlkit.vision.demo.kotlin.objectdetector.ObjectDetectorProcessor
-import com.google.mlkit.vision.demo.kotlin.textdetector.TextRecognitionProcessor
-import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.tensorflow.lite.support.image.TensorImage
+import org.tensorflow.lite.task.vision.detector.ObjectDetector
 import java.io.IOException
 import java.util.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "ScanObstacleFragment"
+private const val MAX_FONT_SIZE = 96F
 @AndroidEntryPoint
 class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.fragment_scan_obstacle),
     GLSurfaceView.Renderer, TextToSpeech.OnInitListener {
     private lateinit var tts: TextToSpeech
-
-    private var graphicOverlay: GraphicOverlay? = null
-    private var imageProcessor: VisionProcessorBase<*>? = null
-    private var objectImageProcessor: ObjectDetectorProcessor? = null
 
     private var frameWidth = 0
     private  var frameHeight = 0
@@ -119,37 +112,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             }
         }
 
-        graphicOverlay = binding.graphicOverlay
-        graphicOverlay!!.bringToFront()
         tts = TextToSpeech(requireContext(), this)
     }
-
-    // MLKit
-    private fun processFrame(frame: Bitmap) {
-        lastFrame = frame
-        if (imageProcessor != null) {
-            pending = processing
-            if (!processing) {
-                processing = true
-                if (frameWidth != frame.width || frameHeight != frame.height) {
-                    frameWidth = frame.width
-                    frameHeight = frame.height
-                    graphicOverlay!!.setImageSourceInfo(frameWidth, frameHeight, false)
-                }
-                imageProcessor!!.setOnProcessingCompleteListener(object :VisionProcessorBase.OnProcessingCompleteListener{
-                    override fun onProcessingComplete() {
-                        processing = false
-                        onProcessComplete(frame)
-                        if(pending) processFrame(lastFrame!!)
-                    }
-                })
-
-                imageProcessor!!.processBitmap(frame, graphicOverlay!!)
-            }
-        }
-    }
-
-    protected fun onProcessComplete(frame: Bitmap?) {}
 
     override fun onResume() {
         super.onResume()
@@ -226,6 +190,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                 return
             }
             binding.tvDistance.bringToFront()
+            binding.inputImageView.bringToFront()
+
         }
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
@@ -238,13 +204,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             session = null
             return
         }
-        createImageProcessor()
         surfaceView.onResume()
         displayRotationHelper!!.onResume()
-
-        objectImageProcessor!!.resultData.observe(this){
-            speakOut(it)
-        }
 
     }
 
@@ -367,10 +328,12 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
             try {
                 val image = frame.acquireCameraImage()
-                val bitmap = RotateBitmap(imageToBitmap(image, requireContext()), 90f)
-                CoroutineScope(Dispatchers.Main).launch {
-                    processFrame(bitmap)
+                val bitmap = RotateBitmap(imageToBitmap(image, requireContext())!!, 90f)
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    runObjectDetection(bitmap!!)
                     image.close()
+                    bitmap.recycle()
                 }
 
             }catch (e: Exception){
@@ -481,6 +444,82 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
     }
 
+    private fun runObjectDetection(bitmap: Bitmap) {
+        // Step 1: Create TFLite's TensorImage object
+        val image = TensorImage.fromBitmap(bitmap)
+
+        // Step 2: Initialize the detector object
+        val options = ObjectDetector.ObjectDetectorOptions.builder()
+            .setMaxResults(5)
+            .setScoreThreshold(0.3f)
+            .build()
+        val detector = ObjectDetector.createFromFileAndOptions(
+            requireContext(),
+            "custom_models/best-fp16.tflite",
+            options
+        )
+
+        // Step 3: Feed given image to the detector
+        val results = detector.detect(image)
+
+        // Step 4: Parse the detection result and show it
+        val resultToDisplay = results.map {
+            // Get the top-1 category and craft the display text
+            val category = it.categories.first()
+            val text = "${category.label}, ${category.score.times(100).toInt()}%"
+
+            // Create a data object to display the detection result
+            DetectionResult(it.boundingBox, text)
+        }
+        // Draw the detection result on the bitmap and show it.
+        val imgWithResult = drawDetectionResult(bitmap, resultToDisplay)
+        requireActivity().runOnUiThread {
+            binding.inputImageView.setImageBitmap(imgWithResult)
+        }
+    }
+
+    private fun drawDetectionResult(
+        bitmap: Bitmap,
+        detectionResults: List<DetectionResult>
+    ): Bitmap {
+        val outputBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(outputBitmap)
+        val pen = Paint()
+        pen.textAlign = Paint.Align.LEFT
+
+        detectionResults.forEach {
+            // draw bounding box
+            pen.color = Color.RED
+            pen.strokeWidth = 8F
+            pen.style = Paint.Style.STROKE
+            val box = it.boundingBox
+            canvas.drawRect(box, pen)
+
+
+            val tagSize = Rect(0, 0, 0, 0)
+
+            // calculate the right font size
+            pen.style = Paint.Style.FILL_AND_STROKE
+            pen.color = Color.YELLOW
+            pen.strokeWidth = 2F
+
+            pen.textSize = MAX_FONT_SIZE
+            pen.getTextBounds(it.text, 0, it.text.length, tagSize)
+            val fontSize: Float = pen.textSize * box.width() / tagSize.width()
+
+            // adjust the font size so texts are inside the bounding box
+            if (fontSize < pen.textSize) pen.textSize = fontSize
+
+            var margin = (box.width() - tagSize.width()) / 2.0F
+            if (margin < 0F) margin = 0F
+            canvas.drawText(
+                it.text, box.left + margin,
+                box.top + tagSize.height().times(1F), pen
+            )
+        }
+        return outputBitmap
+    }
+
 
     fun onUpdateDepthImage(distance: Int) {
         var cm = (distance / 10.0).toFloat()
@@ -489,47 +528,6 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             binding.tvDistance.text = "%.1f m".format(cm)
         }else{
             binding.tvDistance.text = "${cm.toInt()} cm"
-        }
-    }
-
-    private fun createImageProcessor() {
-        stopImageProcessor()
-        imageProcessor =
-            try {
-                when (selectedModel) {
-                    OBJECT_DETECTION_CUSTOM -> {
-                        Log.i(TAG, "Using Custom Object Detector (with object labeler) Processor")
-                        val localModel =
-                            LocalModel.Builder().setAssetFilePath("custom_models/object_labeler.tflite").build()
-                        val customObjectDetectorOptions =
-                            PreferenceUtils.getCustomObjectDetectorOptionsForLivePreview(requireContext(), localModel)
-                        objectImageProcessor = ObjectDetectorProcessor(requireContext(), customObjectDetectorOptions)
-                        objectImageProcessor
-                    }
-                    TEXT_RECOGNITION_KOREAN -> {
-                        Log.i(TAG, "Using on-device Text recognition Processor for Latin and Korean")
-                        TextRecognitionProcessor(requireContext(), KoreanTextRecognizerOptions.Builder().build())
-                    }
-                    else -> throw IllegalStateException("Invalid model name")
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Can not create image processor: $selectedModel", e)
-                Toast.makeText(
-                    requireContext(),
-                    "Can not create image processor: " + e.localizedMessage,
-                    Toast.LENGTH_LONG
-                )
-                    .show()
-                return
-            }
-    }
-
-    private fun stopImageProcessor() {
-        if (imageProcessor != null) {
-            imageProcessor!!.stop()
-            imageProcessor = null
-            processing = false
-            pending = false
         }
     }
 
@@ -550,3 +548,5 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
     }
 }
+
+data class DetectionResult(val boundingBox: RectF, val text: String)

@@ -34,10 +34,9 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideComplaintsRepository(
-        complaintsRemoteDataSource: ComplaintsRemoteDataSource,
-        complaintsApi: ComplaintsApi,
+        complaintsRemoteDataSource: ComplaintsRemoteDataSource
     ): ComplaintsRepository {
-        return ComplaintsRepositoryImpl(complaintsRemoteDataSource, complaintsApi)
+        return ComplaintsRepositoryImpl(complaintsRemoteDataSource)
     }
 
     @Provides

@@ -17,20 +17,21 @@ import com.d201.domain.utils.ResultType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val TAG ="ComplaintsRepositoryImpl"
 @Singleton
 class ComplaintsRepositoryImpl @Inject constructor(
-    private val complaintsRemoteDataSource: ComplaintsRemoteDataSource,
-    private val complaintsApi: ComplaintsApi,
+    private val complaintsRemoteDataSource: ComplaintsRemoteDataSource
 )
     : ComplaintsRepository {
 
-    override fun insertComp(complaints: Complaints): Flow<ResultType<BaseResponse<Void>>> = flow {
+    override fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<ResultType<BaseResponse<Boolean>>> = flow {
         emit(ResultType.Loading)
-        complaintsRemoteDataSource.insertComp(complaints.mapperToComplaintsRequest()).collect{
+        complaintsRemoteDataSource.insertComp(complaintsRequest, imageFile).collect{
             emit(ResultType.Success(
                 BaseResponse(
                     it.message,
@@ -89,10 +90,10 @@ class ComplaintsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun selectAllComplaints(flag: Int) =
+    override fun selectComplaintsList(flag: Int) =
         Pager(
             config = PagingConfig(pageSize = 1, maxSize = 15, enablePlaceholders = false),
-            pagingSourceFactory = { ComplaintsPagingSource(complaintsApi, flag) }
+            pagingSourceFactory = { ComplaintsPagingSource(complaintsRemoteDataSource, flag) }
         ).flow
 
 }

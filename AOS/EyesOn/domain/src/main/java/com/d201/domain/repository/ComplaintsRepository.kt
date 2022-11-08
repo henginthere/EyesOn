@@ -5,9 +5,11 @@ import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.Complaints
 import com.d201.domain.utils.ResultType
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 interface ComplaintsRepository {
-    fun insertComp(complaintsRequest: Complaints): Flow<ResultType<BaseResponse<Void>>>
+    fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<ResultType<BaseResponse<Boolean>>>
 
     fun selectComplaintsBySeq(seq: Long): Flow<ResultType<BaseResponse<Complaints>>>
 
@@ -17,6 +19,6 @@ interface ComplaintsRepository {
 
     fun completeComplaints(complaintsRequest: Complaints): Flow<ResultType<BaseResponse<Void>>>
 
-    fun selectAllComplaints(flag: Int): Flow<PagingData<Complaints>>
+    fun selectComplaintsList(flag: Int): Flow<PagingData<Complaints>>
 
 }

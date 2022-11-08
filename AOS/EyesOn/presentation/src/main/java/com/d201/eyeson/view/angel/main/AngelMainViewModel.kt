@@ -37,8 +37,8 @@ class AngelMainViewModel @Inject constructor(private val angelInfoUseCase: GetAn
         }
     }
 
-    fun getComplaintsList(flag: Int): Flow<PagingData<Complaints>> {
-        return selectAllCompUseCase.excute(flag)
+    fun getComplaintsList(): Flow<PagingData<Complaints>> {
+        return selectAllCompUseCase.excute()
     }
 
 //    private val _complaintsList: MutableStateFlow<Int> = MutableStateFlow(0)

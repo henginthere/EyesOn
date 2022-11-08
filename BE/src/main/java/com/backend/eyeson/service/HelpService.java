@@ -90,6 +90,8 @@ public class HelpService {
                 for(int j=0;j<binaryDay.length();j++){
                     res += binaryDay.charAt(j);
                 }
+            }else{
+                res = binaryDay;
             }
             
             char[] chArray = res.toCharArray();
@@ -104,6 +106,8 @@ public class HelpService {
             }
         }
 
+
+
         // 알림 보내기
         for(int i=0; i<canAngelList.size(); i++){
             // fcm 토큰
@@ -112,7 +116,6 @@ public class HelpService {
             String title = "도움 요청이 도착했어요 !";
             // 알림 내용
             String body = "사용자를 따뜻한 마음으로 도와주세요 !";
-
             firebaseService.sendMessageTo(fcmToken, title, body);
         }
 

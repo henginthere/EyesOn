@@ -63,7 +63,7 @@ public class UserController {
 
         //t_user에 email 존재 여부 확인
         if (userRepository.findByUserEmail(userEmail) != null) {
-            ResponseLoginDto responseLoginDto = userService.login(userEmail);
+            ResponseLoginDto responseLoginDto = userService.login(userEmail, fcmToken);
             if (responseLoginDto != null) {
                 res = ResponseFrame.of(responseLoginDto, "로그인에 성공하였습니다.");
                 return new ResponseEntity<>(res, HttpStatus.OK);
@@ -91,7 +91,7 @@ public class UserController {
         ResponseFrame<?> res;
         String role = requestRGDto.getUserRole();
         char gender = requestRGDto.getUserGender();
-        ResponseLoginDto responseLoginDto = userService.register(role, gender);
+        ResponseLoginDto responseLoginDto = userService.register(role, gender,"");
         res = ResponseFrame.of(responseLoginDto, "정보 등록에 성공하였습니다.");
         return new ResponseEntity<>(res, HttpStatus.OK);
 
