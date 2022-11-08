@@ -75,7 +75,7 @@ public class AwsS3Service {
         String fileName = originalFileName.substring(0, fileExtensionIndex);
         String now = String.valueOf(System.currentTimeMillis());
 
-        return category + CATEGORY_PREFIX + fileName + TIME_SEPARATOR + now + fileExtension;
+        return fileName + TIME_SEPARATOR + now + fileExtension;
     }
 
 

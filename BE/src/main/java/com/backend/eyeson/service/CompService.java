@@ -31,8 +31,8 @@ public class CompService {
     public UserDto getLoginUser() {
         UserEntity user = null;
         try {
-            user = userRepository.findById(SecurityUtil.getCurrentMemberSeq()).get();
-//            user = userRepository.findByUserEmail("sa01070@gmail.com").get();
+//            user = userRepository.findById(SecurityUtil.getCurrentMemberSeq()).get();
+            user = userRepository.findByUserEmail("sa01070@gmail.com").get();
         } catch (Exception e) {
             user = new UserEntity();
             user.setUserSeq(9999);
