@@ -3,7 +3,7 @@ package com.d201.data.mapper
 import com.d201.data.model.request.AngelRequest
 import com.d201.data.model.request.ComplaintsRequest
 import com.d201.data.model.response.AngelInfoResponse
-import com.d201.data.model.response.ResponseCompDto
+import com.d201.data.model.response.ComplaintsResponse
 import com.d201.data.model.response.LoginResponse
 import com.d201.data.model.response.UserResponse
 import com.d201.domain.model.AngelInfo
@@ -73,7 +73,7 @@ fun Complaints.mapperToComplaintsRequest(): ComplaintsRequest{
     }
 }
 
-fun ResponseCompDto.mapperToComplaints(): Complaints{
+fun ComplaintsResponse.mapperToComplaints(): Complaints{
     return this.let {
         Complaints(
             it.seq,
@@ -89,7 +89,7 @@ fun ResponseCompDto.mapperToComplaints(): Complaints{
     }
 }
 
-fun List<ResponseCompDto>.mapperToListComplaints(): List<Complaints>{
+fun List<ComplaintsResponse>.mapperToListComplaints(): List<Complaints>{
     return this.let {
         it.map {
             it.mapperToComplaints()

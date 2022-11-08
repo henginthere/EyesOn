@@ -10,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val TAG = "BlindMainActivity"
 @AndroidEntryPoint
 class BlindMainActivity : BaseActivity<ActivityBlindMainBinding>(R.layout.activity_blind_main) {
+
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
 
@@ -21,4 +22,5 @@ class BlindMainActivity : BaseActivity<ActivityBlindMainBinding>(R.layout.activi
         navHostFragment = supportFragmentManager.findFragmentById(R.id.frame_blind_main) as NavHostFragment
         navController = navHostFragment.navController
     }
+
 }

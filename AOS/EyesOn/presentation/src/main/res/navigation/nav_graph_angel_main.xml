@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/angelMainFragment"
-        android:name="com.d201.eyeson.view.angel.AngelMainFragment"
+        android:name="com.d201.eyeson.view.angel.main.AngelMainFragment"
         android:label="AngelMainFragment" >
         <action
             android:id="@+id/action_angelMainFragment_to_angelSettingFragment"
@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_angelMainFragment_to_complaintsListFragment"
             app:destination="@id/complaintsListFragment" />
+        <action
+            android:id="@+id/action_angelMainFragment_to_complaintsDetailFragment"
+            app:destination="@id/complaintsDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/angelSettingFragment"
@@ -30,5 +33,10 @@
     <fragment
         android:id="@+id/complaintsDetailFragment"
         android:name="com.d201.eyeson.view.angel.complaints.ComplaintsDetailFragment"
-        android:label="ComplaintsDetailFragment" />
+        android:label="ComplaintsDetailFragment" >
+        <argument
+            app:argType="long"
+            android:name="complaintsSeq"
+            />
+    </fragment>
 </navigation>

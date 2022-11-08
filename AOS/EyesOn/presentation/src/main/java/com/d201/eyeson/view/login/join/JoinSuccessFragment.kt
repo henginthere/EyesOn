@@ -6,7 +6,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentJoinSuccessBinding
 import com.d201.eyeson.util.*
-import com.d201.eyeson.view.angel.AngelMainActivity
+import com.d201.eyeson.view.angel.main.AngelMainActivity
 import com.d201.eyeson.view.blind.BlindMainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,8 +41,12 @@ class JoinSuccessFragment : BaseFragment<FragmentJoinSuccessBinding>(R.layout.fr
         binding.apply {
             btnContinue.setOnClickListener {
                 when(args.role){
-                    BLIND -> startActivity(Intent(requireContext(), BlindMainActivity::class.java))
-                    ANGEL -> startActivity(Intent(requireContext(), AngelMainActivity::class.java))
+                    BLIND -> startActivity(Intent(requireContext(), BlindMainActivity::class.java).apply {
+                        putExtra("Gender", args.gender)
+                    })
+                    ANGEL -> startActivity(Intent(requireContext(), AngelMainActivity::class.java).apply {
+                        putExtra("Gender", args.gender)
+                    })
                     else -> return@setOnClickListener
                 }
                 requireActivity().finish()

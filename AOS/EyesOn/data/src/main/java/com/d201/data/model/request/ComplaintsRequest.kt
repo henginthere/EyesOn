@@ -8,6 +8,6 @@ data class ComplaintsRequest(
     @SerializedName("compImage") val image: String?,
     @SerializedName("compContent") val content: String?,
     @SerializedName("compReturn") val returnContent: String?,
-    @SerializedName("comTitle") val title: String?,
+    @SerializedName("compTitle") val title: String?,
     @SerializedName("compResultContent") val resultContent: String?
 )
