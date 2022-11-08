@@ -93,11 +93,21 @@ fun List<ComplaintsResponse>.mapperToListComplaints(): List<Complaints> {
     }
 }
 
-fun List<NotiEntity>.mapperToNoti(): List<Noti> {
+fun List<NotiEntity>.mapperToNotis(): List<Noti> {
     return this.toList().map {
         Noti(
+            it.seq,
             it.title,
             it.body
+        )
+    }
+}
+
+fun Noti.mapperToNotiEntity(): NotiEntity {
+    return this.run {
+        NotiEntity(
+            title = title,
+            body = body
         )
     }
 }

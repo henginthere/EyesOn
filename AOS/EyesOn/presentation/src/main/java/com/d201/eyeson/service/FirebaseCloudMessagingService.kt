@@ -6,10 +6,12 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.d201.domain.model.Noti
 import com.d201.domain.repository.NotiRepository
 import com.d201.eyeson.R
 import com.d201.eyeson.view.angel.help.AngelHelpActivity
+import com.d201.eyeson.view.blind.notification.BlindNotiFragment
 import com.d201.eyeson.view.login.LoginActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -30,6 +32,7 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
         Log.d(TAG, "onNewToken: ${token}")
     }
 
+
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
@@ -37,7 +40,9 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
             val messageTitle = it!!.title
             val messageContent = it!!.body
 
-            notiRepository.insertNoti(Noti(messageTitle!!, messageContent!!))
+            notiRepository.insertNoti(Noti(0, messageTitle!!, messageContent!!))
+
+            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent("ReceiveNoti"))
 
             val mainIntent = Intent(this, AngelHelpActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
