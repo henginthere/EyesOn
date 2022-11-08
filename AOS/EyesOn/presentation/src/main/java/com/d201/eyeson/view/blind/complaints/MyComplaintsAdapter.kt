@@ -1,6 +1,8 @@
 package com.d201.eyeson.view.blind.complaints
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -15,6 +17,21 @@ class MyComplaintsAdapter(private val blindComplaintsClickListener: BlindComplai
     inner class ViewHolder(private val binding: ItemComplaintsVerticalBlindBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(complaints: Complaints){
             binding.apply {
+                Log.d(TAG, "bind: ${complaints}")
+                when(complaints.state){
+                    "PROGRESS_IN" -> {
+                        tvComplaintsStatusProcessing.visibility = View.VISIBLE
+                    }
+                    "RETURN" -> {
+                        tvComplaintsStatusReturn.visibility = View.VISIBLE
+                    }
+                    "REGIST_DONE" -> {
+                        tvComplaintsStatusProcessing.visibility = View.VISIBLE
+                    }
+                    "PROGRESS_DONE" -> {
+                        tvComplaintsStatusDone.visibility = View.VISIBLE
+                    }
+                }
                 data = complaints
             }
         }
