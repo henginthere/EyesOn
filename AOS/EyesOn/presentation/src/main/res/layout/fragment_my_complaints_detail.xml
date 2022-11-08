@@ -76,6 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     tools:src="@drawable/icon_no_image"
+                    imageLoader="@{vm.complaints.image}"
                     app:layout_constraintTop_toBottomOf="@id/tv_detail_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -135,16 +136,15 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_complaints_content"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="200dp"
                     app:layout_constraintTop_toBottomOf="@id/tv_title_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:contentDescription="@{`신고 내용은 `+vm.complaints.content+` 입니다`}"
                     >
                     <TextView
                         android:id="@+id/tv_content"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="match_parent"
                         android:text="@{vm.complaints.content}"
                         android:textSize="36sp"
                         android:fontFamily="@font/noto_sans_bold"
@@ -176,13 +176,14 @@
                     app:layout_constraintTop_toBottomOf="@id/layout_complaints_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:contentDescription="@{`처리 상태는 `+vm.complaints.content+` 입니다`}"
+                    android:layout_marginVertical="16dp"
+                    android:contentDescription="@{`처리 상태는 `+vm.complaints.state+` 입니다`}"
                     >
                     <TextView
                         android:id="@+id/tv_status"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:text="@{vm.complaints.state}"
+                        state="@{vm.complaints.state}"
                         android:textSize="36sp"
                         android:fontFamily="@font/noto_sans_bold"
                         android:textColor="@color/blind_yellow"

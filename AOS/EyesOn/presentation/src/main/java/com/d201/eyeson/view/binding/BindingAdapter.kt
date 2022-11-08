@@ -3,6 +3,7 @@ package com.d201.eyeson.view.binding
 import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -31,5 +32,24 @@ fun bindTextSize(textView: TextView, title: String?) {
     }else{
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16.toFloat())
     }
+}
 
+@BindingAdapter("state")
+fun bindState(textView: TextView, state: String?){
+    if(state != null){
+        when(state){
+            "PROGRESS_IN" -> {
+                textView.text = "민원 처리중"
+            }
+            "RETURN" -> {
+                textView.text = "민원 반환됨"
+            }
+            "REGIST_DONE" -> {
+                textView.text = "민원 등록 완료"
+            }
+            "PROGRESS_DONE" -> {
+                textView.text = "민원 처리 완료"
+            }
+        }
+    }
 }
