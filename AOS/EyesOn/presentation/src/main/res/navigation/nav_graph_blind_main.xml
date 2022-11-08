@@ -10,7 +10,7 @@
         android:label="BlindMainFragment" >
         <action
             android:id="@+id/action_blindMainFragment_to_blindNotificationFragment"
-            app:destination="@id/blindNotificationFragment" />
+            app:destination="@id/blindNotiFragment" />
         <action
             android:id="@+id/action_blindMainFragment_to_blindSettingFragment"
             app:destination="@id/blindSettingFragment" />
@@ -19,8 +19,8 @@
             app:destination="@id/complaintsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/blindNotificationFragment"
-        android:name="com.d201.eyeson.view.blind.notification.BlindNotificationFragment"
+        android:id="@+id/blindNotiFragment"
+        android:name="com.d201.eyeson.view.blind.notification.BlindNotiFragment"
         android:label="BlindNotificationFragment" />
     <fragment
         android:id="@+id/blindSettingFragment"
@@ -51,7 +51,11 @@
     <fragment
         android:id="@+id/myComplaintsFragment"
         android:name="com.d201.eyeson.view.blind.complaints.MyComplaintsFragment"
-        android:label="MyComplaintsFragment" />
+        android:label="MyComplaintsFragment" >
+        <action
+            android:id="@+id/action_myComplaintsFragment_to_myComplaintsDetailFragment"
+            app:destination="@id/myComplaintsDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/complaintsSubmitRecordFragment"
         android:name="com.d201.eyeson.view.blind.complaints.ComplaintsSubmitRecordFragment"
@@ -61,6 +65,14 @@
             android:name="image"
             app:nullable="false"
             />
+    </fragment>
+    <fragment
+        android:id="@+id/myComplaintsDetailFragment"
+        android:name="com.d201.eyeson.view.blind.complaints.MyComplaintsDetailFragment"
+        android:label="MyComplaintsDetailFragment">
+        <argument
+            android:name="complaintSeq"
+            app:argType="long"/>
     </fragment>
 
 </navigation>

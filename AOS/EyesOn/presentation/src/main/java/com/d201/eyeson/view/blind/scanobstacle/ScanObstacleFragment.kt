@@ -455,7 +455,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             .build()
         val detector = ObjectDetector.createFromFileAndOptions(
             requireContext(),
-            "custom_models/test.tflite",
+            "custom_models/best-fp16.tflite",
             options
         )
 

@@ -33,6 +33,11 @@
             android:name=".view.angel.help.AngelHelpActivity"
             android:exported="false">
 
+            <intent-filter>
+                <action android:name=".view.angel.help.AngelHelpActivity"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -100,6 +105,13 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <service android:name=".service.FirebaseCloudMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.google.ar.core"

@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class ComplaintsRemoteDataSource @Inject constructor(private val complaintsApi: ComplaintsApi) {
 
-    fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<BaseResponse<Void>> = flow {
+    fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<BaseResponse<Boolean>> = flow {
         emit(complaintsApi.insertComp(complaintsRequest, imageFile))
     }
 

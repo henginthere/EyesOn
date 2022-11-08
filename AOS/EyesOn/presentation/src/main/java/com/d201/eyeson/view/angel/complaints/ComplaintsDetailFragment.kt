@@ -47,7 +47,9 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
         }
         lifecycleScope.launch{
             complaintsViewModel.complaints.collectLatest {
-                complaints = it!!
+                if(it != null) {
+                    complaints = it
+                }
             }
         }
 

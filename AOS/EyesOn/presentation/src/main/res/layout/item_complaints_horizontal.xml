@@ -39,7 +39,9 @@
                     android:id="@+id/iv_complaints_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/img_graph"/>
+                    android:src="@{data.image}"
+                    tools:src="@drawable/icon_no_image"
+                    />
             </androidx.cardview.widget.CardView>
 
             <TextView

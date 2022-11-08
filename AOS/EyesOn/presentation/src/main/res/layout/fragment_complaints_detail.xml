@@ -47,77 +47,86 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_content"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/layout_top"
-            app:layout_constraintBottom_toTopOf="@id/layout_button"
-            android:layout_marginHorizontal="24dp"
-            >
-            <TextView
-                android:id="@+id/tv_detail_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{vm.complaints.title}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/layout_button">
 
-            <ImageView
-                android:id="@+id/iv_complaints_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher_background"
-                app:layout_constraintTop_toBottomOf="@id/tv_detail_title"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <TextView
-                android:id="@+id/tv_title_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="신고 발생 지역"
-                android:textSize="20sp"
-                android:layout_marginVertical="24dp"
-                app:layout_constraintTop_toBottomOf="@id/iv_complaints_image"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <TextView
-                android:id="@+id/tv_address"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_title_address"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@{vm.complaints.address}"
-                tools:text="주소 경상북도 구미시 "
-                android:textSize="16sp"
-                android:layout_marginVertical="8dp"
-                />
-
-            <TextView
-                android:id="@+id/tv_title_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="신고 내용"
-                android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@id/tv_address"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginVertical="16dp"/>
-
-            <TextView
-                android:id="@+id/tv_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_content"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_title_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:text="@{vm.complaints.content}"
-                android:textSize="16sp"
-                tools:text="내용"
-                android:layout_marginVertical="16dp"
-                />
+                app:layout_constraintTop_toBottomOf="@id/layout_top"
+                app:layout_constraintBottom_toTopOf="@id/layout_button"
+                android:layout_marginHorizontal="24dp"
+                >
+                <TextView
+                    android:id="@+id/tv_detail_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{vm.complaints.title}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/iv_complaints_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    tools:src="@drawable/icon_no_image"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintDimensionRatio="H,3:4"/>
+
+                <TextView
+                    android:id="@+id/tv_title_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="신고 발생 지역"
+                    android:textSize="20sp"
+                    android:layout_marginVertical="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/iv_complaints_image"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title_address"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@{vm.complaints.address}"
+                    tools:text="주소 경상북도 구미시 "
+                    android:textSize="16sp"
+                    android:layout_marginVertical="8dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_title_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="신고 내용"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_address"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginVertical="16dp"/>
+
+                <TextView
+                    android:id="@+id/tv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="@{vm.complaints.content}"
+                    android:textSize="16sp"
+                    tools:text="신고 내용신고 내용신고 내용신고 내용"
+                    android:layout_marginVertical="16dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_button"
