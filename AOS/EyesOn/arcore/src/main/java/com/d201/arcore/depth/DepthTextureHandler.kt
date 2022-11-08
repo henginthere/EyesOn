@@ -42,17 +42,28 @@ class DepthTextureHandler(var context: Context) {
     /**
      * Updates the depth texture with the content from acquireDepthImage().
      * This method needs to be called on a thread with a EGL context attached.
+     * AcquireDepthImage()의 내용으로 깊이 텍스처를 업데이트합니다.
+     * 이 메소드는 EGL 컨텍스트가 연결된 스레드에서 호출해야 합니다.
+     *
      */
+
     fun update(frame: Frame) {
         try {
+//            val originImage = frame.acquireCameraImage()
             val depthImage = frame.acquireDepthImage16Bits()
+//            val rawDepthImage = frame.acquireRawDepthImage16Bits()
+
+           // Log.d(TAG, "originImage : ${originImage.width}  ${originImage.height}" )
+            Log.d(TAG, "originImage : ${depthImage.width}  ${depthImage.height}" )
+//            Log.d(TAG, "originImage : ${rawDepthImage.width}  ${rawDepthImage.height}" )
+            // 160*120 픽셀
             depthTextureWidth = depthImage.width
             depthTextureHeight = depthImage.height
-            Log.d(TAG, "depthTextureWidthSSSS : $depthTextureWidth  ${depthImage.planes[0].pixelStride}" )
-            Log.d(TAG, "depthTextureWidthRRRR : $depthTextureWidth  ${depthImage.planes[0].rowStride}" )
-            Log.d(TAG, "depthTextureHeightSSSS : $depthTextureHeight   ${depthImage.planes[0].pixelStride}" )
-            Log.d(TAG, "depthTextureHeighRRRR : $depthTextureHeight   ${depthImage.planes[0].rowStride}" )
-            Log.d(TAG, "depthTextureStride :${(depthTextureWidth*depthImage.planes[0].rowStride)} :  ${(depthTextureHeight*depthImage.planes[0].rowStride)}" )
+            Log.d(TAG, "depthTexturepixelStride : ${depthImage.planes[0].pixelStride}" )
+            Log.d(TAG, "depthTexturerowStride : ${depthImage.planes[0].rowStride}" )
+            Log.d(TAG, "depthTexturebuffer : ${depthImage.planes[0].buffer}" )
+            Log.d(TAG, "depthTextureWidth : $depthTextureWidth" )
+            Log.d(TAG, "depthTextureHeight : $depthTextureHeight" )
             Log.d(TAG, "depthTexturePixelStride : ${(depthTextureWidth*depthImage.planes[0].pixelStride)} : ${(depthTextureHeight*depthImage.planes[0].pixelStride)}" )
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, depthTextureId)
             GLES20.glTexImage2D(
@@ -75,10 +86,6 @@ class DepthTextureHandler(var context: Context) {
         }
     }
 
-    interface OnDepthImageUpdateListener{
-        fun onUpdateDepthImage(distance: Int)
-    }
-    lateinit var onDepthImageUpdateListener: OnDepthImageUpdateListener
 
     fun getMillimetersDepth(depthImage: Image, x: Int, y: Int): Int {
         // The depth image has a single plane, which stores depth for each pixel as 16-bit unsigned integers.
@@ -87,6 +94,9 @@ class DepthTextureHandler(var context: Context) {
         val byteIndex = x * plane.pixelStride + y * plane.rowStride
         val buffer = plane.buffer.order(ByteOrder.nativeOrder())
         val depthSample = buffer.getShort(byteIndex)
+        Log.d(TAG, "depthTexture byteIndex : $byteIndex" )
+        Log.d(TAG, "depthTexture buffer: $buffer" )
+        Log.d(TAG, "depthTexture depthSample: $depthSample" )
         return depthSample.toInt()
     }
 

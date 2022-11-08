@@ -16,6 +16,7 @@ import com.d201.depth.depth.DepthTextureHandler
 import com.d201.depth.depth.common.*
 import com.d201.depth.depth.rendering.BackgroundRenderer
 import com.d201.depth.depth.rendering.ObjectRenderer
+import com.d201.eyeson.MainActivity
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentScanObstacleBinding
@@ -116,7 +117,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 //            }
 //        }
 
-        tts = TextToSpeech(requireContext(), this)
+//        tts = TextToSpeech(requireContext(), this)
     }
 
     override fun onResume() {
@@ -199,6 +200,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         }
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
+        // 순서가 중요 onPause()의 반대로 적용
         try {
             session!!.resume()
             session!!.pause()
@@ -219,10 +221,12 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // Note that the order matters - GLSurfaceView is paused first so that it does not try
             // to query the session. If Session is paused before GLSurfaceView, GLSurfaceView may
             // still call session.update() and get a SessionPausedException.
+            // GLSurfaceView가 먼저 일시중지되어 세션 쿼리를 시도하지 않음
+            // 세션이 GLSurfaceView 전에 일시중지된 경우 GLSurfaceView는 여전히 세션 호출 가능
+            // update() 및 SessionPausedException을 가져옴
             displayRotationHelper!!.onPause()
-            //surfaceView.onPause()
+            surfaceView.onPause()
             session!!.pause()
-            tts.stop()
         }
     }
 
@@ -249,15 +253,17 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
 
         // Prepare the rendering objects. This involves reading shaders, so may throw an IOException.
+        // 렌더링 개체 준비
         try {
             // The depth texture is used for object occlusion and rendering.
             depthTexture.createOnGlThread()
 
             // Create the texture and pass it to ARCore session to be filled during update().
+            // 텍스처 생성 후 update() 중에 채워질 ARCore 세션에 전달
             backgroundRenderer.createOnGlThread( /*context=*/requireContext())
             backgroundRenderer.createDepthShaders( /*context=*/requireContext(), depthTexture.getDepthTexture())
-            virtualObject.createOnGlThread( /*context=*/requireContext(), "models/andy.obj", "models/andy.png")
-            virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f)
+            //virtualObject.createOnGlThread( /*context=*/requireContext(), "models/andy.obj", "models/andy.png")
+            //virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f)
         } catch (e: IOException) {
             Log.e(
                 TAG,
@@ -274,6 +280,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     override fun onDrawFrame(gl: GL10?) {
         // Clear screen to notify driver it should not load any pixels from previous frame.
+        // 이전 프레임에서 픽셀을 로드하지 않도록 드라이버에 알리기 위해 화면을 지운다.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         if (session == null) {
             return
@@ -291,14 +298,16 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             val camera = frame.camera
 
             // Retrieves the latest depth image for this frame.
+            // 이 프레임의 최신 깊이 이미지를 검색
             if (isDepthSupported) {
                 depthTexture.update(frame)
-//                Log.d(TAG, "onDrawFrame: ${getMillimetersDepth(frame.acquireDepthImage16Bits(), 0, 0)}")
+                // Log.d(TAG, "isDepthSupported ${camera.pose.xAxis}  ${camera.pose.yAxis}  ${camera.pose.zAxis}")
             }
             // Handle one tap per frame.
 //            handleTap(frame, camera)
 
             // If frame is ready, render camera preview image to the GL surface.
+            // 프레임이 준비되면 카메라 미리보기 이미지를 GL 표면으로 렌더링
             backgroundRenderer.draw(frame)
             if (showDepthMap) {
                 backgroundRenderer.drawDepth(frame)
@@ -331,25 +340,25 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
             try {
 
-                val image = frame.acquireCameraImage()
-                val bitmap = RotateBitmap(imageToBitmap(image, requireContext())!!, 90f)
+                val currentFrameImage = frame.acquireCameraImage() // 현재 프레임에 해당하는 깊이 이미지 객체를 가져옴
+                val bitmap = RotateBitmap(imageToBitmap(currentFrameImage, requireContext())!!, 90f) // 이미지를 비트맵으로 변경
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    runObjectDetection(bitmap!!, image)
+                    runObjectDetection(bitmap!!)
                     //Log.d(TAG, "onDrawFrame: ${centerX} : ${centerY}")
                     //onUpdateDepthImage(distance)
-                    image.close()
+                    currentFrameImage.close()
                     bitmap.recycle()
                 }
                 Log.d(TAG, "*****onDrawFrame: ${centerX} : ${centerY}")
-                val pos = depthTexture.pointConverter(frame, image, 0, 0)
-                Log.d(TAG, "pos: ${pos!!.first}  ${pos!!.second}")
+               // val pos = depthTexture.pointConverter(frame, currentFrameImage, 0, 0)
+               // Log.d(TAG, "pos: ${pos!!.first}  ${pos!!.second}")
                 //val pos = depthTexture.pointConverter(frame, image, centerX, centerY)
-                val distance = depthTexture.getMillimetersDepth(image,centerX, centerY*2)
+                val distance = depthTexture.getMillimetersDepth(currentFrameImage,centerX, centerY)
                 onUpdateDepthImage(distance)
                // Log.d(TAG, "DISTANCE1 : ${depthTexture.distance1}")
                // Log.d(TAG, "DISTANCE2 : ${depthTexture.distance2}")
-                image.close()
+                currentFrameImage.close()
             }catch (e: Exception){
                 Log.d(TAG, "onDrawFrame: ${e.message}")
             }
@@ -426,7 +435,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
     }
 
-    private fun runObjectDetection(bitmap: Bitmap, imageb: Image) {
+    private fun runObjectDetection(bitmap: Bitmap) {
         // Step 1: Create TFLite's TensorImage object
         val image = TensorImage.fromBitmap(bitmap)
 
@@ -457,25 +466,20 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         }
 
         // 비트맵에 검출 결과를 그려서 보여줍니다
-        val imgWithResult = drawDetectionResult(bitmap, resultToDisplay,imageb)
-//        val deviceWidth = getDeviceSize(requireActivity()).x
-//        val deviceHeight = deviceWidth / 3 * 4
-//        Log.d(TAG, "deviceWidth: ${deviceWidth}, deviceHeight: ${deviceHeight}")
-
+        val imgWithResult = drawDetectionResult(bitmap, resultToDisplay)
         requireActivity().runOnUiThread {
             binding.inputImageView.setImageBitmap(imgWithResult)
+
         }
     }
 
     private fun drawDetectionResult(
         bitmap: Bitmap,
-        detectionResults: List<DetectionResult>,imageb:Image
+        detectionResults: List<DetectionResult>
     ): Bitmap {
         val outputBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(outputBitmap)
         val pen = Paint()
-
-        val pen2 = Paint()
 
 
         pen.textAlign = Paint.Align.LEFT
@@ -488,13 +492,23 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             pen.style = Paint.Style.STROKE
             val box = it.boundingBox
             canvas.drawRect(box, pen)
+            Log.d(TAG, "boxLeft:${box.left}")
+            Log.d(TAG, "boxRight:${box.right}")
+            Log.d(TAG, "boxTop:${box.top}")
+            Log.d(TAG, "boxBottom:${box.bottom}")
+            Log.d(TAG, "centerX: ${box.centerX()}, centerY: ${box.centerY()}")
             canvas.drawCircle(it.boundingBox.centerX(),it.boundingBox.centerY() ,8F, pen)
+
+//            val boxWidth = Math.abs(it.boundingBox.width())- (boxWidth/2).toInt()
+//            val boxHeight = Math.abs(it.boundingBox.height())- (boxHeight/2).toInt()
+
+
             centerX = it.boundingBox.centerX().toInt()
             centerY = it.boundingBox.centerY().toInt()
 //            val distance = depthTexture.getMillimetersDepth(imageb, it.boundingBox.centerX().toInt(),  it.boundingBox.centerY().toInt())
 //            onUpdateDepthImage(distance)
 //            Log.d(TAG, "DISTANCE : $distance")
-//            Log.d(TAG, "centerX: ${centerX}, centerY: ${centerY}")
+            Log.d(TAG, "centerX: ${centerX}, centerY: ${centerY}")
 //            Log.d(TAG, "boxcenterX: ${box.centerX()}, centerY: ${box.centerY()}")
             val tagSize = Rect(0, 0, 0, 0)
 
