@@ -39,7 +39,7 @@ class ComplaintsListFragment : BaseFragment<FragmentComplaintsListBinding>(R.lay
 
     private fun initViewModel() {
         job = lifecycleScope.launch{
-            angelMainViewModel.getComplaintsList(0).collectLatest {
+            angelMainViewModel.getComplaintsList().collectLatest {
                 complaintsAdapter.submitData(it)
             }
         }
