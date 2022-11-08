@@ -1,16 +1,16 @@
 package com.d201.domain.model
 
-import com.google.gson.annotations.SerializedName
-import java.time.LocalDateTime
-
 data class Complaints(
     val seq: Long,
     val address: String?,
-    val content: String?,
     val image: String?,
+    val content: String?,
     val regTime: String?,
     val resultContent: String?,
-    val returnContent: String?,
+    var returnContent: String?,
     val state: String?,
     val title: String?
-)
+){
+    constructor(address: String?, content: String?): this(seq = 0L, address, image = "", content, regTime = "", resultContent = "", returnContent = "", state = "", title = "")
+
+}

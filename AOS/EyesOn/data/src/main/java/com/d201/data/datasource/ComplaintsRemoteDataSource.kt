@@ -2,22 +2,24 @@ package com.d201.data.datasource
 
 import com.d201.data.api.ComplaintsApi
 import com.d201.data.model.request.ComplaintsRequest
-import com.d201.data.model.response.ResponseCompDto
+import com.d201.data.model.response.ComplaintsResponse
 import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.PagingResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ComplaintsRemoteDataSource @Inject constructor(private val complaintsApi: ComplaintsApi) {
 
-    fun insertComp(complaintsRequest: ComplaintsRequest): Flow<BaseResponse<Void>> = flow {
-        emit(complaintsApi.insertComp(complaintsRequest))
+    fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<BaseResponse<Void>> = flow {
+        emit(complaintsApi.insertComp(complaintsRequest, imageFile))
     }
 
-    fun selectComplaintsBySeq(seq: Int): Flow<BaseResponse<ResponseCompDto>> = flow {
+    fun selectComplaintsBySeq(seq: Long): Flow<BaseResponse<ComplaintsResponse>> = flow {
         emit(complaintsApi.selectComplaintsBySeq(seq))
     }
 
@@ -33,8 +35,8 @@ class ComplaintsRemoteDataSource @Inject constructor(private val complaintsApi: 
         emit(complaintsApi.completeComplaints(complaintsRequest))
     }
 
-    fun selectAllComplaints(page: Int, size: Int): Flow<BaseResponse<PagingResult<ResponseCompDto>>> = flow {
-        emit(complaintsApi.selectAllComplaints(page, size))
+    fun selectComplaintsList(flag: Int, page: Int, size: Int): Flow<BaseResponse<PagingResult<ComplaintsResponse>>> = flow {
+        emit(complaintsApi.selectComplaintsList(flag, page, size))
     }
 
 }

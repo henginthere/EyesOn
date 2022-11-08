@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
+
+
 
     // 회원가입
     public ResponseLoginDto signup(String email, String fcmToken) {
@@ -44,24 +47,36 @@ public class UserService {
         userRepository.save(userEntity);
 
         // 회원가입 후 로그인까지 처리
-        ResponseLoginDto responseLoginDto = login(email);
+        ResponseLoginDto responseLoginDto = login(email, fcmToken);
         return responseLoginDto;
     }
 
     // 로그인
-    public ResponseLoginDto login(String userEmail){
+    public ResponseLoginDto login(String userEmail, String fcmToken){
+
+        Optional<UserEntity> userEntity = userRepository.findByUserEmail(userEmail);
 
         // 계정이 없는 경우
-        if(!userRepository.findByUserEmail(userEmail).isPresent()){
+        if(!userEntity.isPresent()){
             return null;
         }
 
         ResponseLoginDto responseLoginDto = authService.authorize(userEmail);
 
+        // fcm Token이 있으면 갱신
+        if(fcmToken.equals("")){
+
+        }
+        // 없으면 갱신 X
+        else{
+            userEntity.get().setUserFcm(fcmToken);
+            userRepository.save(userEntity.get());
+        }
         return responseLoginDto;
     }
 
-    public ResponseLoginDto register(String role, char gender){
+    // 성별, 역할 등록
+    public ResponseLoginDto register(String role, char gender, String fcmToken){
         long userSeq = SecurityUtil.getCurrentMemberSeq();
         UserEntity userEntity = userRepository.findByUserSeq(userSeq).get();
 
@@ -83,7 +98,7 @@ public class UserService {
         }
 
         String email = userRepository.findByUserSeq(SecurityUtil.getCurrentMemberSeq()).get().getUserEmail();
-        ResponseLoginDto responseLoginDto = login(email);
+        ResponseLoginDto responseLoginDto = login(email,fcmToken);
         return responseLoginDto;
     }
 

@@ -20,7 +20,7 @@ import com.d201.eyeson.databinding.FragmentLoginBinding
 import com.d201.eyeson.util.ANGEL
 import com.d201.eyeson.util.BLIND
 import com.d201.eyeson.util.GENDER_DEFAULT
-import com.d201.eyeson.view.angel.AngelMainActivity
+import com.d201.eyeson.view.angel.main.AngelMainActivity
 import com.d201.eyeson.view.blind.BlindMainActivity
 import com.d201.eyeson.view.login.LoginViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -28,13 +28,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.ar.core.dependencies.e
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 private const val TAG = "LoginFragment"
 
@@ -70,7 +67,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             loginViewModel.login.collectLatest {
                 when (it?.gender) {
                     GENDER_DEFAULT -> {
-                        Log.d(TAG, "initViewModel: ${it}")
                         findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSelectRoleFragment())
                     }
                     else -> {
@@ -79,13 +75,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                                 Intent(
                                     requireContext(),
                                     BlindMainActivity::class.java
-                                )
+                                ).apply {
+                                    putExtra("Gender", it.gender)
+                                }
                             )
                             ANGEL -> startActivity(
                                 Intent(
                                     requireContext(),
                                     AngelMainActivity::class.java
-                                )
+                                ).apply {
+                                    putExtra("Gender", it.gender)
+                                }
                             )
                             else -> return@collectLatest
                         }
@@ -123,7 +123,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
         // Google에서 제공되는 signInIntent를 이용해서 인증 시도
-        val signInIntent = mGoogleSignInClient!!.signInIntent
+        val signInIntent = mGoogleSignInClient.signInIntent
 
         //콜백함수 부르며 launch
         requestActivity.launch(signInIntent)

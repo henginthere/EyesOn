@@ -9,9 +9,6 @@
         android:name="com.d201.eyeson.view.blind.BlindMainFragment"
         android:label="BlindMainFragment" >
         <action
-            android:id="@+id/action_blindMainFragment_to_helperSelectFragment"
-            app:destination="@id/helperSelectFragment" />
-        <action
             android:id="@+id/action_blindMainFragment_to_blindNotificationFragment"
             app:destination="@id/blindNotificationFragment" />
         <action
@@ -30,18 +27,6 @@
         android:name="com.d201.eyeson.view.blind.setting.BlindSettingFragment"
         android:label="BlindSettingFragment" />
     <fragment
-        android:id="@+id/helperSelectFragment"
-        android:name="com.d201.eyeson.view.blind.help.HelperSelectFragment"
-        android:label="HelperSelectFragment" >
-        <action
-            android:id="@+id/action_helperSelectFragment_to_helpLoadingFragment"
-            app:destination="@id/helpLoadingFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/helpLoadingFragment"
-        android:name="com.d201.eyeson.view.blind.help.HelpLoadingFragment"
-        android:label="HelpLoadingFragment" />
-    <fragment
         android:id="@+id/complaintsFragment"
         android:name="com.d201.eyeson.view.blind.complaints.ComplaintsFragment"
         android:label="ComplaintsFragment" >
@@ -55,9 +40,27 @@
     <fragment
         android:id="@+id/complaintsSubmitFragment"
         android:name="com.d201.eyeson.view.blind.complaints.ComplaintsSubmitFragment"
-        android:label="ComplaintsSubmitFragment" />
+        android:label="ComplaintsSubmitFragment" >
+        <action
+            android:id="@+id/action_complaintsSubmitFragment_to_complaintsSubmitRecordFragment"
+            app:destination="@id/complaintsSubmitRecordFragment"
+            app:popUpTo="@id/complaintsSubmitFragment"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
     <fragment
         android:id="@+id/myComplaintsFragment"
         android:name="com.d201.eyeson.view.blind.complaints.MyComplaintsFragment"
         android:label="MyComplaintsFragment" />
+    <fragment
+        android:id="@+id/complaintsSubmitRecordFragment"
+        android:name="com.d201.eyeson.view.blind.complaints.ComplaintsSubmitRecordFragment"
+        android:label="ComplaintsSubmitRecordFragment">
+        <argument
+            app:argType="string"
+            android:name="image"
+            app:nullable="false"
+            />
+    </fragment>
+
 </navigation>
