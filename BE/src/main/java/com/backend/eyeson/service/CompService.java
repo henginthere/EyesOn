@@ -56,7 +56,8 @@ public class CompService {
         UserEntity user = UserMapper.INSTANCE.toEntity(getLoginUser());
 
         String url = fileService.fileUpload(multipartFile);
-        complaints.setCompImage(url);
+        System.out.println(url);
+        complaints.setCompImage(multipartFile.getOriginalFilename());
 
         complaints.setBlindUser(user);
         compRepository.save(complaints);
