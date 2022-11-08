@@ -17,7 +17,9 @@ class MyComplaintsAdapter(private val blindComplaintsClickListener: BlindComplai
     inner class ViewHolder(private val binding: ItemComplaintsVerticalBlindBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(complaints: Complaints){
             binding.apply {
-                Log.d(TAG, "bind: ${complaints}")
+                layoutComplaints.setOnClickListener {
+                    blindComplaintsClickListener.onClick(complaints)
+                }
                 when(complaints.state){
                     "PROGRESS_IN" -> {
                         tvComplaintsStatusProcessing.visibility = View.VISIBLE

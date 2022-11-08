@@ -2,6 +2,7 @@ package com.d201.eyeson.view.blind.complaints
 
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.d201.domain.model.Complaints
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
@@ -46,7 +47,7 @@ class MyComplaintsFragment : BaseFragment<FragmentMyComplaintsBinding>(R.layout.
 
     private val blindComplaintsClickListener = object : BlindComplaintsClickListener{
         override fun onClick(complaints: Complaints) {
-
+            findNavController().navigate(MyComplaintsFragmentDirections.actionMyComplaintsFragmentToMyComplaintsDetailFragment(complaints.seq))
         }
     }
 }

@@ -51,7 +51,11 @@
     <fragment
         android:id="@+id/myComplaintsFragment"
         android:name="com.d201.eyeson.view.blind.complaints.MyComplaintsFragment"
-        android:label="MyComplaintsFragment" />
+        android:label="MyComplaintsFragment" >
+        <action
+            android:id="@+id/action_myComplaintsFragment_to_myComplaintsDetailFragment"
+            app:destination="@id/myComplaintsDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/complaintsSubmitRecordFragment"
         android:name="com.d201.eyeson.view.blind.complaints.ComplaintsSubmitRecordFragment"
@@ -61,6 +65,14 @@
             android:name="image"
             app:nullable="false"
             />
+    </fragment>
+    <fragment
+        android:id="@+id/myComplaintsDetailFragment"
+        android:name="com.d201.eyeson.view.blind.complaints.MyComplaintsDetailFragment"
+        android:label="MyComplaintsDetailFragment">
+        <argument
+            android:name="complaintSeq"
+            app:argType="long"/>
     </fragment>
 
 </navigation>
