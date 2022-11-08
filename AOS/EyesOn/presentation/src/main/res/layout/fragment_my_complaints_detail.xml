@@ -177,13 +177,13 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginVertical="16dp"
-                    android:contentDescription="@{`처리 상태는 `+vm.complaints.state+` 입니다`}"
+                    android:contentDescription="@{`현재 상태는 `+vm.complaints.state+` 입니다`}"
                     >
                     <TextView
                         android:id="@+id/tv_status"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        state="@{vm.complaints.state}"
+                        android:text="@{vm.complaints.state}"
                         android:textSize="36sp"
                         android:fontFamily="@font/noto_sans_bold"
                         android:textColor="@color/blind_yellow"

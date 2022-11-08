@@ -8,7 +8,7 @@ data class Complaints(
     val regTime: String?,
     val resultContent: String?,
     var returnContent: String?,
-    val state: String?,
+    var state: String?,
     val title: String?
 ){
     constructor(address: String?, content: String?): this(seq = 0L, address, content, image = "", regTime = "", resultContent = "", returnContent = "", state = "", title = "")
