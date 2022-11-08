@@ -342,6 +342,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                     bitmap.recycle()
                 }
                 Log.d(TAG, "*****onDrawFrame: ${centerX} : ${centerY}")
+                val pos = depthTexture.pointConverter(frame, image, 0, 0)
+                Log.d(TAG, "pos: ${pos!!.first}  ${pos!!.second}")
                 //val pos = depthTexture.pointConverter(frame, image, centerX, centerY)
                 val distance = depthTexture.getMillimetersDepth(image,centerX, centerY*2)
                 onUpdateDepthImage(distance)
