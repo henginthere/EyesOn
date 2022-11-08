@@ -10,7 +10,7 @@ spring:
     password: hy1221
 #    url: jdbc:mysql://localhost:3306/eyeson?serverTimezone=Asia/Seoul
 #    username: root
-#    password: hy1234
+#    password: 1234
 #  security:
 #    google_id_token: [ ]
 #    oauth2:
@@ -19,10 +19,10 @@ spring:
 #          google:
 #            client-id:
 #            scope: profile, email
-#  servlet:
-#    multipart:
-#      max-file-size: 20MB
-#      max-request-size: 20MB
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
   # jpa ??
   jpa:
@@ -30,7 +30,7 @@ spring:
     show-sql: true  # jpa? hibernate? ?? CRUD? ???? ?? CRUD? sql? ???? ????
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  # ?? ?? DB? ?? SQL ??? ??
     hibernate:
-      ddl-auto: create  # ??? ??? ? ?? ??? ??? ??? ??
+      ddl-auto: update  # ??? ??? ? ?? ??? ??? ??? ??
     properties:
       hibernate:
         format_sql: false  # ??? ???? sql? ?? ?? ???.
@@ -43,10 +43,16 @@ jwt:
   refresh-token-validity-in-seconds: 604800
 
 server:
+  port: 8090
   servlet:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
+
+
+
+
+
 
 

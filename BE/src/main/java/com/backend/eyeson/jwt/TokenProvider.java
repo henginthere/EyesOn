@@ -106,13 +106,6 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
         return new UsernamePasswordAuthenticationToken(claims.get("userSeq"), token, authorities);
-//
-//        if(claims.get(AUTHORITIES_KEY).toString().equals("ROLE_ADMIN")) {
-//            return new UsernamePasswordAuthenticationToken(claims.get("managerSeq"), token, authorities);
-//        }
-//        else{
-//            return new UsernamePasswordAuthenticationToken(claims.get("consultantSeq"), token, authorities);
-//        }
 
     }
 
@@ -123,9 +116,6 @@ public class TokenProvider implements InitializingBean {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             logger.info("validate 들어옴");
-//            if (redisUtil.hasKeyBlackList(token)) {
-//                throw new UnauthorizedException("이미 탈퇴한 회원입니다");
-//            }
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             logger.info("잘못된 JWT 서명입니다.");
@@ -136,9 +126,6 @@ public class TokenProvider implements InitializingBean {
         } catch (IllegalArgumentException e) {
             logger.info("JWT 토큰이 잘못되었습니다.");
         }
-//        catch (UnauthorizedException e) {
-//            logger.info("이미 탈퇴한 회원입니다.");
-//        }
         return false;
     }
 
@@ -154,5 +141,28 @@ public class TokenProvider implements InitializingBean {
             return e.getClaims();
         }
     }
+
+
+    // 사용자 이름 추출
+    public long getUserSeq(String authorizationHeader){
+        validationAuthorizationHeader(authorizationHeader); // (1)
+        String token = extractToken(authorizationHeader); // (2)
+
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        long userSeq = Long.parseLong(String.valueOf(claims.get("userSeq")));
+        return userSeq;
+    }
+
+    private void validationAuthorizationHeader(String header) {
+        if (header == null || !header.startsWith("Bearer ")) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private String extractToken(String authorizationHeader) {
+        return authorizationHeader.substring("Bearer ".length());
+    }
+
+
 
 }

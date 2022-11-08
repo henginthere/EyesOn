@@ -1,30 +1,33 @@
 package com.backend.eyeson.service;
 
-import com.backend.eyeson.controller.UserController;
-import com.backend.eyeson.dto.RequestRegistDto;
+import com.backend.eyeson.dto.ResponseAngelInfoDto;
 import com.backend.eyeson.dto.ResponseLoginDto;
+import com.backend.eyeson.entity.AngelInfoEntity;
 import com.backend.eyeson.entity.AuthorityEntity;
 import com.backend.eyeson.entity.UserEntity;
-import com.backend.eyeson.repository.AuthorityRepository;
+import com.backend.eyeson.mapper.AngelMapper;
+import com.backend.eyeson.repository.AngelRepository;
 import com.backend.eyeson.repository.UserRepository;
+import com.backend.eyeson.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
+
+    private final AngelRepository angelRepository;
     private final UserRepository userRepository;
-
-    private final AuthorityRepository authorityRepository;
-
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
+
+
 
     // 회원가입
     public ResponseLoginDto signup(String email, String fcmToken) {
@@ -32,71 +35,92 @@ public class UserService {
         String g_id[] = email.split("@");
         String pass = g_id[0];
 
-//        // gender enum으로 변경
-//        // m : men, w : women
-//        char gender = 0;
-//        if(requestRegistDto.getUserGender().equals("Women")) gender = 'w';
-//        else if(requestRegistDto.getUserGender().equals("Men")) gender = 'm';
-
-        // 회원 가입 시 gender와 role은 default로 저장,
-
-
-        // 권한 설정
-        AuthorityEntity authorityEntity;
-
-        boolean role;
-        authorityEntity = AuthorityEntity.builder()
-                .authorityName("ROLE_ADMIN")
-                .build();
-//        // true : 시각장애인, false : 엔젤
-//        if(!requestRegistDto.isUserRole()){
-//            role = false;
-//            authorityEntity = AuthorityEntity.builder()
-//                    .authorityName("ROLE_ANGEL")
-//                    .build();
-//
-//            // 로그로 바꾸기
-//            System.out.println(authorityEntity.getAuthorityName());
-//        }
-//        else{
-//            role = true;
-//            authorityEntity = AuthorityEntity.builder()
-//                    .authorityName("ROLE_BLIND")
-//                    .build();
-//
-//            // 로그로 바꾸기
-//            System.out.println(authorityEntity.getAuthorityName());
-//        }
-
-        // 권한 저장
-        authorityRepository.save(authorityEntity);
-
         UserEntity userEntity = UserEntity.builder().
                 userFcm(fcmToken).
                 userEmail(email).
                 userPass(passwordEncoder.encode(pass)).
                 userGender('d').
                 userDate(LocalDateTime.now()).
-                authorities(Collections.singleton(authorityEntity))
+                authority(AuthorityEntity.ROLE_ADMIN)
                 .build();
 
         userRepository.save(userEntity);
 
         // 회원가입 후 로그인까지 처리
-        ResponseLoginDto responseLoginDto = login(email);
+        ResponseLoginDto responseLoginDto = login(email, fcmToken);
         return responseLoginDto;
     }
 
     // 로그인
-    public ResponseLoginDto login(String userEmail){
+    public ResponseLoginDto login(String userEmail, String fcmToken){
+
+        Optional<UserEntity> userEntity = userRepository.findByUserEmail(userEmail);
 
         // 계정이 없는 경우
-        if(!userRepository.findByUserEmail(userEmail).isPresent()){
+        if(!userEntity.isPresent()){
             return null;
         }
 
         ResponseLoginDto responseLoginDto = authService.authorize(userEmail);
 
+        // fcm Token이 없으면 통과
+        if(fcmToken.equals("")){
+
+        }
+        // 있으면 갱신시켜 주기
+        else{
+            userEntity.get().setUserFcm(fcmToken);
+            userRepository.save(userEntity.get());
+        }
         return responseLoginDto;
+    }
+
+    // 성별, 역할 등록
+    public ResponseLoginDto register(String role, char gender, String fcmToken){
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        UserEntity userEntity = userRepository.findByUserSeq(userSeq).get();
+
+        userEntity.setUserGender(gender);
+        switch (role){
+            case "ROLE_ANGEL":
+                userEntity.setAuthority(AuthorityEntity.ROLE_ANGEL);
+                break;
+            case "ROLE_BLIND":
+                userEntity.setAuthority(AuthorityEntity.ROLE_BLIND);
+                break;
+        }
+        userRepository.save(userEntity);
+        if(role.equals("ROLE_ANGEL") && angelRepository.findByUserEntity_UserSeq(userSeq).isEmpty()){
+            AngelInfoEntity angelInfoEntity = new AngelInfoEntity();
+            angelInfoEntity.setUserEntity(userEntity);
+            angelInfoEntity.setAngelGender(gender);
+            angelRepository.save(angelInfoEntity);
+        }
+
+        String email = userRepository.findByUserSeq(SecurityUtil.getCurrentMemberSeq()).get().getUserEmail();
+        ResponseLoginDto responseLoginDto = login(email,fcmToken);
+        return responseLoginDto;
+    }
+
+    //회원탈퇴
+    public void dropUser(long userSeq) {
+        userRepository.delete(userRepository.findByUserSeq(userSeq).get());
+    }
+    
+    public ResponseAngelInfoDto getInfo(){
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        AngelInfoEntity angelInfoEntity = angelRepository.findByUserEntity_UserSeq(userSeq).get();
+        return AngelMapper.INSTANCE.toDto(angelInfoEntity);
+    }
+
+    public ResponseAngelInfoDto setAngelInfo(int start, int end, int day, boolean active){
+        long userSeq = SecurityUtil.getCurrentMemberSeq();
+        AngelInfoEntity angelInfoEntity = angelRepository.findByUserEntity_UserSeq(userSeq).get();
+        angelInfoEntity.setAngelActive(active);
+        angelInfoEntity.setAngelAlarmStart(start);
+        angelInfoEntity.setAngelAlarmEnd(end);
+        angelInfoEntity.setAngelAlarmDay(day);
+        angelRepository.save(angelInfoEntity);
+        return AngelMapper.INSTANCE.toDto(angelInfoEntity);
     }
 }

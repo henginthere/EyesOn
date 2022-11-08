@@ -15,10 +15,10 @@ import org.webrtc.VideoTrack
 
 fun AppCompatActivity.setRemoteMediaStream(
     stream: MediaStream,
-    remoteParticipant: RemoteParticipant){
+    remoteParticipant: RemoteParticipant
+){
 
     val videoTrack :VideoTrack = stream.videoTracks.first()
-//    if(remoteParticipant.getVideoView() != null)
     videoTrack.addSink(remoteParticipant.getVideoView())
 
     runOnUiThread{

@@ -1,3 +1,19 @@
-<resources>
-    <string name="app_name">EyesOn</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Eyes On</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="eyesOn">아이즈온</string>
+    <string name="alarm">알림</string>
+    <string name="setting">설정</string>
+    <string name="button_back">뒤로가기 버튼</string>
+    <string name="frag_complaints">민원 신청 및 내 민원 확인 화면</string>
+    <string name="frag_main">아이즈온 메인화면입니다</string>
+    <string name="frag_my_complaints">내 민원 확인</string>
+    <string name="frag_my_complaints_list">내가 신청한 민원 목록</string>
+    <string name="frag_complaints_submit">민원 신청 화면</string>
+    <string name="frag_complaints_submit_camera">사진 다시 찍기</string>
+    <string name="google_login_button">구글 로그인 버튼</string>
+    <string name="eyeson_main">아이즈온 로그인 화면입니다</string>
+    <string name="frag_complaints_record">민원내용 입력 화면 입니다</string>
+    <string name="btn_complaints_submit">전송하기 버튼</string>
+    <string name="btn_record">녹음 버튼</string>
 </resources>

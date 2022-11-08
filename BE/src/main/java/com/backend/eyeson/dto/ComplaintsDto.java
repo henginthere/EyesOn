@@ -1,6 +1,7 @@
 package com.backend.eyeson.dto;
 
 import com.backend.eyeson.entity.CompStateEnum;
+import com.backend.eyeson.entity.ComplaintsEntity;
 import com.backend.eyeson.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,20 @@ public class ComplaintsDto {
     private String compImage;
     private String compTitle;
     private String compContent;
-    private LocalDateTime compRegTime;
+    private LocalDateTime compRegtime;
     private String compResultContent;
+
+    public ComplaintsDto(ComplaintsEntity complaintsEntity) {
+        this.compSeq = complaintsEntity.getCompSeq();
+        this.blindUser = complaintsEntity.getBlindUser();
+        this.angelUser = complaintsEntity.getAngelUser();
+        this.compState = complaintsEntity.getCompState();
+        this.compReturn = complaintsEntity.getCompReturn();
+        this.compAddress = complaintsEntity.getCompAddress();
+        this.compImage = complaintsEntity.getCompImage();
+        this.compTitle = complaintsEntity.getCompTitle();
+        this.compContent = complaintsEntity.getCompContent();
+        this.compRegtime = complaintsEntity.getCompRegtime();
+        this.compResultContent = complaintsEntity.getCompResultContent();
+    }
 }

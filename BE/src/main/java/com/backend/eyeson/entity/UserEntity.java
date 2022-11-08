@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,10 +49,7 @@ public class UserEntity implements Serializable {
     @Column(name="user_date", nullable = false)
     private LocalDateTime userDate;
 
-    @ManyToMany // user와 authority 다대다 관계를 일대다, 다대일 관계의 조인테이블로 정의
-    @JoinTable(
-            name = "user_authority",
-            joinColumns = {@JoinColumn(name = "userEmail", referencedColumnName = "user_email")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
-    private Set<AuthorityEntity> authorities;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "user_authority")
+    private AuthorityEntity authority;
 }
