@@ -27,11 +27,19 @@ class ComplaintsPagingSource(private val complaintsRemoteDataSource: ComplaintsR
             complaintsRemoteDataSource.selectComplaintsList(flag, page, size = 1).collectLatest {
                 response = it
             }
-            PagingSource.LoadResult.Page(
-                data = response!!.data.result.mapperToListComplaints(),
-                prevKey = if(page == 0) null else page - 1,
-                nextKey = if(page == response!!.data.totalPage) null else page + 1
-            )
+            if(response!!.data.totalPage > 0){
+                PagingSource.LoadResult.Page(
+                    data = response!!.data.result.mapperToListComplaints(),
+                    prevKey = if(page <= 0) null else page - 1,
+                    nextKey = if(page == response!!.data.totalPage || response!!.data.totalPage == 0) null else page + 1
+                )
+            }else{
+                LoadResult.Page(
+                    data = response!!.data.result.mapperToListComplaints(),
+                    prevKey = if(page == 0) null else page -1,
+                    nextKey = null
+                )
+            }
         }catch (e: Exception){
             Log.d(TAG, "load: ${e.message}")
             PagingSource.LoadResult.Error(e)

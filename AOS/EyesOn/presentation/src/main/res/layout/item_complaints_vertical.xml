@@ -42,8 +42,8 @@
                         android:id="@+id/iv_complaints_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/img_graph"
+                        imageLoader="@{data.image}"
+                        tools:src="@drawable/icon_no_image"
                         app:circularflow_radiusInDP="16"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
