@@ -9,6 +9,7 @@ import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import com.d201.arcore.depth.common.OBJECT_DETECTION_CUSTOM
 import com.d201.arcore.depth.common.getDeviceSize
@@ -195,7 +196,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                 return
             }
             binding.inputImageView.bringToFront()
-            binding.tvDistance.bringToFront()
+            //binding.tvDistance.bringToFront()
 
         }
 
@@ -340,25 +341,71 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
             try {
 
-                val currentFrameImage = frame.acquireCameraImage() // 현재 프레임에 해당하는 깊이 이미지 객체를 가져옴
+                val currentFrameImage = frame.acquireCameraImage() // 현재 프레임에 해당하는 이미지 객체를 가져옴
                 val bitmap = RotateBitmap(imageToBitmap(currentFrameImage, requireContext())!!, 90f) // 이미지를 비트맵으로 변경
+                val depthImage = frame.acquireDepthImage16Bits()
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    runObjectDetection(bitmap!!)
+                    val detectionResults = runObjectDetection(bitmap!!)
                     //Log.d(TAG, "onDrawFrame: ${centerX} : ${centerY}")
                     //onUpdateDepthImage(distance)
+
+                    val depthX = centerX * depthImage.width / currentFrameImage.width
+                    val depthY = centerY * depthImage.height / currentFrameImage.height
+
+                    Log.d(TAG, "onDrawFrame11: currentFrameImage.width : ${currentFrameImage.width} | centerX : ${centerX}")
+                    Log.d(TAG, "onDrawFrame11: currentFrameImage.height : ${currentFrameImage.height} | centerY : ${centerY}")
+                    Log.d(TAG, "onDrawFrame11: depthImage.width : ${depthImage.width} | depthX : ${depthX}")
+                    Log.d(TAG, "onDrawFrame11: depthImage.height : ${depthImage.height} | depthY : ${depthY}")
+
+                    val distance = depthTexture.getMillimetersDepth(depthImage, depthX, depthY)
+
+                    // 비트맵에 검출 결과를 그려서 보여줍니다
+                    val imgWithResult = drawDetectionResult(bitmap, detectionResults, distance)
+                    requireActivity().runOnUiThread {
+                        binding.inputImageView.setImageBitmap(imgWithResult)
+                    }
+
+                    //onUpdateDepthImage(distance)
+                    // Log.d(TAG, "DISTANCE1 : ${depthTexture.distance1}")
+                    // Log.d(TAG, "DISTANCE2 : ${depthTexture.distance2}")
                     currentFrameImage.close()
+                    depthImage.close()
+
+                    centerX = 0
+                    centerY = 0
+
+                    //currentFrameImage.close()
                     bitmap.recycle()
                 }
-                Log.d(TAG, "*****onDrawFrame: ${centerX} : ${centerY}")
-               // val pos = depthTexture.pointConverter(frame, currentFrameImage, 0, 0)
-               // Log.d(TAG, "pos: ${pos!!.first}  ${pos!!.second}")
-                //val pos = depthTexture.pointConverter(frame, image, centerX, centerY)
-                val distance = depthTexture.getMillimetersDepth(currentFrameImage,centerX, centerY)
-                onUpdateDepthImage(distance)
-               // Log.d(TAG, "DISTANCE1 : ${depthTexture.distance1}")
-               // Log.d(TAG, "DISTANCE2 : ${depthTexture.distance2}")
-                currentFrameImage.close()
+                // 객체 탐지 시작
+                // 결과로 Center X, Y가 설정됨
+//                runObjectDetection(bitmap!!)
+//
+////                Log.d(TAG, "*****onDrawFrame: ${centerX} : ${centerY}")
+//               // val pos = depthTexture.pointConverter(frame, currentFrameImage, 0, 0)
+//               // Log.d(TAG, "pos: ${pos!!.first}  ${pos!!.second}")
+//                //val pos = depthTexture.pointConverter(frame, image, centerX, centerY)
+//
+//                val depthImage = frame.acquireDepthImage16Bits()
+//
+//                val depthX = centerX * depthImage.width / currentFrameImage.width
+//                val depthY = centerY * depthImage.height / currentFrameImage.height
+//
+//                Log.d(TAG, "onDrawFrame11: currentFrameImage.width : ${currentFrameImage.width} | centerX : ${centerX}")
+//                Log.d(TAG, "onDrawFrame11: currentFrameImage.height : ${currentFrameImage.height} | centerY : ${centerY}")
+//                Log.d(TAG, "onDrawFrame11: depthImage.width : ${depthImage.width} | depthX : ${depthX}")
+//                Log.d(TAG, "onDrawFrame11: depthImage.height : ${depthImage.height} | depthY : ${depthY}")
+//
+//                val distance = depthTexture.getMillimetersDepth(depthImage, depthX, depthY)
+//                onUpdateDepthImage(distance)
+//               // Log.d(TAG, "DISTANCE1 : ${depthTexture.distance1}")
+//               // Log.d(TAG, "DISTANCE2 : ${depthTexture.distance2}")
+//                currentFrameImage.close()
+//                depthImage.close()
+//
+//                centerX = 0
+//                centerY = 0
             }catch (e: Exception){
                 Log.d(TAG, "onDrawFrame: ${e.message}")
             }
@@ -435,7 +482,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
     }
 
-    private fun runObjectDetection(bitmap: Bitmap) {
+    private fun runObjectDetection(bitmap: Bitmap) : List<DetectionResult> {
         // Step 1: Create TFLite's TensorImage object
         val image = TensorImage.fromBitmap(bitmap)
 
@@ -454,7 +501,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         val results = detector.detect(image)
 
         // Step 4: 탐지 결과를 파싱하여 보여줍니다.
-        val resultToDisplay = results.map {
+        return results.map {
             // Get the top-1 category and craft the display text
             val category = it.categories.first()
             val text = "${category.label}, ${category.score.times(100).toInt()}%"//100
@@ -462,20 +509,13 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // 탐지 결과를 표시할 데이터 객체 생성
             DetectionResult(it.boundingBox, text)
 //
-
-        }
-
-        // 비트맵에 검출 결과를 그려서 보여줍니다
-        val imgWithResult = drawDetectionResult(bitmap, resultToDisplay)
-        requireActivity().runOnUiThread {
-            binding.inputImageView.setImageBitmap(imgWithResult)
-
         }
     }
 
     private fun drawDetectionResult(
         bitmap: Bitmap,
-        detectionResults: List<DetectionResult>
+        detectionResults: List<DetectionResult>,
+        distance: Int
     ): Bitmap {
         val outputBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(outputBitmap)
@@ -484,70 +524,135 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
         pen.textAlign = Paint.Align.LEFT
 
-
-        detectionResults.forEach {
-            // draw bounding box
-            pen.color = Color.RED
-            pen.strokeWidth = 8F
-            pen.style = Paint.Style.STROKE
-            val box = it.boundingBox
-            canvas.drawRect(box, pen)
-            Log.d(TAG, "boxLeft:${box.left}")
-            Log.d(TAG, "boxRight:${box.right}")
-            Log.d(TAG, "boxTop:${box.top}")
-            Log.d(TAG, "boxBottom:${box.bottom}")
-            Log.d(TAG, "centerX: ${box.centerX()}, centerY: ${box.centerY()}")
-            canvas.drawCircle(it.boundingBox.centerX(),it.boundingBox.centerY() ,8F, pen)
+        if(detectionResults.isNotEmpty()){
+            detectionResults[0].let {
+                // draw bounding box
+                pen.color = Color.RED
+                pen.strokeWidth = 8F
+                pen.style = Paint.Style.STROKE
+                val box = it.boundingBox
+                canvas.drawRect(box, pen)
+                Log.d(TAG, "boxLeft:${box.left}")
+                Log.d(TAG, "boxRight:${box.right}")
+                Log.d(TAG, "boxTop:${box.top}")
+                Log.d(TAG, "boxBottom:${box.bottom}")
+                Log.d(TAG, "centerX: ${box.centerX()}, centerY: ${box.centerY()}")
+                canvas.drawCircle(it.boundingBox.centerX(),it.boundingBox.centerY() ,8F, pen)
 
 //            val boxWidth = Math.abs(it.boundingBox.width())- (boxWidth/2).toInt()
 //            val boxHeight = Math.abs(it.boundingBox.height())- (boxHeight/2).toInt()
 
 
-            centerX = it.boundingBox.centerX().toInt()
-            centerY = it.boundingBox.centerY().toInt()
+                centerY = it.boundingBox.centerX().toInt()
+                centerX = it.boundingBox.centerY().toInt()
 //            val distance = depthTexture.getMillimetersDepth(imageb, it.boundingBox.centerX().toInt(),  it.boundingBox.centerY().toInt())
 //            onUpdateDepthImage(distance)
 //            Log.d(TAG, "DISTANCE : $distance")
-            Log.d(TAG, "centerX: ${centerX}, centerY: ${centerY}")
+                Log.d(TAG, "centerX: ${centerX}, centerY: ${centerY}")
 //            Log.d(TAG, "boxcenterX: ${box.centerX()}, centerY: ${box.centerY()}")
-            val tagSize = Rect(0, 0, 0, 0)
+                val tagSize = Rect(0, 0, 0, 0)
 
-            // calculate the right font size
-            pen.style = Paint.Style.FILL_AND_STROKE
-            pen.color = Color.YELLOW
-            pen.strokeWidth = 2F
+                // calculate the right font size
+                pen.style = Paint.Style.FILL_AND_STROKE
+                pen.color = Color.YELLOW
+                pen.strokeWidth = 2F
 
-            pen.textSize = MAX_FONT_SIZE
-            pen.getTextBounds(it.text, 0, it.text.length, tagSize)
-            val fontSize: Float = pen.textSize * box.width() / tagSize.width()
+                pen.textSize = MAX_FONT_SIZE
+                pen.getTextBounds(it.text, 0, it.text.length, tagSize)
+                val fontSize: Float = pen.textSize * box.width() / tagSize.width()
 
-            // adjust the font size so texts are inside the bounding box
-            if (fontSize < pen.textSize) pen.textSize = fontSize
+                // adjust the font size so texts are inside the bounding box
+                if (fontSize < pen.textSize) pen.textSize = fontSize
 
-            var margin = (box.width() - tagSize.width()) / 2.0F
-            if (margin < 0F) margin = 0F
-            canvas.drawText(
-                it.text, box.left + margin,
-                box.top + tagSize.height().times(1F), pen
-            )
+                var margin = (box.width() - tagSize.width()) / 2.0F
+                if (margin < 0F) margin = 0F
+                canvas.drawText(
+                    it.text, box.left + margin,
+                    box.top + tagSize.height().times(1F), pen
+                )
 
+                var cm = (distance / 10.0).toFloat()
+                var convertDistance = ""
+                if(cm > 100){
+                        cm /= 100
+                    convertDistance = "%.1f m".format(cm)
+                }
+                else{
+                    convertDistance = "${cm.toInt()} cm"
+                }
+
+                canvas.drawText(
+                    convertDistance, box.centerX(),
+                    box.centerY(), pen
+                )
+
+            }
         }
+
+
+//        detectionResults.forEach {
+//            // draw bounding box
+//            pen.color = Color.RED
+//            pen.strokeWidth = 8F
+//            pen.style = Paint.Style.STROKE
+//            val box = it.boundingBox
+//            canvas.drawRect(box, pen)
+//            Log.d(TAG, "boxLeft:${box.left}")
+//            Log.d(TAG, "boxRight:${box.right}")
+//            Log.d(TAG, "boxTop:${box.top}")
+//            Log.d(TAG, "boxBottom:${box.bottom}")
+//            Log.d(TAG, "centerX: ${box.centerX()}, centerY: ${box.centerY()}")
+//            canvas.drawCircle(it.boundingBox.centerX(),it.boundingBox.centerY() ,8F, pen)
+//
+////            val boxWidth = Math.abs(it.boundingBox.width())- (boxWidth/2).toInt()
+////            val boxHeight = Math.abs(it.boundingBox.height())- (boxHeight/2).toInt()
+//
+//
+//            centerX = it.boundingBox.centerX().toInt()
+//            centerY = it.boundingBox.centerY().toInt()
+////            val distance = depthTexture.getMillimetersDepth(imageb, it.boundingBox.centerX().toInt(),  it.boundingBox.centerY().toInt())
+////            onUpdateDepthImage(distance)
+////            Log.d(TAG, "DISTANCE : $distance")
+//            Log.d(TAG, "centerX: ${centerX}, centerY: ${centerY}")
+////            Log.d(TAG, "boxcenterX: ${box.centerX()}, centerY: ${box.centerY()}")
+//            val tagSize = Rect(0, 0, 0, 0)
+//
+//            // calculate the right font size
+//            pen.style = Paint.Style.FILL_AND_STROKE
+//            pen.color = Color.YELLOW
+//            pen.strokeWidth = 2F
+//
+//            pen.textSize = MAX_FONT_SIZE
+//            pen.getTextBounds(it.text, 0, it.text.length, tagSize)
+//            val fontSize: Float = pen.textSize * box.width() / tagSize.width()
+//
+//            // adjust the font size so texts are inside the bounding box
+//            if (fontSize < pen.textSize) pen.textSize = fontSize
+//
+//            var margin = (box.width() - tagSize.width()) / 2.0F
+//            if (margin < 0F) margin = 0F
+//            canvas.drawText(
+//                it.text, box.left + margin,
+//                box.top + tagSize.height().times(1F), pen
+//            )
+//
+//        }
         return outputBitmap
     }
 
 
-    fun onUpdateDepthImage(distance: Int) {
-        requireActivity().runOnUiThread {
-            var cm = (distance / 10.0).toFloat()
-            if(cm > 100){
-                cm /= 100
-                binding.tvDistance.text = "%.1f m".format(cm)
-            }
-            else{
-                binding.tvDistance.text = "${cm.toInt()} cm"
-            }
-        }
-    }
+//    fun onUpdateDepthImage(distance: Int) {
+//        requireActivity().runOnUiThread {
+//            var cm = (distance / 10.0).toFloat()
+//            if(cm > 100){
+//                cm /= 100
+//                binding.tvDistance.text = "%.1f m".format(cm)
+//            }
+//            else{
+//                binding.tvDistance.text = "${cm.toInt()} cm"
+//            }
+//        }
+//    }
 
     override fun onInit(p0: Int) {
         if(p0 == TextToSpeech.SUCCESS) {
