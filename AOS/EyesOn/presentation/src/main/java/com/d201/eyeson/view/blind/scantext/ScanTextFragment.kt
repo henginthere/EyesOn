@@ -93,7 +93,7 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         }
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
         textRecognitionProcessor = TextRecognitionProcessor(requireContext(), KoreanTextRecognizerOptions.Builder().build())
@@ -101,6 +101,7 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
             if(System.currentTimeMillis() - lastSpeakTime > INTERVAL){
                 lastSpeakTime = System.currentTimeMillis()
                 speakOut(it)
+                binding.tvRecognizeText.text = it
             }
         }
         createCameraSource(selectedModel)
@@ -114,7 +115,7 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         tts.stop()
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         if (cameraSource != null) {
             cameraSource?.release()
@@ -132,7 +133,7 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         }
     }
 
-    fun speakOut(text: String) {
+    private fun speakOut(text: String) {
         tts.setPitch(1f)
         tts.setSpeechRate(3.5f)
         tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
