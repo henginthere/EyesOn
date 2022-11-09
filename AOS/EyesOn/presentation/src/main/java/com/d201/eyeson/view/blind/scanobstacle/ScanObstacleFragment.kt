@@ -350,13 +350,18 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                     //Log.d(TAG, "onDrawFrame: ${centerX} : ${centerY}")
                     //onUpdateDepthImage(distance)
 
-                    val depthX = centerX * depthImage.width / currentFrameImage.width
-                    val depthY = centerY * depthImage.height / currentFrameImage.height
+//                    val depthX = centerY * depthImage.height / currentFrameImage.height
+//                    val depthY = depthImage.width - (centerX * depthImage.width / currentFrameImage.width)
+
+                    val ratio = currentFrameImage.width / depthImage.width
+                    val depthX = centerY / ratio
+                    val depthY = depthImage.height - (centerX / ratio)
 
                     Log.d(TAG, "onDrawFrame11: currentFrameImage.width : ${currentFrameImage.width} | centerX : ${centerX}")
                     Log.d(TAG, "onDrawFrame11: currentFrameImage.height : ${currentFrameImage.height} | centerY : ${centerY}")
                     Log.d(TAG, "onDrawFrame11: depthImage.width : ${depthImage.width} | depthX : ${depthX}")
                     Log.d(TAG, "onDrawFrame11: depthImage.height : ${depthImage.height} | depthY : ${depthY}")
+                    Log.d(TAG, "onDrawFrame11: bitmap.width : ${bitmap.width} | bitmap.height : ${bitmap.height}")
 
                     val distance = depthTexture.getMillimetersDepth(depthImage, depthX, depthY)
 
@@ -493,7 +498,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             .build()
         val detector = ObjectDetector.createFromFileAndOptions(
             requireContext(),
-            "custom_models/test.tflite",
+            "custom_models/model_221108_2234.tflite",
             options
         )
 
@@ -543,8 +548,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 //            val boxHeight = Math.abs(it.boundingBox.height())- (boxHeight/2).toInt()
 
 
-                centerY = it.boundingBox.centerX().toInt()
-                centerX = it.boundingBox.centerY().toInt()
+                centerY = it.boundingBox.centerY().toInt()
+                centerX = it.boundingBox.centerX().toInt()
 //            val distance = depthTexture.getMillimetersDepth(imageb, it.boundingBox.centerX().toInt(),  it.boundingBox.centerY().toInt())
 //            onUpdateDepthImage(distance)
 //            Log.d(TAG, "DISTANCE : $distance")

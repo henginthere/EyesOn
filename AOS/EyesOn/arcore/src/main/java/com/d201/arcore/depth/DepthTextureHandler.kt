@@ -91,7 +91,7 @@ class DepthTextureHandler(var context: Context) {
         // The depth image has a single plane, which stores depth for each pixel as 16-bit unsigned integers.
         // 깊이 이미지에는 각 픽셀의 깊이를 16비트 부호 없는 정수로 저장하는 단일 평면이 있습니다.
         val plane = depthImage.planes[0]
-        val byteIndex = x * plane.pixelStride + y * plane.rowStride
+        val byteIndex = x * plane.pixelStride + y * plane.rowStride -2
         val buffer = plane.buffer.order(ByteOrder.nativeOrder())
         val depthSample = buffer.getShort(byteIndex)
         Log.d(TAG, "depthTexture byteIndex : $byteIndex" )
