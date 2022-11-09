@@ -356,7 +356,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                     val ratio = currentFrameImage.width / depthImage.width
                     val depthX = centerY / ratio
                     val depthY = depthImage.height - (centerX / ratio)
-
+                    //제발
                     Log.d(TAG, "onDrawFrame11: currentFrameImage.width : ${currentFrameImage.width} | centerX : ${centerX}")
                     Log.d(TAG, "onDrawFrame11: currentFrameImage.height : ${currentFrameImage.height} | centerY : ${centerY}")
                     Log.d(TAG, "onDrawFrame11: depthImage.width : ${depthImage.width} | depthX : ${depthX}")
