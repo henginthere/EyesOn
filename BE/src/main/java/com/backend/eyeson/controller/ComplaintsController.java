@@ -32,13 +32,13 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Api(tags   = "민원 컨트롤러")
 public class ComplaintsController {
-    private final UserRepository userRepository;
     private final CompService compService;
 
     @ApiParam(value = "민원 등록")
     @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> registerCom(@RequestPart(value = "params") RequestCompDto params, @RequestPart(value="file", required = false) MultipartFile multipartFile) throws Exception{
         boolean result = compService.registerCom(params, multipartFile);
+
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 등록 성공"), HttpStatus.OK);
     }
 
@@ -50,15 +50,15 @@ public class ComplaintsController {
             case 1: {return new ResponseEntity<>(ResponseFrame.of(compService.listAngel(pageable), "엔젤 민원 조회"), HttpStatus.OK);}
             case 2: {return new ResponseEntity<>(ResponseFrame.of(compService.listBlind(pageable), "블라인드 신청 민원 조회"), HttpStatus.OK);}
         }
+
         return new ResponseEntity<>(ResponseFrame.of(HttpStatus.BAD_REQUEST, "조회 실패"), HttpStatus.OK);
     }
 
     @ApiParam(value = "신청 민원 전체 조회")
     @GetMapping(value = "/list")
     public ResponseEntity<?> listAll(@PageableDefault Pageable pageable) throws Exception{
-        System.out.println("######################################################################################");
         PagingResult result = compService.listAll(pageable);
-        System.out.println(result);
+
         return new ResponseEntity<>(ResponseFrame.of(result, "신청 민원 전체 조회"), HttpStatus.OK);
     }
 
@@ -66,8 +66,7 @@ public class ComplaintsController {
     @GetMapping(value = "/list/angel")
     public ResponseEntity<?> listAngel(@PageableDefault Pageable pageable) throws Exception{
         PagingResult result = compService.listAngel(pageable);
-        ResponseFrame res = ResponseFrame.of(result, "민원 조회");
-        System.out.println(res);
+
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 조회"), HttpStatus.OK);
     }
 
@@ -75,6 +74,7 @@ public class ComplaintsController {
     @GetMapping(value = "/list/blind")
     public ResponseEntity<?> listBlind(@PageableDefault Pageable pageable) throws Exception{
         PagingResult result = compService.listBlind(pageable);
+
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 조회"), HttpStatus.OK);
     }
 
@@ -90,6 +90,7 @@ public class ComplaintsController {
     @PutMapping(value = "/return")
     public ResponseEntity<?> returnCom(@RequestBody RequestCompDto params) throws Exception{
         ResponseCompDto result = compService.returnCom(params);
+
         return new ResponseEntity<>(ResponseFrame.of(result, "반환 완료"), HttpStatus.OK);
     }
 
@@ -97,6 +98,7 @@ public class ComplaintsController {
     @PutMapping(value = "/submit")
     public ResponseEntity<?> submitCom(@RequestBody RequestCompDto params) throws Exception{
         ResponseCompDto result = compService.submitCom(params);
+
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 접수 완료"), HttpStatus.OK);
     }
 
@@ -104,6 +106,7 @@ public class ComplaintsController {
     @PutMapping(value = "/complete")
     public ResponseEntity<?> completeCom(@RequestBody RequestCompDto params) throws Exception{
         ResponseCompDto result = compService.completeCom(params);
+
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 처리 완료"), HttpStatus.OK);
     }
 }

@@ -63,11 +63,11 @@ public class UserService {
 
         ResponseLoginDto responseLoginDto = authService.authorize(userEmail);
 
-        // fcm Token이 있으면 갱신
+        // fcm Token이 없으면 통과
         if(fcmToken.equals("")){
 
         }
-        // 없으면 갱신 X
+        // 있으면 갱신시켜 주기
         else{
             userEntity.get().setUserFcm(fcmToken);
             userRepository.save(userEntity.get());

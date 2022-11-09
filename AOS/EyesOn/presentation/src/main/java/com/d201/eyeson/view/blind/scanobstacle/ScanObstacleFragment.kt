@@ -8,11 +8,8 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import com.d201.arcore.depth.common.OBJECT_DETECTION_CUSTOM
-import com.d201.arcore.depth.common.getDeviceSize
 import com.d201.depth.depth.DepthTextureHandler
 import com.d201.depth.depth.common.*
 import com.d201.depth.depth.rendering.BackgroundRenderer
@@ -23,6 +20,7 @@ import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentScanObstacleBinding
 import com.d201.eyeson.util.RotateBitmap
 import com.d201.eyeson.util.imageToBitmap
+import com.d201.mlkit.BitmapUtils
 import com.google.ar.core.*
 import com.google.ar.core.Camera
 import com.google.ar.core.Point

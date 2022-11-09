@@ -44,10 +44,11 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     private lateinit var session: Session
 
     override fun init() {
-        initView()
-        checkPermission()
+        initListener()
         initViewModelCallback()
+        checkPermission()
         getSessionId()
+        initWebRTC()
     }
 
     override fun onStop() {
@@ -56,7 +57,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     }
 
 
-    private fun initView() {
+    private fun initListener() {
         binding.apply {
             btnChangeCamera.setOnClickListener {
                 session.getLocalParticipant()!!.switchCamera()
@@ -71,7 +72,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     private fun initViewModelCallback() {
         lifecycleScope.launch {
             angelHelpViewModel.sessionId.collectLatest {
-                initWebRTC()
+                getToken("${angelHelpViewModel.sessionId.value}-session")
             }
         }
     }
@@ -83,9 +84,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     private fun initWebRTC() {
         if (allPermissionsGranted()) {
             initSurfaceView()
-            getToken("${angelHelpViewModel.sessionId.value}-session")
         }
-
     }
 
     private fun getToken(sessionId: String) {

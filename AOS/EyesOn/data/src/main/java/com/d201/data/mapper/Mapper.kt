@@ -1,98 +1,113 @@
 package com.d201.data.mapper
 
+import com.d201.data.model.entity.NotiEntity
 import com.d201.data.model.request.AngelRequest
 import com.d201.data.model.request.ComplaintsRequest
 import com.d201.data.model.response.AngelInfoResponse
 import com.d201.data.model.response.ComplaintsResponse
 import com.d201.data.model.response.LoginResponse
 import com.d201.data.model.response.UserResponse
-import com.d201.domain.model.AngelInfo
-import com.d201.domain.model.Complaints
-import com.d201.domain.model.Login
-import com.d201.domain.model.User
+import com.d201.domain.model.*
 
 fun UserResponse.mapperToUser(): User {
-    return this.let {
+    return this.run {
         User(
-            it.accessToken,
-            it.refreshToken,
-            it.userSeq,
-            it.userName,
-            it.userEmail,
-            it.status
+            accessToken,
+            refreshToken,
+            userSeq,
+            userName,
+            userEmail,
+            status
         )
     }
 }
 
-fun LoginResponse.mapperToToken(): Login{
-    return this.let {
+fun LoginResponse.mapperToToken(): Login {
+    return this.run {
         Login(
-            it.token,
-            it.role,
-            it.gender
+            token,
+            role,
+            gender
         )
     }
 }
 
-fun AngelInfoResponse.mapperToAngelInfo(): AngelInfo{
-    return this.let {
+fun AngelInfoResponse.mapperToAngelInfo(): AngelInfo {
+    return this.run {
         AngelInfo(
-            it.alarmStart,
-            it.alarmEnd,
-            it.alarmDay,
-            it.compCnt,
-            it.helpCnt,
-            it.gender,
-            it.active,
+            alarmStart,
+            alarmEnd,
+            alarmDay,
+            compCnt,
+            helpCnt,
+            gender,
+            active,
         )
     }
 }
 
-fun AngelInfo.mapperToAngelRequest(): AngelRequest{
-    return this.let {
+fun AngelInfo.mapperToAngelRequest(): AngelRequest {
+    return this.run {
         AngelRequest(
-            it.alarmStart,
-            it.alarmEnd,
-            it.alarmDay,
-            it.active
+            alarmStart,
+            alarmEnd,
+            alarmDay,
+            active
         )
     }
 }
 
-fun Complaints.mapperToComplaintsRequest(): ComplaintsRequest{
-    return this.let {
+fun Complaints.mapperToComplaintsRequest(): ComplaintsRequest {
+    return this.run {
         ComplaintsRequest(
-            it.seq,
-            it.address,
-            it.image,
-            it.content,
-            it.returnContent,
-            it.title,
-            it.resultContent
+            seq,
+            address,
+            image,
+            content,
+            returnContent,
+            title,
+            resultContent
         )
     }
 }
 
-fun ComplaintsResponse.mapperToComplaints(): Complaints{
-    return this.let {
+fun ComplaintsResponse.mapperToComplaints(): Complaints {
+    return this.run {
         Complaints(
-            it.seq,
-            it.address,
-            it.content,
-            it.image,
-            it.regTime,
-            it.resultContent,
-            it.returnContent,
-            it.state,
-            it.title
+            seq,
+            address,
+            content,
+            image,
+            regTime,
+            resultContent,
+            returnContent,
+            state,
+            title
         )
     }
 }
 
-fun List<ComplaintsResponse>.mapperToListComplaints(): List<Complaints>{
-    return this.let {
-        it.map {
+fun List<ComplaintsResponse>.mapperToListComplaints(): List<Complaints> {
+    return this.toList().map {
             it.mapperToComplaints()
-        }
+    }
+}
+
+fun List<NotiEntity>.mapperToNotis(): List<Noti> {
+    return this.toList().map {
+        Noti(
+            it.seq,
+            it.title,
+            it.body
+        )
+    }
+}
+
+fun Noti.mapperToNotiEntity(): NotiEntity {
+    return this.run {
+        NotiEntity(
+            title = title,
+            body = body
+        )
     }
 }

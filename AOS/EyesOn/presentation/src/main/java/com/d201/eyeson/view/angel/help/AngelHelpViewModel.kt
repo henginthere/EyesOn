@@ -29,9 +29,9 @@ class AngelHelpViewModel @Inject constructor(
             responseHelpUseCase.execute().collectLatest {
                 if(it is ResultType.Success){
                     _sessionId.value = it.data.data
-                    Log.d(TAG, "request Help: ${it.data.data}")
+                    Log.d(TAG, "responseHelp: ${it.data.data}")
                 } else {
-                    Log.d(TAG, "requestHelp: $it")
+                    Log.d(TAG, "responseHelp: $it")
                 }
             }
         }

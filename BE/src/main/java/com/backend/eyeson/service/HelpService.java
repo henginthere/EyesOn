@@ -2,9 +2,7 @@ package com.backend.eyeson.service;
 
 
 import com.backend.eyeson.entity.AngelInfoEntity;
-import com.backend.eyeson.entity.UserEntity;
 import com.backend.eyeson.repository.AngelRepository;
-import com.backend.eyeson.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -68,9 +66,6 @@ public class HelpService {
                 break;
         }
 
-        System.out.println("시간 " + hour);
-        System.out.println("요일 " + days);
-
         // 가능한 엔젤 리스트
         List<AngelInfoEntity> canAngelList = new ArrayList<>();
 
@@ -98,24 +93,22 @@ public class HelpService {
             
             // 요일에 있고 시간안에 있으면 배열에 추가
             if(chArray[days] == '1' && (angelInfoEntity.getAngelAlarmStart()) <= hour && angelInfoEntity.getAngelAlarmEnd() >= hour){
-                System.out.println("시작 시간 : " + angelInfoEntity.getAngelAlarmStart());
-                System.out.println("끝나는 시간 : " + angelInfoEntity.getAngelAlarmEnd());
-                System.out.println("지금 시간 : " + hour);
-                System.out.println("요일 : " + days);
                 canAngelList.add(angelInfoEntity);
             }
         }
 
 
 
+        // 알림 제목
+        String title = "도움 요청이 도착했어요 !";
+
+        // 알림 내용
+        String body = "사용자를 따뜻한 마음으로 도와주세요 !";
+
         // 알림 보내기
         for(int i=0; i<canAngelList.size(); i++){
             // fcm 토큰
             String fcmToken = canAngelList.get(i).getUserEntity().getUserFcm();
-            // 알림 제목
-            String title = "도움 요청이 도착했어요 !";
-            // 알림 내용
-            String body = "사용자를 따뜻한 마음으로 도와주세요 !";
             firebaseService.sendMessageTo(fcmToken, title, body);
         }
 
