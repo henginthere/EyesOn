@@ -1,16 +1,15 @@
 package com.d201.eyeson.view.blind.scanobstacle
 
 import android.graphics.*
+import android.media.Image
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import com.d201.arcore.depth.common.OBJECT_DETECTION_CUSTOM
-import com.d201.arcore.depth.common.getDeviceSize
 import com.d201.depth.depth.DepthTextureHandler
 import com.d201.depth.depth.common.*
 import com.d201.depth.depth.rendering.BackgroundRenderer
@@ -20,6 +19,7 @@ import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentScanObstacleBinding
 import com.d201.eyeson.util.RotateBitmap
 import com.d201.eyeson.util.imageToBitmap
+import com.d201.mlkit.BitmapUtils
 import com.google.ar.core.*
 import com.google.ar.core.Camera
 import com.google.ar.core.Point
@@ -117,13 +117,13 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     override fun onResume() {
         super.onResume()
-        val params: ViewGroup.LayoutParams? = requireActivity().window.attributes
-        val deviceWidth = getDeviceSize(requireActivity()).x
-        val deviceHeight = deviceWidth / 3 * 4
-        params?.width = deviceWidth
-        params?.height = deviceHeight
-        binding.surfaceview.layoutParams = params
-        binding.surfaceview.layout(0, 0,deviceWidth,deviceHeight)
+//        val params: ViewGroup.LayoutParams? = requireActivity().window.attributes
+//        val deviceWidth = getDeviceSize(requireActivity()).x
+//        val deviceHeight = deviceWidth / 3 * 4
+//        params?.width = deviceWidth
+//        params?.height = deviceHeight
+//        binding.surfaceview.layoutParams = params
+//        binding.surfaceview.layout(0, 0,deviceWidth,deviceHeight)
 
         if (session == null) {
             var exception: Exception? = null
@@ -328,11 +328,14 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
             try {
                 val image = frame.acquireCameraImage()
+                val depthImage = frame.acquireDepthImage16Bits()
                 val bitmap = RotateBitmap(imageToBitmap(image, requireContext())!!, 90f)
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    runObjectDetection(bitmap!!)
-                    image.close()
+                    runObjectDetection(bitmap!!, image)
+                    Log.d(TAG, "onDrawFrame: ${image.width}")
+
+//                    image.close()
                     bitmap.recycle()
                 }
 
@@ -444,7 +447,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
     }
 
-    private fun runObjectDetection(bitmap: Bitmap) {
+    private fun runObjectDetection(bitmap: Bitmap, depthImage: Image) {
         // Step 1: Create TFLite's TensorImage object
         val image = TensorImage.fromBitmap(bitmap)
 
@@ -455,13 +458,16 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             .build()
         val detector = ObjectDetector.createFromFileAndOptions(
             requireContext(),
-            "custom_models/best-fp16.tflite",
+            "custom_models/model_221108_2234.tflite",
             options
         )
 
         // Step 3: Feed given image to the detector
         val results = detector.detect(image)
 
+        val score = results.map {
+            it.categories.first().score.times(100).toInt()
+        }
         // Step 4: Parse the detection result and show it
         val resultToDisplay = results.map {
             // Get the top-1 category and craft the display text
@@ -472,15 +478,17 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             DetectionResult(it.boundingBox, text)
         }
         // Draw the detection result on the bitmap and show it.
-        val imgWithResult = drawDetectionResult(bitmap, resultToDisplay)
+        val imgWithResult = drawDetectionResult(bitmap, resultToDisplay, depthImage)
         requireActivity().runOnUiThread {
             binding.inputImageView.setImageBitmap(imgWithResult)
+            depthImage.close()
         }
     }
 
     private fun drawDetectionResult(
         bitmap: Bitmap,
-        detectionResults: List<DetectionResult>
+        detectionResults: List<DetectionResult>,
+        depthImage: Image
     ): Bitmap {
         val outputBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(outputBitmap)
@@ -489,33 +497,58 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
         detectionResults.forEach {
             // draw bounding box
-            pen.color = Color.RED
-            pen.strokeWidth = 8F
-            pen.style = Paint.Style.STROKE
-            val box = it.boundingBox
-            canvas.drawRect(box, pen)
+//            Log.d(TAG, "drawDetectionResult: boundingBox.width : ${it.boundingBox.width()}")
+            Log.d(TAG, "drawDetectionResult: bitmap.width : ${bitmap.width} // ${bitmap.height}")
+            Log.d(TAG, "drawDetectionResult: depth.width : ${depthImage.width} // ${depthImage.height}")
+
+            /*
+            depthImage -90' Rotate 해야됨
+
+            bitmap 720 x 1280
+            depthImage 160 x 90 or 640 x 360
+            object rect x, y / ratio
+
+            width, height
+            bitmap.width / depthImage.height
+            bitmap.height / depthImage.width
+            nx = y
+            ny = w - x
+
+             */
+
+            requireActivity().runOnUiThread{
+                binding.ivTest.setImageBitmap(BitmapUtils.imageToBitmap(depthImage, requireContext()))
+            }
+
+            if(it.boundingBox.width() < 500){
+                pen.color = Color.RED
+                pen.strokeWidth = 8F
+                pen.style = Paint.Style.STROKE
+                val box = it.boundingBox
+                canvas.drawRect(box, pen)
 
 
-            val tagSize = Rect(0, 0, 0, 0)
+                val tagSize = Rect(0, 0, 0, 0)
 
-            // calculate the right font size
-            pen.style = Paint.Style.FILL_AND_STROKE
-            pen.color = Color.YELLOW
-            pen.strokeWidth = 2F
+                // calculate the right font size
+                pen.style = Paint.Style.FILL_AND_STROKE
+                pen.color = Color.YELLOW
+                pen.strokeWidth = 2F
 
-            pen.textSize = MAX_FONT_SIZE
-            pen.getTextBounds(it.text, 0, it.text.length, tagSize)
-            val fontSize: Float = pen.textSize * box.width() / tagSize.width()
+                pen.textSize = MAX_FONT_SIZE
+                pen.getTextBounds(it.text, 0, it.text.length, tagSize)
+                val fontSize: Float = pen.textSize * box.width() / tagSize.width()
 
-            // adjust the font size so texts are inside the bounding box
-            if (fontSize < pen.textSize) pen.textSize = fontSize
+                // adjust the font size so texts are inside the bounding box
+                if (fontSize < pen.textSize) pen.textSize = fontSize
 
-            var margin = (box.width() - tagSize.width()) / 2.0F
-            if (margin < 0F) margin = 0F
-            canvas.drawText(
-                it.text, box.left + margin,
-                box.top + tagSize.height().times(1F), pen
-            )
+                var margin = (box.width() - tagSize.width()) / 2.0F
+                if (margin < 0F) margin = 0F
+                canvas.drawText(
+                    it.text, box.left + margin,
+                    box.top + tagSize.height().times(1F), pen
+                )
+            }
         }
         return outputBitmap
     }

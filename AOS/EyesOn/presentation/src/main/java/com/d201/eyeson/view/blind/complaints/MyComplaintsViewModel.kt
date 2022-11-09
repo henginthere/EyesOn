@@ -33,7 +33,14 @@ class MyComplaintsViewModel @Inject constructor(
             selectCompBySeqUseCase.excute(complaintsSeq).collectLatest {
                 when(it){
                     is ResultType.Success -> {
-                        _complaints.value = it.data.data
+                        var tmp = it.data.data
+                        when(tmp.state){
+                            "PROGRESS_IN" -> { tmp.state = "민원 처리중" }
+                            "RETURN" -> { tmp.state = "민원 반환됨" }
+                            "REGIST_DONE" -> { tmp.state = "민원 등록 완료" }
+                            "PROGRESS_DONE" -> { tmp.state = "민원 처리 완료" }
+                        }
+                        _complaints.value = tmp
                     }
                     else -> Log.d(TAG, "getComplaints: ${it}")
                 }
