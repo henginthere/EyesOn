@@ -34,8 +34,10 @@ import javax.microedition.khronos.opengles.GL10
 private const val TAG = "ScanObstacleFragment"
 private const val MAX_FONT_SIZE = 96F
 private const val INTERVAL = 3000
+
 @AndroidEntryPoint
-class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.fragment_scan_obstacle),
+class ScanObstacleFragment :
+    BaseFragment<FragmentScanObstacleBinding>(R.layout.fragment_scan_obstacle),
     GLSurfaceView.Renderer, TextToSpeech.OnInitListener {
     private lateinit var tts: TextToSpeech
 
@@ -66,16 +68,13 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     private var showDepthMap = false
 
-    private var centerX: Int = 0
-    private var centerY: Int = 0
-
     private var lastSpeakTime = 0L
 
     override fun init() {
         initView()
     }
 
-    private fun initView(){
+    private fun initView() {
         surfaceView = binding.surfaceview
         displayRotationHelper = DisplayRotationHelper( /*context=*/requireContext())
         trackingStateHelper = TrackingStateHelper(requireActivity())
@@ -102,7 +101,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             var exception: Exception? = null
             var message: String? = null
             try {
-                when (ArCoreApk.getInstance().requestInstall(requireActivity(), !installRequested)) {
+                when (ArCoreApk.getInstance()
+                    .requestInstall(requireActivity(), !installRequested)) {
                     ArCoreApk.InstallStatus.INSTALL_REQUESTED -> {
                         installRequested = true
                         return
@@ -175,7 +175,10 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             session!!.pause()
             session!!.resume()
         } catch (e: CameraNotAvailableException) {
-            messageSnackbarHelper.showError(requireActivity(), "Camera not available. Try restarting the app.")
+            messageSnackbarHelper.showError(
+                requireActivity(),
+                "Camera not available. Try restarting the app."
+            )
             session = null
             return
         }
@@ -230,7 +233,9 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // Create the texture and pass it to ARCore session to be filled during update().
             // 텍스처 생성 후 update() 중에 채워질 ARCore 세션에 전달
             backgroundRenderer.createOnGlThread( /*context=*/requireContext())
-            backgroundRenderer.createDepthShaders( /*context=*/requireContext(), depthTexture.getDepthTexture())
+            backgroundRenderer.createDepthShaders( /*context=*/requireContext(),
+                depthTexture.getDepthTexture()
+            )
             //virtualObject.createOnGlThread( /*context=*/requireContext(), "models/andy.obj", "models/andy.png")
             //virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f)
         } catch (e: IOException) {
@@ -288,7 +293,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // If not tracking, don't draw 3D objects, show tracking failure reason instead.
             if (camera.trackingState == TrackingState.PAUSED) {
                 messageSnackbarHelper.showMessage(
-                    requireActivity(), TrackingStateHelper(requireActivity()).getTrackingFailureReasonString(camera)!!
+                    requireActivity(),
+                    TrackingStateHelper(requireActivity()).getTrackingFailureReasonString(camera)!!
                 )
                 return
             }
@@ -308,41 +314,41 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             frame.lightEstimate.getColorCorrection(colorCorrectionRgba, 0)
 
             try {
+                // 현재 프레임에 해당하는 이미지 객체를 가져옴
+                // 가로 모드
+                val currentFrameImage = frame.acquireCameraImage()
 
-                val currentFrameImage = frame.acquireCameraImage() // 현재 프레임에 해당하는 이미지 객체를 가져옴
-                val bitmap = RotateBitmap(imageToBitmap(currentFrameImage, requireContext())!!, 90f) // 이미지를 비트맵으로 변경
+                // 세로 모드
+                val bitmap = RotateBitmap(
+                    imageToBitmap(currentFrameImage, requireContext())!!,
+                    90f
+                ) // 이미지를 비트맵으로 변경
+                // 가로 모드
                 val depthImage = frame.acquireDepthImage16Bits()
 
                 CoroutineScope(Dispatchers.IO).launch {
+                    // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
                     val detectionResults = runObjectDetection(bitmap!!)
 
-                    val ratio = currentFrameImage.width / depthImage.width
-                    val depthX = centerY / ratio
-                    val depthY = depthImage.height - (centerX / ratio)
-
                     // 비트맵에 검출 결과를 그려서 보여줍니다
-                    val imgWithResult = drawDetectionResult(bitmap, detectionResults, depthX, depthY, depthImage)
+                    val imgWithResult = drawDetectionResult(bitmap, detectionResults, depthImage)
+
                     requireActivity().runOnUiThread {
                         binding.inputImageView.setImageBitmap(imgWithResult)
                     }
 
+
 //                    Log.d(TAG, "onDrawFrame11: currentFrameImage.width : ${currentFrameImage.width} | centerX : ${centerX}")
 //                    Log.d(TAG, "onDrawFrame11: currentFrameImage.height : ${currentFrameImage.height} | centerY : ${centerY}")
-                    Log.d(TAG, "onDrawFrame11: depthImage.width : ${depthImage.width} | depthX : ${depthX}")
-                    Log.d(TAG, "onDrawFrame11: depthImage.height : ${depthImage.height} | depthY : ${depthY}")
+//                    Log.d(TAG, "onDrawFrame11: depthImage.width : ${depthImage.width} | depthX : ${depthX}")
+//                    Log.d(TAG, "onDrawFrame11: depthImage.height : ${depthImage.height} | depthY : ${depthY}")
 //                    Log.d(TAG, "onDrawFrame11: bitmap.width : ${bitmap.width} | bitmap.height : ${bitmap.height}")
-
-
-
-
-
 
                     //onUpdateDepthImage(distance)
                     // Log.d(TAG, "DISTANCE1 : ${depthTexture.distance1}")
                     // Log.d(TAG, "DISTANCE2 : ${depthTexture.distance2}")
                     currentFrameImage.close()
                     depthImage.close()
-
 
                     //currentFrameImage.close()
                     bitmap.recycle()
@@ -375,10 +381,9 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 //
 //                centerX = 0
 //                centerY = 0
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Log.d(TAG, "onDrawFrame: ${e.message}")
             }
-
 
 
             // No tracking error at this point. Inform user of what to do based on if planes are found.
@@ -451,7 +456,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
     }
 
-    private fun runObjectDetection(bitmap: Bitmap) : List<DetectionResult> {
+    private fun runObjectDetection(bitmap: Bitmap): List<DetectionResult> {
         // Step 1: Create TFLite's TensorImage object
         val image = TensorImage.fromBitmap(bitmap)
 
@@ -485,88 +490,79 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     private fun drawDetectionResult(
         bitmap: Bitmap,
         detectionResults: List<DetectionResult>,
-        depthX: Int,
-        depthY: Int,
         depthImage: Image
     ): Bitmap {
         val outputBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(outputBitmap)
         val pen = Paint()
 
+        detectionResults.forEach {
+            if (it.boundingBox.width() < 1000) {
+                // 박스 그리기
+                pen.color = Color.RED
+                pen.strokeWidth = 8F
+                pen.style = Paint.Style.STROKE
+                val box = it.boundingBox
+                canvas.drawRect(box, pen)
+                canvas.drawCircle(it.boundingBox.centerX(), it.boundingBox.centerY(), 8F, pen)
 
-        pen.textAlign = Paint.Align.LEFT
+                val tagSize = Rect(0, 0, 0, 0)
 
-        if(detectionResults.isNotEmpty()){
-            detectionResults[0].let {
-                if(it.boundingBox.width() < 1000){
-                    // draw bounding box
-                    pen.color = Color.RED
-                    pen.strokeWidth = 8F
-                    pen.style = Paint.Style.STROKE
-                    val box = it.boundingBox
-                    canvas.drawRect(box, pen)
-//                Log.d(TAG, "boxLeft:${box.left}")
-//                Log.d(TAG, "boxRight:${box.right}")
-//                Log.d(TAG, "boxTop:${box.top}")
-//                Log.d(TAG, "boxBottom:${box.bottom}")
-//                Log.d(TAG, "centerX: ${box.centerX()}, centerY: ${box.centerY()}")
-                    canvas.drawCircle(it.boundingBox.centerX(),it.boundingBox.centerY() ,8F, pen)
+                // calculate the right font size
+                pen.style = Paint.Style.FILL_AND_STROKE
+                pen.color = Color.YELLOW
+                pen.strokeWidth = 2F
 
-                    centerX = it.boundingBox.centerX().toInt()
-                    centerY = it.boundingBox.centerY().toInt()
+                pen.textAlign = Paint.Align.LEFT
+                pen.textSize = MAX_FONT_SIZE
+                pen.getTextBounds(it.text, 0, it.text.length, tagSize)
+                val fontSize: Float = pen.textSize * box.width() / tagSize.width()
 
-                    val distance = depthTexture.getMillimetersDepth(depthImage, depthX, depthY)
+                // adjust the font size so texts are inside the bounding box
+                if (fontSize < pen.textSize) pen.textSize = fontSize
 
-                    val tagSize = Rect(0, 0, 0, 0)
+                var margin = (box.width() - tagSize.width()) / 2.0F
+                if (margin < 0F) margin = 0F
+                canvas.drawText(
+                    it.text, box.left + margin,
+                    box.top + tagSize.height().times(1F), pen
+                )
 
-                    // calculate the right font size
-                    pen.style = Paint.Style.FILL_AND_STROKE
-                    pen.color = Color.YELLOW
-                    pen.strokeWidth = 2F
+                val centerX = it.boundingBox.centerX().toInt()
+                val centerY = it.boundingBox.centerY().toInt()
 
-                    pen.textSize = MAX_FONT_SIZE
-                    pen.getTextBounds(it.text, 0, it.text.length, tagSize)
-                    val fontSize: Float = pen.textSize * box.width() / tagSize.width()
+                val ratio = bitmap.height / depthImage.width
+                val depthX = centerY / ratio
+                val depthY = depthImage.height - (centerX / ratio)
 
-                    // adjust the font size so texts are inside the bounding box
-                    if (fontSize < pen.textSize) pen.textSize = fontSize
+                val distance = depthTexture.getMillimetersDepth(depthImage, depthX, depthY)
 
-                    var margin = (box.width() - tagSize.width()) / 2.0F
-                    if (margin < 0F) margin = 0F
-                    canvas.drawText(
-                        it.text, box.left + margin,
-                        box.top + tagSize.height().times(1F), pen
-                    )
-
-                    var cm = (distance / 10.0).toFloat()
-                    var convertDistance = ""
-                    if(cm > 100){
-                        cm /= 100
-                        convertDistance = "%.1f m".format(cm)
-                    }
-                    else{
-                        convertDistance = "${cm.toInt()} cm"
-                    }
-
-                    if(System.currentTimeMillis() - lastSpeakTime > INTERVAL) {
-                        lastSpeakTime = System.currentTimeMillis()
-                        speakOut("전방 ${convertDistance}에 ${it.text}가 있습니다")
-                    }
-
-
-                    canvas.drawText(
-                        convertDistance, box.centerX(),
-                        box.centerY(), pen
-                    )
+                var cm = (distance / 10.0).toFloat()
+                var convertDistance = ""
+                if (cm > 100) {
+                    cm /= 100
+                    convertDistance = "%.1f m".format(cm)
+                } else {
+                    convertDistance = "${cm.toInt()} cm"
                 }
 
+                if (System.currentTimeMillis() - lastSpeakTime > INTERVAL) {
+                    lastSpeakTime = System.currentTimeMillis()
+                    speakOut("전방 ${convertDistance}에 ${it.text}가 있습니다")
+                }
+
+
+                canvas.drawText(
+                    convertDistance, box.centerX(),
+                    box.centerY(), pen
+                )
             }
         }
         return outputBitmap
     }
 
     override fun onInit(p0: Int) {
-        if(p0 == TextToSpeech.SUCCESS) {
+        if (p0 == TextToSpeech.SUCCESS) {
             tts.setLanguage(Locale.KOREAN)
             tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
                 override fun onStart(p0: String?) {}
