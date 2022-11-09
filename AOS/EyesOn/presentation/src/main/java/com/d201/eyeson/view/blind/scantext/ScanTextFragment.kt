@@ -17,7 +17,7 @@ import java.io.IOException
 import java.util.*
 
 private const val TAG = "ScanTextFragment"
-private const val INTERVAL = 3500
+private const val INTERVAL = 1000
 @AndroidEntryPoint
 class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment_scan_text), TextToSpeech.OnInitListener {
 
@@ -100,8 +100,11 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         textRecognitionProcessor.textLiveData.observe(viewLifecycleOwner){
             if(System.currentTimeMillis() - lastSpeakTime > INTERVAL){
                 lastSpeakTime = System.currentTimeMillis()
-                speakOut(it)
-                binding.tvRecognizeText.text = it
+                if(!tts.isSpeaking){
+                    binding.tvRecognizeText.text = it
+                    speakOut(it.replace("\\r\\n|\\r|\\n|\\n\\r".toRegex()," "))
+                }
+
             }
         }
         createCameraSource(selectedModel)
