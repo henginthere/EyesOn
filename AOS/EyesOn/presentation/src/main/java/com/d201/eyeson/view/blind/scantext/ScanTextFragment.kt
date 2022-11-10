@@ -17,7 +17,7 @@ import java.io.IOException
 import java.util.*
 
 private const val TAG = "ScanTextFragment"
-private const val INTERVAL = 3500
+private const val INTERVAL = 1000
 @AndroidEntryPoint
 class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment_scan_text), TextToSpeech.OnInitListener {
 
@@ -93,14 +93,18 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         }
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
         textRecognitionProcessor = TextRecognitionProcessor(requireContext(), KoreanTextRecognizerOptions.Builder().build())
         textRecognitionProcessor.textLiveData.observe(viewLifecycleOwner){
             if(System.currentTimeMillis() - lastSpeakTime > INTERVAL){
                 lastSpeakTime = System.currentTimeMillis()
-                speakOut(it)
+                if(!tts.isSpeaking){
+                    binding.tvRecognizeText.text = it
+                    speakOut(it.replace("\\r\\n|\\r|\\n|\\n\\r".toRegex()," "))
+                }
+
             }
         }
         createCameraSource(selectedModel)
@@ -114,7 +118,7 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         tts.stop()
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         if (cameraSource != null) {
             cameraSource?.release()
@@ -132,7 +136,7 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         }
     }
 
-    fun speakOut(text: String) {
+    private fun speakOut(text: String) {
         tts.setPitch(1f)
         tts.setSpeechRate(3.5f)
         tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")

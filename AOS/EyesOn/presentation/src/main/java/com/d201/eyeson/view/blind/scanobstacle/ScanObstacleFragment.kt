@@ -463,7 +463,7 @@ class ScanObstacleFragment :
         // Step 2: Initialize the detector object
         val options = ObjectDetector.ObjectDetectorOptions.builder()
             .setMaxResults(1)
-            .setScoreThreshold(0.7f)
+            .setScoreThreshold(0.4f)
             .build()
         val detector = ObjectDetector.createFromFileAndOptions(
             requireContext(),
@@ -478,8 +478,8 @@ class ScanObstacleFragment :
         return results.map {
             // Get the top-1 category and craft the display text
             val category = it.categories.first()
-//            val text = "${category.label}, ${category.score.times(100).toInt()}%"//100
-            val text = "${category.label}"//100
+            val text = "${category.label}, ${category.score.times(100).toInt()}%"//100
+//            val text = "${category.label}"//100
 
             // 탐지 결과를 표시할 데이터 객체 생성
             DetectionResult(it.boundingBox, text)
@@ -572,7 +572,7 @@ class ScanObstacleFragment :
         }
     }
 
-    fun speakOut(text: String) {
+    private fun speakOut(text: String) {
         tts.setPitch(1f)
         tts.setSpeechRate(3.5f)
         tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
