@@ -6,10 +6,7 @@ import com.d201.data.model.request.UserRoleRequest
 import com.d201.data.model.response.AngelInfoResponse
 import com.d201.data.model.response.LoginResponse
 import com.d201.domain.base.BaseResponse
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 interface UserApi {
 
@@ -25,6 +22,9 @@ interface UserApi {
 
     @PUT("user/angel")
     suspend fun putAngelInfo(@Body angelRequest: AngelRequest): BaseResponse<AngelInfoResponse>
+
+    @DELETE("user/info")
+    suspend fun deleteUser(): BaseResponse<Void>
 
 
 }

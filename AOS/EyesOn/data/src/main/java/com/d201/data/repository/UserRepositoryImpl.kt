@@ -70,4 +70,17 @@ class UserRepositoryImpl @Inject constructor(
                 )))
         }
     }
+
+    override fun deleteUser(): Flow<ResultType<BaseResponse<Void>>> = flow {
+        emit(ResultType.Loading)
+        userRemoteDataSource.deleteUser().collect(){
+            emit(ResultType.Success(
+                BaseResponse(
+                    it.message,
+                    it.status,
+                    it.data
+                )
+            ))
+        }
+    }
 }

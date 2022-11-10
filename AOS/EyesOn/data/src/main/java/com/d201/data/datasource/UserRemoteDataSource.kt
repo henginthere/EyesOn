@@ -31,4 +31,8 @@ class UserRemoteDataSource @Inject constructor(
     fun putAngelInfo(angelRequest: AngelRequest): Flow<BaseResponse<AngelInfoResponse>> = flow {
         emit(userApi.putAngelInfo(angelRequest))
     }
+
+    fun deleteUser(): Flow<BaseResponse<Void>> = flow {
+        emit(userApi.deleteUser())
+    }
 }
