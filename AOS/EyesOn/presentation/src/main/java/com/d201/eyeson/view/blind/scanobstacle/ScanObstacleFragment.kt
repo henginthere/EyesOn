@@ -195,6 +195,7 @@ class ScanObstacleFragment :
             displayRotationHelper!!.onPause()
             surfaceView.onPause()
             session!!.pause()
+            tts.stop()
         }
     }
 

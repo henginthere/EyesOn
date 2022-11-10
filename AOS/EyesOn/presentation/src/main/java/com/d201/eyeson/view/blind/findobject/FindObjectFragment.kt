@@ -201,6 +201,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
             displayRotationHelper!!.onPause()
             surfaceView.onPause()
             session!!.pause()
+            tts.stop()
         }
     }
 
