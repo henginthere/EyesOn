@@ -20,7 +20,6 @@
             android:contentDescription="@string/frag_main">
 
             <ImageView
-                android:includeFontPadding="false"
                 android:id="@+id/iv_logo"
                 android:layout_width="200dp"
                 android:layout_height="70dp"
@@ -31,197 +30,166 @@
 
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/frame_layout_text"
+        <FrameLayout
+            android:id="@+id/frame_scan_text"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="24dp"
-            android:background="@drawable/btn_border_yellow"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_tv_logo">
 
+            <TextView
+                android:id="@+id/btn_scan_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_border_yellow"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center"
+                android:text="         글자 보기"
+                android:textColor="@color/black"
+                android:textSize="27sp" />
+
             <ImageView
                 android:id="@+id/iv_text"
                 android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="20dp"
-                android:layout_marginStart="80dp"
-                android:src="@drawable/ic_text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/btn_scan_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="70dp"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="20dp"
-                android:fontFamily="@font/noto_sans_medium"
-                android:text="글자 보기"
-                android:textColor="@color/black"
-                android:textSize="27sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_text"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginStart="60dp"
+                android:src="@drawable/ic_text" />
+        </FrameLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/frame_layout_search"
+        <FrameLayout
+            android:id="@+id/frmae_find_object"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/btn_border_yellow"
-            android:gravity="center"
             android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/frame_layout_text">
+            app:layout_constraintTop_toBottomOf="@id/frame_scan_text">
+
+            <TextView
+                android:id="@+id/btn_find_object"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_border_yellow"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center"
+                android:text="         물건 찾기"
+                android:textColor="@color/black"
+                android:textSize="27sp" />
 
             <ImageView
                 android:id="@+id/iv_search"
                 android:layout_width="60dp"
-                android:layout_height="80dp"
-                android:layout_marginStart="80dp"
-                android:layout_marginVertical="20dp"
-                android:src="@drawable/ic_search"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <TextView
-                android:id="@+id/btn_find_object"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="20dp"
-                android:fontFamily="@font/noto_sans_medium"
-                android:text="물건 찾기"
-                android:textColor="@color/black"
-                android:textSize="27sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_search"
-                app:layout_constraintBottom_toBottomOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/frame_layout_obstacle"
+                android:layout_marginStart="50dp"
+                android:src="@drawable/ic_search"/>
+
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/frame_scan_obstacle"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/btn_border_yellow"
-            android:gravity="center"
             android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/frame_layout_search">
-
-            <ImageView
-                android:id="@+id/iv_obstacle"
-                android:layout_width="52dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="70dp"
-                android:layout_marginVertical="20dp"
-                android:src="@drawable/ic_obstacle"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/frmae_find_object">
 
             <TextView
                 android:id="@+id/btn_scan_obstacle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_border_yellow"
                 android:fontFamily="@font/noto_sans_medium"
-                android:text="장애물 인식"
+                android:gravity="center"
+                android:text="             장애물 인식"
                 android:textColor="@color/black"
-                android:textSize="27sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_obstacle"
-                app:layout_constraintBottom_toBottomOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:textSize="27sp" />
+            <ImageView
+                android:id="@+id/iv_obstacle"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="50dp"
+                android:src="@drawable/ic_obstacle"/>
+        </FrameLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/frame_layout_help"
+        <FrameLayout
+            android:id="@+id/frame_help"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/btn_border_yellow"
-            android:gravity="center"
             android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/frame_layout_obstacle">
-
-            <ImageView
-                android:id="@+id/iv_help"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="70dp"
-                android:layout_marginVertical="20dp"
-                android:src="@drawable/ic_angel"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/frame_scan_obstacle">
 
             <TextView
                 android:id="@+id/btn_help"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_border_yellow"
                 android:fontFamily="@font/noto_sans_medium"
-                android:text="도움 요청"
+                android:gravity="center"
+                android:text="             엔젤과 연결"
                 android:textColor="@color/black"
-                android:textSize="27sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_help"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:textSize="27sp" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/frame_layout_complaints"
+            <ImageView
+                android:id="@+id/iv_help"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginVertical="20dp"
+                android:src="@drawable/ic_angel"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frmae_complaints"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_marginTop="15dp"
-            android:paddingHorizontal="30dp"
-            android:background="@drawable/btn_border_yellow"
+            android:layout_marginTop="24dp"
             android:gravity="center"
             android:layout_marginHorizontal="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/frame_layout_help">
-
-            <ImageView
-                android:id="@+id/iv_complaints"
-                android:layout_width="52dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="13dp"
-                android:layout_marginVertical="20dp"
-                android:src="@drawable/ic_complaints"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/frame_help">
 
             <TextView
                 android:id="@+id/btn_complaints"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_border_yellow"
                 android:fontFamily="@font/noto_sans_medium"
-                android:text="민원 신청 및 확인"
+                android:gravity="center"
+                android:text="              민원 신청 및 확인"
                 android:textColor="@color/black"
-                android:textSize="27sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_complaints"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:textSize="27sp" />
+
+            <ImageView
+                android:id="@+id/iv_complaints"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="40dp"
+                android:src="@drawable/ic_complaints"/>
+
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

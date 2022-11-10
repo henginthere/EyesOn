@@ -65,12 +65,12 @@ class BlindMainFragment : BaseFragment<FragmentBlindMainBinding>(R.layout.fragme
                     })
                 }
             }
-//            btnComplaints.apply {
-//                accessibilityDelegate = accessibilityEvent(this, requireContext())
-//                setOnClickListener {
-//                    findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToComplaintsFragment())
-//                }
-//            }
+            btnComplaints.apply {
+                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                setOnClickListener {
+                    findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToComplaintsFragment())
+                }
+            }
         }
     }
 
