@@ -12,6 +12,7 @@ import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelSettingBinding
 import com.d201.eyeson.view.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -90,7 +91,9 @@ class AngelSettingFragment : BaseFragment<FragmentAngelSettingBinding>(R.layout.
                     binding.apply {
                         numpickStart.value = it.alarmStart
                         numpickEnd.value = it.alarmEnd
-                        switchAlarm.isChecked = it.active
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            switchAlarm.isChecked = it.active
+                        }
                     }
                 }
 
