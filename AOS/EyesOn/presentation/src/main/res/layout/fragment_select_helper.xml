@@ -13,24 +13,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="어떤 엔젤이 편하신가요?"
+            android:textSize="24dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/noto_sans_medium"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_same_gender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="50dp"
+            android:elevation="10dp"
             android:text="같은 성별"
+            android:textSize="32dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/noto_sans_bold"
+            android:background="@drawable/btn_border_green_focus"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_anyone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:elevation="10dp"
             android:text="누구나"
+            android:textSize="32dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/noto_sans_bold"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/btn_border_blue"
             app:layout_constraintTop_toBottomOf="@id/btn_same_gender"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
