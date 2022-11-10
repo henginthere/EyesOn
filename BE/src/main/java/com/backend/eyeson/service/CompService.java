@@ -131,7 +131,6 @@ public class CompService {
         String body = requestCompDto.getCompReturn();
         String fcmToken = complaintsEntity.getBlindUser().getUserFcm();
         String action = "Complaints";
-        System.out.println(body + " | " + fcmToken + " | body, token"  + " | " + complaintsEntity.getBlindUser() );
         firebaseService.sendMessageTo(fcmToken, title, body, action);
 
         return result;
