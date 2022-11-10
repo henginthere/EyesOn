@@ -1,6 +1,7 @@
 package com.d201.eyeson.view.angel.help
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelHelpBinding
 import com.d201.eyeson.util.OPENVIDU_URL
+import com.d201.eyeson.view.angel.main.AngelMainActivity
 import com.d201.webrtc.openvidu.LocalParticipant
 import com.d201.webrtc.openvidu.Session
 import com.d201.webrtc.utils.CustomHttpClient
@@ -18,6 +20,7 @@ import com.d201.webrtc.websocket.CustomWebSocket
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.Call
@@ -58,6 +61,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
 
 
     private fun initListener() {
+        lifecycleScope
         binding.apply {
             btnChangeCamera.setOnClickListener {
                 session.getLocalParticipant()!!.switchCamera()
@@ -222,7 +226,9 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     }
 
     private fun leaveSession() {
-        this.session.leaveSession()
+        if(::session.isInitialized) {
+            this.session.leaveSession()
+        }
         this.httpClient.dispose()
         requireActivity().runOnUiThread {
             binding.localGlSurfaceView.clearImage()
