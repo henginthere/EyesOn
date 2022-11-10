@@ -73,9 +73,7 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
                         .setContentTitle(messageTitle)
                         .setContentText(messageContent)
                         .addAction(R.drawable.img_logo_title, "수락", mainPendingIntent)
-                        .addAction(R.drawable.img_logo_title, "거절", null)
                         .setAutoCancel(true)
-                        .setContentIntent(mainPendingIntent)
                 }
                 else -> {
                     val mainIntent = Intent(this, BlindMainActivity::class.java).apply {
