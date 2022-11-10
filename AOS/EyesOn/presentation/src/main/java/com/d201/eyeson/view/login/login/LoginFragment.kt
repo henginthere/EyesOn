@@ -6,7 +6,12 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Build.VERSION_CODES.P
+import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -40,15 +45,25 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private val loginViewModel: LoginViewModel by viewModels()
     private lateinit var mGoogleSignInClient: GoogleSignInClient
 
+    private var action = ""
     private var fcmToken = ""
 
     override fun init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel("EyesOn_id", "EyesOn")
         }
+        initAction()
         initFirebaseTokenListener()
         initListener()
         initViewModelCallback()
+    }
+
+    private fun initAction() {
+        val intent = requireActivity().intent
+        val extra = intent.extras
+        if(intent != null && extra != null){
+            action = extra.getString("action")!!
+        }
     }
 
     private fun initFirebaseTokenListener() {
@@ -79,14 +94,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                                     putExtra("Gender", it.gender)
                                 }
                             )
-                            ANGEL -> startActivity(
-                                Intent(
-                                    requireContext(),
-                                    AngelMainActivity::class.java
-                                ).apply {
+                            ANGEL -> {
+                                val angelMainIntent = Intent(requireContext(),AngelMainActivity::class.java).apply {
                                     putExtra("Gender", it.gender)
+                                    putExtra("action", this@LoginFragment.action)
                                 }
-                            )
+
+                                startActivity(angelMainIntent)
+                            }
                             else -> return@collectLatest
                         }
                         requireActivity().finish()

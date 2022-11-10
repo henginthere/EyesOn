@@ -1,5 +1,6 @@
 package com.d201.eyeson.view.angel.main
 
+import android.content.Intent
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -8,6 +9,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelMainBinding
 import com.d201.eyeson.view.angel.ComplaintsClickListener
+import com.d201.eyeson.view.angel.help.AngelHelpActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -26,6 +28,20 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         initView()
         initViewModelCallback()
         angelMainViewModel.getAngelInfo()
+        actionCheck()
+    }
+
+    private fun actionCheck() {
+        val bundle = requireActivity().intent.extras
+        var action = ""
+
+        if(bundle != null && bundle.containsKey("action")){
+            action = bundle.getString("action")!!
+        }
+
+        if(action.isNotEmpty() && action == "AngelHelp"){
+            startActivity(Intent(requireActivity(), AngelHelpActivity::class.java))
+        }
     }
 
     private fun initListener() {
