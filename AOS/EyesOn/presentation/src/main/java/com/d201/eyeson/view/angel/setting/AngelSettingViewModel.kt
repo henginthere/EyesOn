@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d201.domain.model.AngelInfo
+import com.d201.domain.usecase.user.DeleteUserUseCase
 import com.d201.domain.usecase.user.PutAngelInfoUseCase
 import com.d201.domain.utils.ResultType
+import com.d201.eyeson.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,10 @@ import javax.inject.Inject
 
 private const val TAG = "AngelSettingViewModel"
 @HiltViewModel
-class AngelSettingViewModel @Inject constructor(private val putAngelInfoUseCase: PutAngelInfoUseCase): ViewModel() {
+class AngelSettingViewModel @Inject constructor(
+    private val putAngelInfoUseCase: PutAngelInfoUseCase,
+    private val deleteUserUseCase: DeleteUserUseCase
+): ViewModel() {
 
     private val _angelInfo: MutableStateFlow<AngelInfo?> = MutableStateFlow(null)
     val angelInfo get() = _angelInfo.asStateFlow()
@@ -28,6 +33,18 @@ class AngelSettingViewModel @Inject constructor(private val putAngelInfoUseCase:
                     _angelInfo.value = it.data.data
                 }else{
                     Log.d(TAG, "putAngelInfo: ${it}")
+                }
+            }
+        }
+    }
+
+    private val _deleteUserEvent = SingleLiveEvent<Boolean>()
+    val deleteUserEvent get() = _deleteUserEvent
+    fun deleteUser(){
+        viewModelScope.launch(Dispatchers.IO){
+            deleteUserUseCase.excute().collectLatest {
+                if (it is ResultType.Success){
+                    _deleteUserEvent.postValue(false)
                 }
             }
         }

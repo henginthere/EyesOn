@@ -14,4 +14,6 @@ interface UserRepository {
     fun putAngelInfo(angelRequest: AngelInfo): Flow<ResultType<BaseResponse<AngelInfo>>>
 
     fun putUserRole(role: String, gender: String): Flow<ResultType<BaseResponse<Login>>>
+
+    fun deleteUser(): Flow<ResultType<BaseResponse<Void>>>
 }
