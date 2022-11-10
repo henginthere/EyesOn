@@ -106,12 +106,5 @@ public class HelpController {
             return ResponseFrame.of(HttpStatus.OK, "도움 종료 성공");
         }
     }
-
-
-    @ApiOperation(value = "알림 테스트")
-    @PostMapping("/alarm")
-    public void checkAlarm(@RequestBody Token token) throws IOException {
-        firebaseService.sendMessageTo(token.getFcmToken(), token.getTitle(), token.getBody());
-    }
 }
 

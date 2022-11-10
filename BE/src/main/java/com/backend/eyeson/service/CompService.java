@@ -130,7 +130,8 @@ public class CompService {
         String title = "신청한 민원이 반환됐습니다.";
         String body = requestCompDto.getCompReturn();
         String fcmToken = complaintsEntity.getBlindUser().getUserFcm();
-        firebaseService.sendMessageTo(fcmToken, title, body);
+        String action = "Complaints";
+        firebaseService.sendMessageTo(fcmToken, title, body, action);
 
         return result;
     }
@@ -149,7 +150,8 @@ public class CompService {
         String title = "신청한 민원이 접수됐습니다.";
         String body = requestCompDto.getCompTitle();
         String fcmToken = complaintsEntity.getBlindUser().getUserFcm();
-        firebaseService.sendMessageTo(fcmToken, title, body);
+        String action = "Complaints";
+        firebaseService.sendMessageTo(fcmToken, title, body, action);
 
         return result;
     }
@@ -168,7 +170,8 @@ public class CompService {
         String title = "신청한 민원이 처리완료됐습니다.";
         String body = requestCompDto.getCompResultContent();
         String fcmToken = complaintsEntity.getBlindUser().getUserFcm();
-        firebaseService.sendMessageTo(fcmToken, title, body);
+        String action = "Complaints";
+        firebaseService.sendMessageTo(fcmToken, title, body, action);
 
         return result;
     }

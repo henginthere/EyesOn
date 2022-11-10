@@ -90,12 +90,15 @@ public class HelpService {
 
         // 알림 내용
         String body = "사용자를 따뜻한 마음으로 도와주세요 !";
+        
+        // click_action 처리
+        String action = "AngelHelp";
 
         // 알림 보내기
         for(int i=0; i<canAngelList.size(); i++){
             // fcm 토큰
             String fcmToken = canAngelList.get(i).getUserEntity().getUserFcm();
-            firebaseService.sendMessageTo(fcmToken, title, body);
+            firebaseService.sendMessageTo(fcmToken, title, body, action);
         }
 
         if(canAngelList.size() == 0) return false;
