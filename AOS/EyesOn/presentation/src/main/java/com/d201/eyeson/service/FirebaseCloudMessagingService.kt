@@ -11,6 +11,8 @@ import com.d201.domain.model.Noti
 import com.d201.domain.repository.NotiRepository
 import com.d201.eyeson.R
 import com.d201.eyeson.view.angel.help.AngelHelpActivity
+import com.d201.eyeson.view.angel.main.AngelMainActivity
+import com.d201.eyeson.view.blind.BlindMainActivity
 import com.d201.eyeson.view.blind.notification.BlindNotiFragment
 import com.d201.eyeson.view.login.LoginActivity
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -32,6 +34,17 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
         Log.d(TAG, "onNewToken: ${token}")
     }
 
+    override fun handleIntent(intent: Intent?) {
+        super.handleIntent(intent)
+        val bundle = intent?.extras
+
+        if(bundle != null){
+            for (key in bundle.keySet()){
+                val value = bundle.get(key)
+                Log.d(TAG, "handleIntent: ${key} | ${value}")
+            }
+        }
+    }
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
@@ -39,25 +52,50 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
         message.notification.let {
             val messageTitle = it!!.title
             val messageContent = it!!.body
+            val action = message.data["action"]
 
             notiRepository.insertNoti(Noti(0, messageTitle!!, messageContent!!))
 
-            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent("ReceiveNoti"))
+             val builder = when(action){
+                "AngelHelp" -> {
+                    val mainIntent = Intent(this, AngelMainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        putExtra("action", action)
+                    }
 
-            val mainIntent = Intent(this, AngelHelpActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    val mainPendingIntent = PendingIntent.getActivity(
+                        this, 0, mainIntent,
+                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+
+                    NotificationCompat.Builder(this, "EyesOn_id")
+                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setContentTitle(messageTitle)
+                        .setContentText(messageContent)
+                        .addAction(R.drawable.img_logo_title, "수락", mainPendingIntent)
+                        .addAction(R.drawable.img_logo_title, "거절", null)
+                        .setAutoCancel(true)
+                        .setContentIntent(mainPendingIntent)
+                }
+                else -> {
+                    val mainIntent = Intent(this, BlindMainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        putExtra("action", action)
+                    }
+
+                    val mainPendingIntent = PendingIntent.getActivity(
+                        this, 0, mainIntent,
+                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+
+                    NotificationCompat.Builder(this, "EyesOn_id")
+                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setContentTitle(messageTitle)
+                        .setContentText(messageContent)
+                        .setAutoCancel(true)
+                        .setContentIntent(mainPendingIntent)
+                }
             }
-
-            val mainPendingIntent = PendingIntent.getActivity(
-                this, 0, mainIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
-            val builder = NotificationCompat.Builder(this, "EyesOn_id")
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle(messageTitle)
-                .setContentText(messageContent)
-                .setAutoCancel(true)
-                .setContentIntent(mainPendingIntent)
 
             NotificationManagerCompat.from(this).apply {
                 notify(201, builder.build())
