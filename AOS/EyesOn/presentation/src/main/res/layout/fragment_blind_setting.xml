@@ -6,31 +6,94 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.blind.setting.BlindSettingFragment">
-
-        <Button
-            android:id="@+id/btn_replay_guide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="설명 다시 듣기"
+        tools:context=".view.blind.setting.BlindSettingFragment"
+        android:background="@color/gray">
+        <LinearLayout
+            android:id="@+id/layout_tv_logo"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:orientation="horizontal"
+            android:contentDescription="@string/frag_main">
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/btn_back"
+                android:contentDescription="@string/button_back"/>
+            <TextView
+                android:id="@+id/iv_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="150dp"
+                android:contentDescription="@string/frag_complaints"
+                android:fontFamily="@font/noto_sans_medium"
+                android:importantForAccessibility="no"
+                android:includeFontPadding="false"
+                android:text="설정"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_setting"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_tv_logo"
+            android:orientation="vertical"
+            android:background="@color/white">
+            <TextView
+                android:id="@+id/btn_replay_guide"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:gravity="center_vertical"
+                android:layout_marginHorizontal="24dp"
+                android:text="설명 다시 듣기"
+                android:textSize="24dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_medium"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"/>
+            <TextView
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:gravity="center_vertical"
+                android:layout_marginHorizontal="24dp"
+                android:text="로그아웃"
+                android:textSize="24dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_medium"/>
 
-        <Button
-            android:id="@+id/btn_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="로그아웃"
-            app:layout_constraintTop_toBottomOf="@id/btn_replay_guide"
-            app:layout_constraintStart_toStartOf="parent"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"/>
+            <TextView
+                android:id="@+id/btn_sign_out"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginHorizontal="24dp"
+                android:gravity="center_vertical"
+                android:text="탈퇴하기"
+                android:textSize="24dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_medium"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"/>
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_sign_out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="로그아웃"
-            app:layout_constraintTop_toBottomOf="@id/btn_logout"
-            app:layout_constraintStart_toStartOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
