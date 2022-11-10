@@ -5,6 +5,7 @@
         <variable
             name="vm"
             type="com.d201.eyeson.view.blind.complaints.MyComplaintsViewModel" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -174,7 +175,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/layout_complaints_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginVertical="16dp"
                     android:contentDescription="@{`현재 상태는 `+vm.complaints.state+` 입니다`}"
@@ -182,7 +182,7 @@
                     <TextView
                         android:id="@+id/tv_status"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="wrap_content"
                         android:text="@{vm.complaints.state}"
                         android:textSize="36sp"
                         android:fontFamily="@font/noto_sans_bold"
@@ -193,6 +193,100 @@
                         android:importantForAccessibility="no"
                         />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_return"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/layout_complaints_status"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginVertical="16dp"
+                    android:visibility="@{vm.complaints.returnContent == null ? View.GONE : View.VISIBLE}"
+                    >
+                    <TextView
+                        android:id="@+id/tv_title_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="민원 반환 사유"
+                        android:textSize="30sp"
+                        android:textColor="@color/blind_yellow"
+                        android:importantForAccessibility="no"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_complaints_return"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/tv_title_return"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:contentDescription="@{`반환 사유는 `+vm.complaints.returnContent+` 입니다`}"
+                        >
+                        <TextView
+                            android:id="@+id/tv_return"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{vm.complaints.returnContent}"
+                            android:textSize="36sp"
+                            android:fontFamily="@font/noto_sans_bold"
+                            android:textColor="@color/blind_yellow"
+                            tools:text="민원 반환 사유"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:importantForAccessibility="no"
+                            />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/layout_complaints_status"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginVertical="16dp"
+                    android:visibility="@{vm.complaints.resultContent  == null ? View.GONE : View.VISIBLE}"
+                    >
+                    <TextView
+                        android:id="@+id/tv_title_result"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="민원 처리 결과"
+                        android:textSize="30sp"
+                        android:textColor="@color/blind_yellow"
+                        android:importantForAccessibility="no"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_complaints_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/tv_title_result"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:contentDescription="@{`민원 처리 결과는 `+vm.complaints.resultContent+` 입니다`}"
+                        >
+                        <TextView
+                            android:id="@+id/tv_result"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{vm.complaints.resultContent}"
+                            android:textSize="36sp"
+                            android:fontFamily="@font/noto_sans_bold"
+                            android:textColor="@color/blind_yellow"
+                            tools:text="민원 처리 결과"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:importantForAccessibility="no"
+                            />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
