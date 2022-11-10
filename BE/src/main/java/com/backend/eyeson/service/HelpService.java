@@ -80,7 +80,7 @@ public class HelpService {
             int angelDay = angelInfoEntity.getAngelAlarmDay();
 
             // 요일에 있고 시간안에 있으면 배열에 추가
-            if(((todayNum & angelDay) != 0) && (angelInfoEntity.getAngelAlarmStart()) <= hour && angelInfoEntity.getAngelAlarmEnd() >= hour){
+            if(angelInfoEntity.isAngelActive() && ((todayNum & angelDay) != 0) && (angelInfoEntity.getAngelAlarmStart()) <= hour && angelInfoEntity.getAngelAlarmEnd() >= hour){
                 canAngelList.add(angelInfoEntity);
             }
         }
