@@ -54,7 +54,8 @@ public class FirebaseService {
 
 
     // targetToken에 해당하는 device로 FCM 푸시 알림 전송
-    public void sendMessageTo(String targetToken, String title, String body) throws IOException {
+    public void
+    sendMessageTo(String targetToken, String title, String body) throws IOException {
         // 엔젤 정보 받아서 시간 확인
         LocalDateTime str = LocalDateTime.now();
         String message = makeMessage(targetToken, title, body);

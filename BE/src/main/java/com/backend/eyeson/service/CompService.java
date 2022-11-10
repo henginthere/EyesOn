@@ -48,6 +48,7 @@ public class CompService {
     private final CompRepository compRepository;
     private final UserRepository userRepository;
     private final FileService fileService;
+    private final FirebaseService firebaseService;
 
     public boolean registerCom(RequestCompDto params, MultipartFile multipartFile) throws IOException {
         ComplaintsEntity complaints = CompMapper.INSTANCE.toEntity(params);
@@ -115,7 +116,7 @@ public class CompService {
         return complaintsDto;
     }
 
-    public ResponseCompDto returnCom(RequestCompDto requestCompDto) {
+    public ResponseCompDto returnCom(RequestCompDto requestCompDto) throws IOException{
         long compSeq = requestCompDto.getCompSeq();
         ComplaintsEntity complaintsEntity = compRepository.findByCompSeq(compSeq).get();
         complaintsEntity.setCompReturn(requestCompDto.getCompReturn());
@@ -125,10 +126,16 @@ public class CompService {
         compRepository.save(complaintsEntity);
         ResponseCompDto result = CompMapper.INSTANCE.toDto(complaintsEntity);
 
+        //알림보내기
+        String title = "신청한 민원이 반환됐습니다.";
+        String body = requestCompDto.getCompReturn();
+        String fcmToken = complaintsEntity.getBlindUser().getUserFcm();
+        firebaseService.sendMessageTo(fcmToken, title, body);
+
         return result;
     }
 
-    public ResponseCompDto submitCom(RequestCompDto requestCompDto) {
+    public ResponseCompDto submitCom(RequestCompDto requestCompDto) throws IOException{
         long compSeq = requestCompDto.getCompSeq();
         ComplaintsEntity complaintsEntity = compRepository.findByCompSeq(compSeq).get();
         complaintsEntity.setCompTitle(requestCompDto.getCompTitle());
@@ -138,10 +145,16 @@ public class CompService {
         compRepository.save(complaintsEntity);
         ResponseCompDto result = CompMapper.INSTANCE.toDto(complaintsEntity);
 
+        //알림보내기
+        String title = "신청한 민원이 접수됐습니다.";
+        String body = requestCompDto.getCompTitle();
+        String fcmToken = complaintsEntity.getBlindUser().getUserFcm();
+        firebaseService.sendMessageTo(fcmToken, title, body);
+
         return result;
     }
 
-    public ResponseCompDto completeCom(RequestCompDto requestCompDto) {
+    public ResponseCompDto completeCom(RequestCompDto requestCompDto) throws IOException{
         long compSeq = requestCompDto.getCompSeq();
         ComplaintsEntity complaintsEntity = compRepository.findByCompSeq(compSeq).get();
         complaintsEntity.setCompResultContent(requestCompDto.getCompResultContent());
@@ -150,6 +163,12 @@ public class CompService {
 
         compRepository.save(complaintsEntity);
         ResponseCompDto result = CompMapper.INSTANCE.toDto(complaintsEntity);
+
+        //알림보내기
+        String title = "신청한 민원이 처리완료됐습니다.";
+        String body = requestCompDto.getCompResultContent();
+        String fcmToken = complaintsEntity.getBlindUser().getUserFcm();
+        firebaseService.sendMessageTo(fcmToken, title, body);
 
         return result;
     }
