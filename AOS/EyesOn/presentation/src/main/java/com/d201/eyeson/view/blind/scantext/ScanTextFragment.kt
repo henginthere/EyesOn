@@ -115,7 +115,6 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
     override fun onPause() {
         super.onPause()
         preview?.stop()
-        tts.stop()
     }
 
     override fun onDestroy() {
@@ -123,6 +122,7 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         if (cameraSource != null) {
             cameraSource?.release()
         }
+        tts.stop()
     }
 
     override fun onInit(p0: Int) {
