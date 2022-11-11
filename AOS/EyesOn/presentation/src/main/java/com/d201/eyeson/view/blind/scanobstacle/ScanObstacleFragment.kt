@@ -97,6 +97,13 @@ class ScanObstacleFragment :
 
         tts = TextToSpeech(requireContext(), this)
         lastSpeakTime = System.currentTimeMillis()
+
+        binding.apply {
+            btnBack.apply {
+                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                setOnClickListener { requireActivity().finish() }
+            }
+        }
     }
 
     override fun onResume() {
@@ -202,6 +209,12 @@ class ScanObstacleFragment :
             surfaceView.onPause()
             session!!.pause()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tts.stop()
+
     }
 
     override fun onRequestPermissionsResult(

@@ -103,6 +103,13 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
 
         tts = TextToSpeech(requireContext(), this)
         lastSpeakTime = System.currentTimeMillis()
+
+        binding.apply {
+            btnBack.apply {
+                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                setOnClickListener { requireActivity().finish() }
+            }
+        }
     }
 
     override fun onResume() {
@@ -208,6 +215,11 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
             surfaceView.onPause()
             session!!.pause()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tts.stop()
     }
 
     override fun onRequestPermissionsResult(
