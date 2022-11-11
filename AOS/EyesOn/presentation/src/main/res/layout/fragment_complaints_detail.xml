@@ -7,6 +7,8 @@
         <variable
             name="vm"
             type="com.d201.eyeson.view.angel.complaints.ComplaintsViewModel" />
+        <import type="android.view.View"/>
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -134,6 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="@{vm.complaints.state != `REGIST_DONE` ? View.VISIBLE : View.GONE}"
             >
 
             <Button
@@ -180,7 +183,7 @@
             android:backgroundTint="@color/angel_blue"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginHorizontal="24dp"
-            android:visibility="gone"
+            android:visibility="@{vm.complaints.state == `PROGRESS_IN` ? View.VISIBLE : View.GONE}"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
