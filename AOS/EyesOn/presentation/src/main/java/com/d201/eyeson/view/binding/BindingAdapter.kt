@@ -3,7 +3,6 @@ package com.d201.eyeson.view.binding
 import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter

@@ -1,7 +1,5 @@
 package com.d201.eyeson.view.blind.scanobstacle
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import com.d201.depth.depth.common.FullScreenHelper
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseActivity

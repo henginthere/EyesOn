@@ -1,6 +1,5 @@
 package com.d201.eyeson.view.angel.complaints
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

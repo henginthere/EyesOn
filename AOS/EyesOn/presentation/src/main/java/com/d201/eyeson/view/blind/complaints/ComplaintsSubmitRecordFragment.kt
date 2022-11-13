@@ -15,7 +15,6 @@ import com.d201.eyeson.util.accessibilityEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.File
 
 private const val TAG ="ComplaintsSubmitRecordFragment"
 @AndroidEntryPoint

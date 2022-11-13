@@ -1,9 +1,5 @@
 package com.d201.eyeson.view.blind.help
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.d201.eyeson.R

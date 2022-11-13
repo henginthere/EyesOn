@@ -8,7 +8,6 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
 import com.d201.depth.depth.DepthTextureHandler
 import com.d201.depth.depth.common.CameraPermissionHelper
 import com.d201.depth.depth.common.DisplayRotationHelper
@@ -25,7 +24,6 @@ import com.google.ar.core.exceptions.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
@@ -33,8 +31,6 @@ import java.io.IOException
 import java.util.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
-import kotlin.concurrent.timer
-import kotlin.concurrent.timerTask
 
 private const val TAG = "FindObjectFragment"
 @AndroidEntryPoint

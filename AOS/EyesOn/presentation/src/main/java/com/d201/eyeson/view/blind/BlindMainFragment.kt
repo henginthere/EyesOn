@@ -7,11 +7,9 @@ import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentBlindMainBinding
 import com.d201.eyeson.util.accessibilityEvent
 import com.d201.eyeson.view.blind.findobject.FindObjectActivity
-import com.d201.eyeson.view.blind.findobject.FindObjectFragment
 import com.d201.eyeson.view.blind.help.BlindHelpActivity
 import com.d201.eyeson.view.blind.scanobstacle.ScanObstacleActivity
 import com.d201.eyeson.view.blind.scantext.ScanTextActivity
-import com.d201.eyeson.view.blind.scantext.ScanTextFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "BlindMainFragment"

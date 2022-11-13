@@ -16,7 +16,6 @@ import android.view.accessibility.AccessibilityEvent
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.accessibility.AccessibilityEventCompat
 import com.d201.eyeson.R
 import com.google.gson.Gson

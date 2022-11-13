@@ -40,11 +40,14 @@ class AngelSettingViewModel @Inject constructor(
         }
     }
 
+    private val _saveSettingEvent = SingleLiveEvent<Boolean>()
+    val saveSettingEvent get() = _saveSettingEvent
     fun putAngelInfo(alarmStart: Int, alarmEnd: Int, alarmDay: Int, active: Boolean){
         viewModelScope.launch(Dispatchers.IO){
             putAngelInfoUseCase.execute(AngelInfo(alarmStart, alarmEnd, alarmDay, active)).collectLatest {
                 if(it is ResultType.Success && it.data.status == 200){
                     _angelInfo.value = it.data.data
+                    _saveSettingEvent.postValue(true)
                 }else{
                     Log.d(TAG, "putAngelInfo: ${it}")
                 }
@@ -58,7 +61,7 @@ class AngelSettingViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO){
             deleteUserUseCase.excute().collectLatest {
                 if (it is ResultType.Success){
-                    _deleteUserEvent.postValue(false)
+                    _deleteUserEvent.postValue(true)
                 }
             }
         }

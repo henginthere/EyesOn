@@ -2,14 +2,10 @@ package com.d201.eyeson.util
 
 import android.content.SharedPreferences
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 private const val TAG = "XAccessTokenInterceptor"
 class XAccessTokenInterceptor @Inject constructor(

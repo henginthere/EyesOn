@@ -2,23 +2,17 @@ package com.d201.eyeson.service
 
 import android.app.PendingIntent
 import android.content.Intent
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.d201.domain.model.Noti
 import com.d201.domain.repository.NotiRepository
 import com.d201.eyeson.R
-import com.d201.eyeson.view.angel.help.AngelHelpActivity
 import com.d201.eyeson.view.angel.main.AngelMainActivity
 import com.d201.eyeson.view.blind.BlindMainActivity
-import com.d201.eyeson.view.blind.notification.BlindNotiFragment
-import com.d201.eyeson.view.login.LoginActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
 private const val TAG = "FirebaseCloudMessagingService"
