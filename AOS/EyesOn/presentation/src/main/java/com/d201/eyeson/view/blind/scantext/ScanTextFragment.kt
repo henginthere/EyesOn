@@ -1,8 +1,11 @@
 package com.d201.eyeson.view.blind.scantext
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.d201.arcore.depth.common.TEXT_RECOGNITION_KOREAN
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
@@ -12,6 +15,8 @@ import com.d201.mlkit.CameraSourcePreview
 import com.d201.mlkit.GraphicOverlay
 import com.google.mlkit.vision.demo.kotlin.textdetector.TextRecognitionProcessor
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.util.*
@@ -38,6 +43,7 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         createCameraSource(selectedModel)
         lastSpeakTime = System.currentTimeMillis()
         initView()
+        checkPermission()
     }
 
     private fun initView(){
@@ -140,5 +146,33 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         tts.setPitch(1f)
         tts.setSpeechRate(3.5f)
         tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
+    }
+
+    private fun allPermissionsGranted() = mutableListOf(
+        Manifest.permission.CAMERA
+    ).toTypedArray().all {
+        ContextCompat.checkSelfPermission(
+            requireActivity().baseContext, it
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun checkPermission() {
+        val permissionListener = object : PermissionListener {
+            override fun onPermissionGranted() {
+            }
+
+            override fun onPermissionDenied(deniedPermissions: List<String>) {
+                showToast("권한을 허용해야 이용이 가능합니다.")
+                requireActivity().finish()
+            }
+
+        }
+        TedPermission.create()
+            .setPermissionListener(permissionListener)
+            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
+            .setPermissions(
+                Manifest.permission.CAMERA
+            )
+            .check()
     }
 }

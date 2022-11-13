@@ -1,5 +1,7 @@
 package com.d201.eyeson.view.blind.scanobstacle
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.*
 import android.media.Image
 import android.opengl.GLES20
@@ -8,6 +10,7 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.d201.depth.depth.DepthTextureHandler
 import com.d201.depth.depth.common.CameraPermissionHelper
 import com.d201.depth.depth.common.DisplayRotationHelper
@@ -21,6 +24,8 @@ import com.d201.eyeson.databinding.FragmentScanObstacleBinding
 import com.d201.eyeson.util.*
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,6 +75,7 @@ class ScanObstacleFragment :
     private var lastSpeakTime = 0L
 
     override fun init() {
+        checkPermission()
         initView()
     }
 
@@ -547,7 +553,33 @@ class ScanObstacleFragment :
         // Compute dot product of plane's normal with vector from camera to plane center.
         return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
     }
+    private fun allPermissionsGranted() = mutableListOf(
+        Manifest.permission.CAMERA
+    ).toTypedArray().all {
+        ContextCompat.checkSelfPermission(
+            requireActivity().baseContext, it
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
+    private fun checkPermission() {
+        val permissionListener = object : PermissionListener {
+            override fun onPermissionGranted() {
+            }
+
+            override fun onPermissionDenied(deniedPermissions: List<String>) {
+                showToast("권한을 허용해야 이용이 가능합니다.")
+                requireActivity().finish()
+            }
+
+        }
+        TedPermission.create()
+            .setPermissionListener(permissionListener)
+            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
+            .setPermissions(
+                Manifest.permission.CAMERA
+            )
+            .check()
+    }
 }
 
 data class DetectionResult(val boundingBox: RectF, val text: String, val score: Int)

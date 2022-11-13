@@ -40,8 +40,8 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     private lateinit var session: Session
 
     override fun init() {
-        initListener()
         checkPermission()
+        initListener()
         initWebRTC()
     }
 
