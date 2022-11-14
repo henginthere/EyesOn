@@ -54,7 +54,7 @@ class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.
             btnReplayGuide.setOnClickListener {  }
 
             btnLogout.setOnClickListener {
-                signOut()
+                logOut()
             }
 
             btnSignOut.setOnClickListener {
@@ -69,7 +69,7 @@ class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.
         requireActivity().finish()
     }
 
-    private fun signOut() {
+    private fun logOut() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()
