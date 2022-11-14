@@ -10,6 +10,9 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelSettingBinding
 import com.d201.eyeson.view.login.LoginActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -23,7 +26,7 @@ class AngelSettingFragment : BaseFragment<FragmentAngelSettingBinding>(R.layout.
 
     private lateinit var buttonList : List<ToggleButton>
     private val viewModel: AngelSettingViewModel by viewModels()
-
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
     override fun init() {
         initView()
         initViewModel()
@@ -36,7 +39,7 @@ class AngelSettingFragment : BaseFragment<FragmentAngelSettingBinding>(R.layout.
                 findNavController().popBackStack()
             }
             btnLogout.setOnClickListener {
-                finishActivity()
+                logOut()
             }
             btnResign.setOnClickListener {
                 viewModel.deleteUser()
@@ -122,6 +125,15 @@ class AngelSettingFragment : BaseFragment<FragmentAngelSettingBinding>(R.layout.
             }
             viewModel.putAngelInfo(numpickStart.value, numpickEnd.value, alarmDay, switchAlarm.isChecked)
 //            Log.d(TAG, "saveAlarmInfo: ${numpickStart.value} | ${numpickEnd.value} | ${alarmDay} | ${switchAlarm.isChecked}")
+        }
+    }
+    private fun logOut() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+        mGoogleSignInClient.signOut().addOnCompleteListener {
+            finishActivity()
         }
     }
 }
