@@ -13,25 +13,26 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/frag_find_object"
-            >
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/frag_find_object">
 
             <TextView
                 android:id="@+id/tv_title"
+                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="물건 인식"
-                android:textSize="30sp"
+                android:fontFamily="@font/noto_sans_bold"
+                android:text="글자 인식"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/blind_yellow"
                 android:importantForAccessibility="no"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintStart_toEndOf="@id/btn_back"/>
 
             <ImageButton
                 android:id="@+id/btn_back"
