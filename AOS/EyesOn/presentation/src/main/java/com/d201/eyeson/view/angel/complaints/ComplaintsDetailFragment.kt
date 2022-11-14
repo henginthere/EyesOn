@@ -23,9 +23,9 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentComplaintsDetailBinding
 import com.d201.eyeson.util.S3_URL
+import com.d201.eyeson.view.angel.RegisterComplaintsListener
 import com.d201.eyeson.view.angel.ReturnConfirmListener
 import com.d201.eyeson.view.angel.TitleConfirmListener
-import com.d201.eyeson.view.blind.complaints.ComplaintsFragmentDirections
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
@@ -82,6 +82,9 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
                 RegisterTitleDialog(complaintsViewModel.complaints.value!!, titleConfirmListener).let{
                     it.show(parentFragmentManager, "RegisterTitle")
                 }
+            }
+            btnComplaintsDone.setOnClickListener {
+                RegisterComplaintsResultDialog(complaintsViewModel.complaints.value!!, registerComplaintsListener).show(parentFragmentManager, "RegisterResult")
             }
             btnBack.setOnClickListener {
                 findNavController().popBackStack()
@@ -140,6 +143,12 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
     private val titleConfirmListener = object : TitleConfirmListener{
         override fun onClick(complaints: Complaints) {
             complaintsViewModel.submitComplaints(complaints)
+        }
+    }
+
+    private val registerComplaintsListener = object : RegisterComplaintsListener {
+        override fun onClick(complaints: Complaints) {
+            complaintsViewModel.completeComplaints(complaints)
         }
     }
 

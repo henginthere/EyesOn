@@ -3,8 +3,11 @@ package com.d201.eyeson.view.binding
 import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -33,22 +36,24 @@ fun bindTextSize(textView: TextView, title: String?) {
     }
 }
 
-@BindingAdapter("state")
-fun bindState(textView: TextView, state: String?){
-    if(state != null){
-        when(state){
-            "PROGRESS_IN" -> {
-                textView.text = "민원 처리중"
-            }
-            "RETURN" -> {
-                textView.text = "민원 반환됨"
-            }
-            "REGIST_DONE" -> {
-                textView.text = "민원 등록 완료"
-            }
-            "PROGRESS_DONE" -> {
-                textView.text = "민원 처리 완료"
-            }
+@BindingAdapter("complaintsDoneVisible")
+fun complaintsDoneVisible(view: Button, state: String?){
+    if(!state.isNullOrEmpty()){
+        if(state == "REGIST_DONE"){
+            view.visibility = View.VISIBLE
+        }else{
+            view.visibility = View.GONE
+        }
+    }
+}
+
+@BindingAdapter("complaintsRegistVisible")
+fun complaintsRegistVisible(view: ConstraintLayout, state: String?){
+    if(!state.isNullOrEmpty()){
+        if(state == "PROGRESS_IN"){
+            view.visibility = View.VISIBLE
+        }else{
+            view.visibility = View.GONE
         }
     }
 }
