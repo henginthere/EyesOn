@@ -82,6 +82,9 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
                     it.show(parentFragmentManager, "RegisterTitle")
                 }
             }
+            btnBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
         }
     }
 

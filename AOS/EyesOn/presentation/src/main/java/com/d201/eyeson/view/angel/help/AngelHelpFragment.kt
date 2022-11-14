@@ -46,7 +46,6 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     override fun init() {
         initListener()
         initViewModelCallback()
-        checkPermission()
         getSessionId()
         initWebRTC()
     }
@@ -84,9 +83,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     }
 
     private fun initWebRTC() {
-        if (allPermissionsGranted()) {
-            initSurfaceView()
-        }
+        initSurfaceView()
     }
 
     private fun getToken(sessionId: String) {
@@ -171,16 +168,11 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     }
 
     private fun initSurfaceView() {
-        if (allPermissionsGranted()) {
-            val rootEgleBase = EglBase.create()
-            binding.localGlSurfaceView.init(rootEgleBase.eglBaseContext, null)
-            binding.localGlSurfaceView.setMirror(true)
-            binding.localGlSurfaceView.setEnableHardwareScaler(true)
-            binding.localGlSurfaceView.setZOrderMediaOverlay(true)
-        } else {
-            showToast("권한을 허용해야 이용이 가능합니다.")
-            requireActivity().finish()
-        }
+        val rootEgleBase = EglBase.create()
+        binding.localGlSurfaceView.init(rootEgleBase.eglBaseContext, null)
+        binding.localGlSurfaceView.setMirror(true)
+        binding.localGlSurfaceView.setEnableHardwareScaler(true)
+        binding.localGlSurfaceView.setZOrderMediaOverlay(true)
     }
 
     private fun getTokenSuccess(token: String, sessionId: String) {
@@ -235,37 +227,5 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
             binding.remoteGlSurfaceView.release()
         }
 
-    }
-
-    private fun allPermissionsGranted() = mutableListOf(
-        Manifest.permission.CAMERA,
-        Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.MODIFY_AUDIO_SETTINGS
-    ).toTypedArray().all {
-        ContextCompat.checkSelfPermission(
-            requireActivity().baseContext, it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun checkPermission() {
-        val permissionListener = object : PermissionListener {
-            override fun onPermissionGranted() {
-            }
-
-            override fun onPermissionDenied(deniedPermissions: List<String>) {
-                showToast("권한을 허용해야 이용이 가능합니다.")
-                requireActivity().finish()
-            }
-
-        }
-        TedPermission.create()
-            .setPermissionListener(permissionListener)
-            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
-            .setPermissions(
-                Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS
-            )
-            .check()
     }
 }

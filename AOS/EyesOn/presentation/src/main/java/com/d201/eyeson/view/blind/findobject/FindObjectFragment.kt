@@ -77,7 +77,6 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
     private var lastSpeakTime = 0L
 
     override fun init() {
-        checkPermission()
         initView()
     }
 
@@ -563,25 +562,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun checkPermission() {
-        val permissionListener = object : PermissionListener {
-            override fun onPermissionGranted() {
-            }
 
-            override fun onPermissionDenied(deniedPermissions: List<String>) {
-                showToast("권한을 허용해야 이용이 가능합니다.")
-                requireActivity().finish()
-            }
-
-        }
-        TedPermission.create()
-            .setPermissionListener(permissionListener)
-            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
-            .setPermissions(
-                Manifest.permission.CAMERA
-            )
-            .check()
-    }
 }
 
 data class DetectionResult(val boundingBox: RectF, val text: String, val score: Int)
