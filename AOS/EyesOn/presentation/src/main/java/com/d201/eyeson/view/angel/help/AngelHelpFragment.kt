@@ -60,6 +60,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     private fun initListener() {
         lifecycleScope
         binding.apply {
+
             btnChangeCamera.setOnClickListener {
                 session.getLocalParticipant()!!.switchCamera()
             }

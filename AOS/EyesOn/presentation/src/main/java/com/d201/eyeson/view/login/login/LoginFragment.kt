@@ -124,6 +124,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         notificationManager.createNotificationChannel(channel)
     }
 
+
     private fun initAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             // default_web_client_id 값은 build 타임에 values.xml 파일에 자동 생성

@@ -58,6 +58,11 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
                 lastSpeakTime -= 3000
             }
         }
+
+        binding.tvRecognizeText.bringToFront()
+        binding.frameLayoutCamera.bringToFront()
+        //binding.tvTitle.bringToFront()
+        //binding.btnBack.bringToFront()
     }
 
     private fun createCameraSource(model: String) {
