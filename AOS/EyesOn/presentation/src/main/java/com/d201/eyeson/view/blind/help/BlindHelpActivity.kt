@@ -19,27 +19,13 @@ class BlindHelpActivity : BaseActivity<ActivityAngelHelpBinding>(R.layout.activi
 
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
-    private lateinit var btnBack:ImageButton
-
     override fun init() {
         initView()
-        initListener()
     }
 
     private fun initView(){
         navHostFragment = supportFragmentManager.findFragmentById(R.id.frame_blind_help) as NavHostFragment
         navController = navHostFragment.navController
 
-    }
-    private fun initListener(){
-        btnBack = findViewById(R.id.btn_back)
-        btnBack.setOnClickListener {
-            onBackPressed()
-        }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
     }
 }
