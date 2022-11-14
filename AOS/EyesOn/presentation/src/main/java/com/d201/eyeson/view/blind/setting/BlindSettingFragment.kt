@@ -10,8 +10,14 @@ import com.d201.eyeson.databinding.FragmentBlindSettingBinding
 import com.d201.eyeson.util.JWT
 import com.d201.eyeson.util.accessibilityEvent
 import com.d201.eyeson.view.login.LoginActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
 
 private const val TAG = "BlindSettingFragment"
 @AndroidEntryPoint
@@ -19,6 +25,8 @@ class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.
     @Inject
     lateinit var sharedPref: SharedPreferences
     private val viewModel: BlindSettingViewModel by viewModels()
+
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
     override fun init() {
         initListener()
         initViewModel()
@@ -46,7 +54,7 @@ class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.
             btnReplayGuide.setOnClickListener {  }
 
             btnLogout.setOnClickListener {
-                finishActivity()
+                signOut()
             }
 
             btnSignOut.setOnClickListener {
@@ -60,4 +68,15 @@ class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.
         requireActivity().startActivity(Intent(requireContext(), LoginActivity::class.java))
         requireActivity().finish()
     }
+
+    private fun signOut() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+        mGoogleSignInClient.signOut().addOnCompleteListener {
+            finishActivity()
+        }
+    }
 }
+
