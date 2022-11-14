@@ -50,6 +50,9 @@ class ComplaintsListFragment : BaseFragment<FragmentComplaintsListBinding>(R.lay
                     }
                 }
             })
+            btnBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
         }
     }
 
