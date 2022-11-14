@@ -149,6 +149,7 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
             showToast("권한을 허용해야 이용이 가능합니다.")
             requireActivity().finish()
         }
+        binding.peerContainer.bringToFront()
     }
 
     private fun getTokenSuccess(token: String, sessionId: String) {
