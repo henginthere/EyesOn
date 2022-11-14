@@ -31,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.support.image.TensorImage
+import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
 import java.io.IOException
 import java.util.*
@@ -412,8 +413,10 @@ class ScanObstacleFragment :
         // Step 1: Create TFLite's TensorImage object
         val image = TensorImage.fromBitmap(bitmap)
 
+        val baseOptions = BaseOptions.builder().useGpu().build()
         // Step 2: Initialize the detector object
         val options = ObjectDetector.ObjectDetectorOptions.builder()
+            .setBaseOptions(baseOptions)
             .setMaxResults(MAX_RESULT)
             .setScoreThreshold(SCORE_THRESHOLD)
             .build()
