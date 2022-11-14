@@ -6,13 +6,11 @@ import android.widget.ToggleButton
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.d201.domain.model.AngelInfo
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelSettingBinding
 import com.d201.eyeson.view.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -74,6 +72,12 @@ class AngelSettingFragment : BaseFragment<FragmentAngelSettingBinding>(R.layout.
             deleteUserEvent.observe(viewLifecycleOwner){
                 if(it){
                     finishActivity()
+                }
+            }
+            saveSettingEvent.observe(viewLifecycleOwner){
+                if(it){
+                    showToast("저장 되었습니다")
+                    findNavController().popBackStack()
                 }
             }
         }

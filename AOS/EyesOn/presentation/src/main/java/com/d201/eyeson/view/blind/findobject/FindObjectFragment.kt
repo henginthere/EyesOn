@@ -1,5 +1,7 @@
 package com.d201.eyeson.view.blind.findobject
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.*
 import android.media.Image
 import android.opengl.GLES20
@@ -8,6 +10,8 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.d201.depth.depth.DepthTextureHandler
 import com.d201.depth.depth.common.CameraPermissionHelper
@@ -22,10 +26,13 @@ import com.d201.eyeson.databinding.FragmentFindObjectBinding
 import com.d201.eyeson.util.*
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
@@ -33,8 +40,6 @@ import java.io.IOException
 import java.util.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
-import kotlin.concurrent.timer
-import kotlin.concurrent.timerTask
 
 private const val TAG = "FindObjectFragment"
 @AndroidEntryPoint
@@ -75,8 +80,31 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
 
     private var lastSpeakTime = 0L
 
+    private val viewModel: FindObjectViewModel by viewModels()
+    private var objectToFind: String? = null
+
     override fun init() {
         initView()
+        initViewModel()
+    }
+
+    private fun initViewModel() {
+        viewModel.apply {
+
+        }
+        lifecycleScope.launch(Dispatchers.IO){
+            viewModel.recordText.collectLatest {
+                if(it.isNotEmpty()){
+                    when(it){
+                        "마우스" -> objectToFind = "mouse"
+                        "키보드" -> objectToFind = "keyboard"
+                        "컵" -> objectToFind = "cup"
+                    }
+
+                    speakOut("${objectToFind}를 찾습니다")
+                }
+            }
+        }
     }
 
     private fun initView() {
@@ -97,6 +125,19 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
 
         tts = TextToSpeech(requireContext(), this)
         lastSpeakTime = System.currentTimeMillis()
+
+        binding.apply {
+            btnBack.apply {
+                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                setOnClickListener { requireActivity().finish() }
+            }
+            btnRecord.setOnClickListener {
+                objectToFind = ""
+                tts.stop()
+                speakOut("찾을 물건을 말해주세요")
+                viewModel.startRecord(requireContext())
+            }
+        }
     }
 
     override fun onResume() {
@@ -168,6 +209,8 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                 return
             }
             binding.inputImageView.bringToFront()
+            binding.frameLayoutCamera.bringToFront()
+            binding.btnRecord.bringToFront()
         }
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
@@ -186,7 +229,6 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
         }
         surfaceView.onResume()
         displayRotationHelper!!.onResume()
-
     }
 
     override fun onPause() {
@@ -203,6 +245,11 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
             session!!.pause()
             tts.stop()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tts.stop()
     }
 
     override fun onRequestPermissionsResult(
@@ -316,55 +363,44 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
             val colorCorrectionRgba = FloatArray(4)
             frame.lightEstimate.getColorCorrection(colorCorrectionRgba, 0)
 
-            try {
-                // 현재 프레임에 해당하는 이미지 객체를 가져옴
-                // 가로 모드
-                val currentFrameImage = frame.acquireCameraImage()
 
-                // 객체를 탐지할 비트맵
-                // 세로 모드
-                val bitmap = RotateBitmap(
-                    imageToBitmap(currentFrameImage, requireContext())!!,
-                    90f
-                )
-                // Depth 비트맵
-                // 가로 모드
-                val depthImage = frame.acquireDepthImage16Bits()
+            if(objectToFind != null){
+                try {
+                    // 현재 프레임에 해당하는 이미지 객체를 가져옴
+                    // 가로 모드
+                    val currentFrameImage = frame.acquireCameraImage()
 
-                CoroutineScope(Dispatchers.Default).launch {
-                    // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
-                    val detectionResults = runObjectDetection(bitmap!!)
+                    // 객체를 탐지할 비트맵
+                    // 세로 모드
+                    val bitmap = RotateBitmap(
+                        imageToBitmap(currentFrameImage, requireContext())!!,
+                        90f
+                    )
+                    // Depth 비트맵
+                    // 가로 모드
+                    val depthImage = frame.acquireDepthImage16Bits()
 
-                    // 비트맵에 검출 결과를 그려서 보여줍니다
-                    // 음성으로 출력
-                    val imgWithResult = drawDetectionResult(bitmap, depthImage, detectionResults)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
+                        val detectionResults = runObjectDetection(bitmap!!)
 
-                    requireActivity().runOnUiThread {
-                        binding.inputImageView.setImageBitmap(imgWithResult)
+                        // 비트맵에 검출 결과를 그려서 보여줍니다
+                        // 음성으로 출력
+                        val imgWithResult = drawDetectionResult(bitmap, depthImage, detectionResults)
+
+                        requireActivity().runOnUiThread {
+                            binding.inputImageView.setImageBitmap(imgWithResult)
+                        }
+
+                        currentFrameImage.close()
+                        depthImage.close()
+                        bitmap.recycle()
                     }
-
-                    currentFrameImage.close()
-                    depthImage.close()
-                    bitmap.recycle()
+                } catch (e: Exception) {
+                    Log.d(TAG, "onDrawFrame: ${e.message}")
                 }
-            } catch (e: Exception) {
-                Log.d(TAG, "onDrawFrame: ${e.message}")
             }
 
-            // No tracking error at this point. Inform user of what to do based on if planes are found.
-//            var messageToShow = if (!hasTrackingPlane()) {
-//                SEARCHING_PLANE_MESSAGE
-//            } else {
-//                ""
-//            }
-//            if (!isDepthSupported) {
-//                messageToShow += """
-//                ${DEPTH_NOT_AVAILABLE_MESSAGE}
-//                """.trimIndent()
-//            }
-//            messageSnackbarHelper.showMessage(requireActivity(), messageToShow)
-
-            // Visualize anchors created by touch.
             val scaleFactor = 1.0f
             for (anchor in anchors) {
                 if (anchor.trackingState != TrackingState.TRACKING) {
@@ -383,8 +419,6 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                     OBJECT_COLOR
                 )
             }
-
-
         } catch (t: Throwable) {
             // Avoid crashing the application due to unhandled exceptions.
             Log.e(
@@ -413,16 +447,25 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
         // Step 3:주어진 이미지를 감지기에 공급
         val results = detector.detect(image)
 
-        // Step 4: 탐지 결과를 파싱하여 보여줍니다.
-        return results.map {
-            // Get the top-1 category and craft the display text
-            val category = it.categories.first()
-            val text = category.label
-            val score = category.score.times(100).toInt()
-
-            // 탐지 결과를 표시할 데이터 객체 생성
-            DetectionResult(it.boundingBox, text, score)
+        val resultText = results.map {
+            it.categories.first().label
         }
+
+        for(text in resultText){
+            if(text == objectToFind){
+                // Step 4: 탐지 결과를 파싱하여 보여줍니다.
+                return results.map {
+                    // Get the top-1 category and craft the display text
+                    val category = it.categories.first()
+                    val text = category.label
+                    val score = category.score.times(100).toInt()
+
+                    // 탐지 결과를 표시할 데이터 객체 생성
+                    DetectionResult(it.boundingBox, text, score)
+                }
+            }
+        }
+        return listOf()
     }
 
     private fun drawDetectionResult(
@@ -510,6 +553,8 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                 override fun onDone(p0: String?) {}
                 override fun onError(p0: String?) {}
             })
+            speakOut("찾을 물건을 말해주세요")
+            viewModel.startRecord(requireContext())
         }
     }
 

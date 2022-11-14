@@ -13,6 +13,10 @@ class XAccessTokenInterceptor @Inject constructor(
 ): Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
+
+//        var token = CoroutineScope(Dispatchers.Main).launch{
+//            sharedPref.getString(JWT,"")!!
+//        }
         var token = runBlocking {
             sharedPref.getString(JWT,"")!!
         }

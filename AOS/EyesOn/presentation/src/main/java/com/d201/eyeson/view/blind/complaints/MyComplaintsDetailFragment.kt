@@ -3,13 +3,14 @@ package com.d201.eyeson.view.blind.complaints
 import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.d201.domain.model.Complaints
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentMyComplaintsDetailBinding
+import com.d201.eyeson.util.accessibilityEvent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -41,6 +42,12 @@ class MyComplaintsDetailFragment : BaseFragment<FragmentMyComplaintsDetailBindin
     private fun initView() {
         binding.apply {
             vm = viewModel
+            btnBack.apply {
+                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                setOnClickListener {
+                    findNavController().popBackStack()
+                }
+            }
         }
     }
 }

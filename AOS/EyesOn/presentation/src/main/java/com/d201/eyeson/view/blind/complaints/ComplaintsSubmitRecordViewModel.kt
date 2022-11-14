@@ -3,7 +3,6 @@ package com.d201.eyeson.view.blind.complaints
 import android.content.Context
 import android.content.Intent
 import android.location.Location
-import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
@@ -17,15 +16,16 @@ import androidx.lifecycle.viewModelScope
 import com.d201.data.mapper.mapperToComplaintsRequest
 import com.d201.domain.model.Complaints
 import com.d201.domain.usecase.complaints.InsertCompUseCase
-import com.d201.domain.usecase.complaints.SubmitCompUseCase
 import com.d201.domain.utils.ResultType
-import com.d201.eyeson.util.*
+import com.d201.eyeson.util.LocationService
+import com.d201.eyeson.util.SingleLiveEvent
+import com.d201.eyeson.util.imagePathToPartBody
+import com.d201.eyeson.util.objectToMultipartPart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import java.io.File
 import java.util.*
 import javax.inject.Inject

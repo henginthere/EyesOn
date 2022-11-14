@@ -8,5 +8,6 @@ data class NotiEntity(
     @PrimaryKey(autoGenerate = true)
     var seq: Int = 0,
     val title: String,
-    val body: String
+    val body: String,
+    val date: String
 )
