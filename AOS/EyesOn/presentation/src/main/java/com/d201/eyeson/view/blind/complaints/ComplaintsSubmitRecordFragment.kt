@@ -56,6 +56,7 @@ class ComplaintsSubmitRecordFragment : BaseFragment<FragmentComplaintsSubmitReco
             location?.observe(viewLifecycleOwner){
                 Log.d(TAG, "initViewModel: GPS LOCATION : ${it}")
                 this@ComplaintsSubmitRecordFragment.location = it
+                binding.btnSubmit.isEnabled = true
             }
         }
     }

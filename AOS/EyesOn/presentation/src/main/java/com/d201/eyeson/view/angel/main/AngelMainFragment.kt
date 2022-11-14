@@ -1,6 +1,8 @@
 package com.d201.eyeson.view.angel.main
 
+import android.Manifest
 import android.content.Intent
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -9,6 +11,8 @@ import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelMainBinding
 import com.d201.eyeson.view.angel.ComplaintsClickListener
 import com.d201.eyeson.view.angel.help.AngelHelpActivity
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -39,7 +43,7 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         }
 
         if(action.isNotEmpty() && action == "AngelHelp"){
-            startActivity(Intent(requireActivity(), AngelHelpActivity::class.java))
+            checkPermission()
         }
     }
 
@@ -86,4 +90,24 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         }
     }
 
+    private fun checkPermission() {
+        val permissionListener = object : PermissionListener {
+            override fun onPermissionGranted() {
+                startActivity(Intent(requireActivity(), AngelHelpActivity::class.java))
+            }
+
+            override fun onPermissionDenied(deniedPermissions: List<String>) {
+                showToast("권한을 허용해야 이용이 가능합니다.")
+            }
+
+        }
+        TedPermission.create()
+            .setPermissionListener(permissionListener)
+            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
+            .setPermissions(
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO
+            )
+            .check()
+    }
 }
