@@ -25,3 +25,4 @@ const val VIEW_FIND_OBJECT = 1
 const val VIEW_SCAN_OBSTACLE = 2
 const val VIEW_HELP = 3
 const val VIEW_COMPLAINTS = 4
+const val VIEW_ANGEL_HELP = 5

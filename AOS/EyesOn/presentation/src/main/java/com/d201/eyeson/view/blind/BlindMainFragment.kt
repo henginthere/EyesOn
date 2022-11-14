@@ -60,7 +60,7 @@ class BlindMainFragment : BaseFragment<FragmentBlindMainBinding>(R.layout.fragme
             btnHelp.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
-                    checkPermission(VIEW_HELP, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
+                    checkPermission(VIEW_HELP, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS)
                 }
             }
             btnComplaints.apply {

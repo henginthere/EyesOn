@@ -1,10 +1,7 @@
 package com.d201.eyeson.view.blind.help
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
@@ -14,8 +11,6 @@ import com.d201.webrtc.openvidu.LocalParticipant
 import com.d201.webrtc.openvidu.Session
 import com.d201.webrtc.utils.CustomHttpClient
 import com.d201.webrtc.websocket.CustomWebSocket
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.Call
 import okhttp3.Callback
@@ -29,6 +24,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 private const val TAG = "BlindHelpFragment"
+
 @AndroidEntryPoint
 class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragment_blind_help) {
 
@@ -40,7 +36,6 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     private lateinit var session: Session
 
     override fun init() {
-        checkPermission()
         initListener()
         initWebRTC()
     }
@@ -57,18 +52,14 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
                 session.getLocalParticipant()!!.switchCamera()
             }
             btnDisconnect.setOnClickListener {
-                leaveSession()
                 requireActivity().finish()
             }
         }
     }
 
     private fun initWebRTC() {
-        if (allPermissionsGranted()) {
-            initSurfaceView()
-            getToken("${blindHelpViewModel.sessionId.value}-session")
-        }
-
+        initSurfaceView()
+        getToken("${blindHelpViewModel.sessionId.value}-session")
     }
 
     private fun getToken(sessionId: String) {
@@ -139,21 +130,22 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     }
 
     private fun initSurfaceView() {
-        if (allPermissionsGranted()) {
-            val rootEgleBase = EglBase.create()
-            binding.localGlSurfaceView.init(rootEgleBase.eglBaseContext, null)
-            binding.localGlSurfaceView.setMirror(true)
-            binding.localGlSurfaceView.setEnableHardwareScaler(true)
-            binding.localGlSurfaceView.setZOrderMediaOverlay(true)
-        } else {
-            showToast("권한을 허용해야 이용이 가능합니다.")
-            requireActivity().finish()
-        }
+        val rootEgleBase = EglBase.create()
+        binding.localGlSurfaceView.init(rootEgleBase.eglBaseContext, null)
+        binding.localGlSurfaceView.setMirror(true)
+        binding.localGlSurfaceView.setEnableHardwareScaler(true)
+        binding.localGlSurfaceView.setZOrderMediaOverlay(true)
+
     }
 
     private fun getTokenSuccess(token: String, sessionId: String) {
         // Initialize our session
-        session = Session(sessionId, token, requireActivity() as AppCompatActivity, binding.viewsContainer)
+        session = Session(
+            sessionId,
+            token,
+            requireActivity() as AppCompatActivity,
+            binding.viewsContainer
+        )
 
         // Initialize our local participant and start local camera
         val participantName: String = "customerName"
@@ -180,13 +172,14 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     }
 
     private fun startWebSocket() {
-        val webSocket = CustomWebSocket(session, OPENVIDU_URL, requireActivity() as AppCompatActivity)
+        val webSocket =
+            CustomWebSocket(session, OPENVIDU_URL, requireActivity() as AppCompatActivity)
         webSocket.execute()
         session.setWebSocket(webSocket)
     }
 
     private fun leaveSession() {
-        if(::session.isInitialized){
+        if (::session.isInitialized) {
             this.session.leaveSession()
         }
         this.httpClient.dispose()
@@ -199,35 +192,4 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
 
     }
 
-    private fun allPermissionsGranted() = mutableListOf(
-        Manifest.permission.CAMERA,
-        Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.MODIFY_AUDIO_SETTINGS
-    ).toTypedArray().all {
-        ContextCompat.checkSelfPermission(
-            requireActivity().baseContext, it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun checkPermission() {
-        val permissionListener = object : PermissionListener {
-            override fun onPermissionGranted() {
-            }
-
-            override fun onPermissionDenied(deniedPermissions: List<String>) {
-                showToast("권한을 허용해야 이용이 가능합니다.")
-                requireActivity().finish()
-            }
-
-        }
-        TedPermission.create()
-            .setPermissionListener(permissionListener)
-            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
-            .setPermissions(
-                Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS
-            )
-            .check()
-    }
 }

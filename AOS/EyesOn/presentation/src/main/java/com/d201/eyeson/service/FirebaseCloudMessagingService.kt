@@ -41,12 +41,12 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
             val messageContent = it!!.body
             val action = message.data["action"]
 
-            Log.d(TAG, "onMessageReceived: title : ${it.title} | body : ${it.body}")
+            Log.d(TAG, "onMessageReceived: title : $messageTitle\nbody : $messageContent\naction : ${action}")
 
              val builder = when(action){
                 "AngelHelp" -> {
                     val mainIntent = Intent(this, AngelMainActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         putExtra("action", action)
                     }
 
@@ -59,8 +59,8 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
                         .setSmallIcon(R.mipmap.ic_launcher_round)
                         .setContentTitle(messageTitle)
                         .setContentText(messageContent)
-                        .addAction(R.drawable.img_logo_title, "수락", mainPendingIntent)
                         .setAutoCancel(true)
+                        .setContentIntent(mainPendingIntent)
                 }
                 else -> {
                     val now = Date(System.currentTimeMillis())
@@ -77,7 +77,7 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
 
                     val mainPendingIntent = PendingIntent.getActivity(
                         this, 0, mainIntent,
-                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_IMMUTABLE
                     )
 
                     NotificationCompat.Builder(this, "EyesOn_id")

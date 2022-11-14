@@ -57,14 +57,11 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
 
 
     private fun initListener() {
-        lifecycleScope
         binding.apply {
-
             btnChangeCamera.setOnClickListener {
                 session.getLocalParticipant()!!.switchCamera()
             }
             btnDisconnect.setOnClickListener {
-                leaveSession()
                 requireActivity().finish()
             }
         }
@@ -216,6 +213,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     }
 
     private fun leaveSession() {
+        angelHelpViewModel.disconnectHelp()
         if(::session.isInitialized) {
             this.session.leaveSession()
         }

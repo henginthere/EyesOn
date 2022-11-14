@@ -28,7 +28,6 @@ class HelpRepositoryImpl @Inject constructor(
     override fun responseHelp(): Flow<ResultType<BaseResponse<Int>>> = flow {
         emit(ResultType.Loading)
         helpRemoteDataSource.responseHelp().collect {
-            Log.d(TAG, "responseHelp: ${it}")
             when (it.status) {
                 200 -> emit(ResultType.Success(it))
             }
