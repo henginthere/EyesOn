@@ -30,6 +30,7 @@ import java.nio.ByteBuffer
 
 private const val TAG ="EXTENSIONS"
 
+
 private fun blindTextViewFocused(context: Context, view: TextView, eventType: Int){
     when(eventType){
         AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUSED -> {
@@ -38,7 +39,6 @@ private fun blindTextViewFocused(context: Context, view: TextView, eventType: In
         }
         AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED -> {
             view.setBackgroundResource(R.drawable.btn_border_yellow)
-            view.setTextColor(context.getColor(R.color.blind_yellow))
         }
     }
 }

@@ -1,8 +1,5 @@
 package com.d201.domain.model
 
-import com.google.gson.annotations.SerializedName
-import java.time.LocalDateTime
-
 data class AngelInfo(
     val alarmStart: Int,
     val alarmEnd: Int,

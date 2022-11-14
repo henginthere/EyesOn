@@ -1,12 +1,13 @@
 package com.d201.eyeson.view.angel.complaints
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d201.domain.model.Complaints
+import com.d201.domain.usecase.complaints.CompleteCompUseCase
 import com.d201.domain.usecase.complaints.ReturnCompUseCase
 import com.d201.domain.usecase.complaints.SelectCompBySeqUseCase
+import com.d201.domain.usecase.complaints.SubmitCompUseCase
 import com.d201.domain.utils.ResultType
 import com.d201.eyeson.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +22,9 @@ private const val TAG = "ComplaintsViewModel"
 @HiltViewModel
 class ComplaintsViewModel @Inject constructor(
     private val selectCompBySeqUseCase: SelectCompBySeqUseCase,
-    private val returnCompUseCase: ReturnCompUseCase
+    private val returnCompUseCase: ReturnCompUseCase,
+    private val submitCompUseCase: SubmitCompUseCase,
+    private val completeCompUseCase: CompleteCompUseCase
     ) : ViewModel() {
 
     private val _successResultEvent = SingleLiveEvent<String>()
@@ -38,6 +41,7 @@ class ComplaintsViewModel @Inject constructor(
                 when(it){
                     is ResultType.Success -> {
                         _complaints.value = it.data.data
+                        Log.d(TAG, "getComplaints: ${it.data.data}")
                     }
                     else -> Log.d(TAG, "getComplaints: ${it}")
                 }
@@ -56,5 +60,31 @@ class ComplaintsViewModel @Inject constructor(
             }
         }
     }
+
+    fun submitComplaints(submitComplaints: Complaints){
+        viewModelScope.launch(Dispatchers.IO){
+            submitCompUseCase.excute(submitComplaints).collectLatest {
+                when(it){
+                    is ResultType.Success -> { _successResultEvent.postValue(it.data.message) }
+                    is ResultType.Error -> { _successResultEvent.postValue(it.exception.message)}
+                    else -> { Log.d(TAG, "returnComplaints: ${it}")}
+                }
+            }
+        }
+    }
+
+    fun completeComplaints(completeComplaints: Complaints){
+        viewModelScope.launch(Dispatchers.IO){
+            completeCompUseCase.excute(completeComplaints).collectLatest {
+                when(it){
+                    is ResultType.Success -> { successResultEvent.postValue(it.data.message) }
+                    is ResultType.Error -> {successResultEvent.postValue(it.exception.message) }
+                    else -> {
+                        Log.d(TAG, "completeComplaints: ${it}")}
+                }
+            }
+        }
+    }
+
 
 }

@@ -1,13 +1,18 @@
 package com.d201.eyeson.view.angel.main
 
+import android.Manifest
+import android.content.Intent
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.d201.data.utils.SELELCT_ALL
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelMainBinding
 import com.d201.eyeson.view.angel.ComplaintsClickListener
+import com.d201.eyeson.view.angel.help.AngelHelpActivity
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -26,6 +31,20 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         initView()
         initViewModelCallback()
         angelMainViewModel.getAngelInfo()
+        actionCheck()
+    }
+
+    private fun actionCheck() {
+        val bundle = requireActivity().intent.extras
+        var action = ""
+
+        if(bundle != null && bundle.containsKey("action")){
+            action = bundle.getString("action")!!
+        }
+
+        if(action.isNotEmpty() && action == "AngelHelp"){
+            checkPermission()
+        }
     }
 
     private fun initListener() {
@@ -71,4 +90,24 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         }
     }
 
+    private fun checkPermission() {
+        val permissionListener = object : PermissionListener {
+            override fun onPermissionGranted() {
+                startActivity(Intent(requireActivity(), AngelHelpActivity::class.java))
+            }
+
+            override fun onPermissionDenied(deniedPermissions: List<String>) {
+                showToast("권한을 허용해야 이용이 가능합니다.")
+            }
+
+        }
+        TedPermission.create()
+            .setPermissionListener(permissionListener)
+            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
+            .setPermissions(
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO
+            )
+            .check()
+    }
 }

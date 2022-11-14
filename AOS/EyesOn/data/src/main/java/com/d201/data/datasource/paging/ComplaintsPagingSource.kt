@@ -3,19 +3,13 @@ package com.d201.data.datasource.paging
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.d201.data.api.ComplaintsApi
 import com.d201.data.datasource.ComplaintsRemoteDataSource
 import com.d201.data.mapper.mapperToListComplaints
 import com.d201.data.model.response.ComplaintsResponse
-import com.d201.data.utils.COMPLAINTS_PAGE_SIZE
-import com.d201.data.utils.SELELCT_ALL
-import com.d201.data.utils.SELELCT_BY_ANGEL
-import com.d201.data.utils.SELELCT_BY_BLIND
 import com.d201.domain.base.BaseResponse
 import com.d201.domain.model.Complaints
 import com.d201.domain.model.PagingResult
 import kotlinx.coroutines.flow.collectLatest
-import javax.inject.Inject
 
 private const val TAG ="ComplaintsPagingSource"
 class ComplaintsPagingSource(private val complaintsRemoteDataSource: ComplaintsRemoteDataSource, private val flag: Int): PagingSource<Int, Complaints>() {
@@ -24,7 +18,7 @@ class ComplaintsPagingSource(private val complaintsRemoteDataSource: ComplaintsR
         return try {
             val page = params.key ?: 0
             var response : BaseResponse<PagingResult<ComplaintsResponse>>? = null
-            complaintsRemoteDataSource.selectComplaintsList(flag, page, size = 1).collectLatest {
+            complaintsRemoteDataSource.selectComplaintsList(flag, page, size = 5).collectLatest {
                 response = it
             }
             if(response!!.data.totalPage > 0){

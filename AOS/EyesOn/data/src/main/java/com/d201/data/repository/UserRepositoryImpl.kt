@@ -12,7 +12,6 @@ import com.d201.domain.model.Login
 import com.d201.domain.repository.UserRepository
 import com.d201.domain.utils.ResultType
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton

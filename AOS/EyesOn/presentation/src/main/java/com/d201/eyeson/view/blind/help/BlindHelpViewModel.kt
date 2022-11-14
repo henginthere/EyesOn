@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.d201.domain.usecase.help.RequestHelpUseCase
 import com.d201.domain.utils.ResultType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

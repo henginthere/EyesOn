@@ -3,12 +3,10 @@ package com.d201.eyeson.view.angel.complaints
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentComplaintsListBinding
 import com.d201.eyeson.view.angel.ComplaintsClickListener
-import com.d201.eyeson.view.angel.main.AngelMainFragmentDirections
 import com.d201.eyeson.view.angel.main.AngelMainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job

@@ -40,15 +40,25 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private val loginViewModel: LoginViewModel by viewModels()
     private lateinit var mGoogleSignInClient: GoogleSignInClient
 
+    private var action = ""
     private var fcmToken = ""
 
     override fun init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel("EyesOn_id", "EyesOn")
         }
+        initAction()
         initFirebaseTokenListener()
         initListener()
         initViewModelCallback()
+    }
+
+    private fun initAction() {
+        val intent = requireActivity().intent
+        val extra = intent.extras
+        if(intent != null && extra?.getString("action") != null){
+            action = extra.getString("action")!!
+        }
     }
 
     private fun initFirebaseTokenListener() {
@@ -79,14 +89,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                                     putExtra("Gender", it.gender)
                                 }
                             )
-                            ANGEL -> startActivity(
-                                Intent(
-                                    requireContext(),
-                                    AngelMainActivity::class.java
-                                ).apply {
+                            ANGEL -> {
+                                val angelMainIntent = Intent(requireContext(),AngelMainActivity::class.java).apply {
                                     putExtra("Gender", it.gender)
+                                    putExtra("action", this@LoginFragment.action)
                                 }
-                            )
+
+                                startActivity(angelMainIntent)
+                            }
                             else -> return@collectLatest
                         }
                         requireActivity().finish()
@@ -113,6 +123,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
+
 
     private fun initAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
