@@ -1,17 +1,21 @@
 package com.backend.eyeson.service;
 
 import com.backend.eyeson.dto.*;
+import com.backend.eyeson.entity.AngelInfoEntity;
 import com.backend.eyeson.entity.CompStateEnum;
 import com.backend.eyeson.entity.ComplaintsEntity;
 import com.backend.eyeson.entity.UserEntity;
+import com.backend.eyeson.mapper.AngelMapper;
 import com.backend.eyeson.mapper.CompMapper;
 import com.backend.eyeson.mapper.StructMapper;
 import com.backend.eyeson.mapper.UserMapper;
+import com.backend.eyeson.repository.AngelRepository;
 import com.backend.eyeson.repository.CompRepository;
 import com.backend.eyeson.repository.UserRepository;
 import com.backend.eyeson.util.ReverseGeocoding;
 import com.backend.eyeson.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +51,7 @@ public class CompService {
     @Autowired
     private final CompRepository compRepository;
     private final UserRepository userRepository;
+    private final AngelRepository angelRepository;
     private final FileService fileService;
     private final FirebaseService firebaseService;
 
@@ -165,6 +170,10 @@ public class CompService {
 
         compRepository.save(complaintsEntity);
         ResponseCompDto result = CompMapper.INSTANCE.toDto(complaintsEntity);
+
+        AngelInfoEntity angelInfoEntity = angelRepository.findByUserEntity_UserSeq(getLoginUser().getUserSeq()).get();
+        angelInfoEntity.setAngelCompCnt(angelInfoEntity.getAngelHelpCnt() + 1);
+        angelRepository.save(angelInfoEntity);
 
         //알림보내기
         String title = "신청한 민원이 처리완료됐습니다.";
