@@ -71,9 +71,7 @@ class ComplaintsSubmitRecordFragment : BaseFragment<FragmentComplaintsSubmitReco
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
                     val comp = Complaints("${location.longitude},${location.latitude}",viewModel.recordText.value)
-                    Log.d(TAG, "initView: $comp")
                     val c = comp.mapperToComplaintsRequest()
-                    Log.d(TAG, "initView: $c ${c.address} ${c.content} ${c.seq}")
                     viewModel.submitComplaints(comp, args.image)
                 }
             }

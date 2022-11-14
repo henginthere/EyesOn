@@ -79,6 +79,17 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/btn_record"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:lottie_rawRes="@raw/animation_record"
+            app:lottie_loop="true"/>
+
+
 
 
 
