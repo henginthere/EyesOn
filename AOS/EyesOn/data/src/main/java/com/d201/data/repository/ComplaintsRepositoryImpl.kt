@@ -86,7 +86,7 @@ class ComplaintsRepositoryImpl @Inject constructor(
 
     override fun selectComplaintsList(flag: Int) =
         Pager(
-            config = PagingConfig(pageSize = 5, maxSize = 15, enablePlaceholders = false),
+            config = PagingConfig(pageSize = 1, maxSize = 15, enablePlaceholders = false),
             pagingSourceFactory = { ComplaintsPagingSource(complaintsRemoteDataSource, flag) }
         ).flow
 

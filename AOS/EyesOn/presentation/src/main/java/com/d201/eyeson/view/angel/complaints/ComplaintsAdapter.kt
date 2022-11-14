@@ -1,6 +1,7 @@
 package com.d201.eyeson.view.angel.complaints
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -15,8 +16,25 @@ class ComplaintsAdapter(private val complaintsClickListener: ComplaintsClickList
     inner class ViewHolder(private val binding: ItemComplaintsVerticalBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(complaints: Complaints) {
             binding.apply {
-                data = complaints
                 layoutComplaints.setOnClickListener { complaintsClickListener.onClick(complaints.seq) }
+                tvComplaintsStatusProcessing.visibility = View.GONE
+                tvComplaintsStatusReturn.visibility = View.GONE
+                tvComplaintsStatusDone.visibility = View.GONE
+                when(complaints.state){
+                    "PROGRESS_IN" -> {
+                        tvComplaintsStatusProcessing.visibility = View.VISIBLE
+                    }
+                    "RETURN" -> {
+                        tvComplaintsStatusReturn.visibility = View.VISIBLE
+                    }
+                    "REGIST_DONE" -> {
+                        tvComplaintsStatusProcessing.visibility = View.VISIBLE
+                    }
+                    "PROGRESS_DONE" -> {
+                        tvComplaintsStatusDone.visibility = View.VISIBLE
+                    }
+                }
+                data = complaints
             }
         }
     }

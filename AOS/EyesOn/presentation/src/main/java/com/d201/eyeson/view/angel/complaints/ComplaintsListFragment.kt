@@ -7,8 +7,10 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentComplaintsListBinding
 import com.d201.eyeson.view.angel.ComplaintsClickListener
-import com.d201.eyeson.view.angel.main.AngelMainViewModel
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -17,7 +19,7 @@ private const val TAG = "ComplaintsListFragment"
 @AndroidEntryPoint
 class ComplaintsListFragment : BaseFragment<FragmentComplaintsListBinding>(R.layout.fragment_complaints_list) {
 
-    private val angelMainViewModel: AngelMainViewModel by viewModels()
+    private val viewModel: ComplaintsListViewModel by viewModels()
     private lateinit var job: Job
     private lateinit var complaintsAdapter: ComplaintsAdapter
 
@@ -32,15 +34,35 @@ class ComplaintsListFragment : BaseFragment<FragmentComplaintsListBinding>(R.lay
             rvComplaintsList.apply {
                 adapter = complaintsAdapter
             }
+            tabAngelComplaintsList.addOnTabSelectedListener(object : OnTabSelectedListener{
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    when(tab!!.position){
+                        0 -> viewModel.getComplaintsList()
+                        1 -> viewModel.getComplaintsByAngelList()
+
+                    }
+                }
+                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    when(tab!!.position){
+                        0 -> viewModel.getComplaintsList()
+                        1 -> viewModel.getComplaintsByAngelList()
+                    }
+                }
+            })
         }
     }
 
     private fun initViewModel() {
         job = lifecycleScope.launch{
-            angelMainViewModel.getComplaintsList().collectLatest {
-                complaintsAdapter.submitData(it)
+            viewModel.complaintsList.collectLatest {
+                if(it != null) {
+                    complaintsAdapter.submitData(it)
+                }
             }
         }
+        viewModel.getComplaintsList()
+
 
     }
 

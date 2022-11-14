@@ -18,7 +18,7 @@ class ComplaintsPagingSource(private val complaintsRemoteDataSource: ComplaintsR
         return try {
             val page = params.key ?: 0
             var response : BaseResponse<PagingResult<ComplaintsResponse>>? = null
-            complaintsRemoteDataSource.selectComplaintsList(flag, page, size = 5).collectLatest {
+            complaintsRemoteDataSource.selectComplaintsList(flag, page, size = 15).collectLatest {
                 response = it
             }
             if(response!!.data.totalPage > 0){
