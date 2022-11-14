@@ -7,22 +7,22 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.d201.domain.model.Noti
 import com.d201.eyeson.databinding.ItemNotificationBinding
+import com.d201.eyeson.view.blind.NotiClickListener
 
 private const val TAG = "BlindNotiAdapter"
 
-class BlindNotiAdapter : ListAdapter<Noti, BlindNotiAdapter.ViewHolder>(diffUtil) {
+class BlindNotiAdapter(private val notiClickListener : NotiClickListener) : ListAdapter<Noti, BlindNotiAdapter.ViewHolder>(diffUtil) {
     inner class ViewHolder(private val binding: ItemNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(noti: Noti) {
-            binding.apply {
-                this.noti = noti
-            }
+        fun bind(noti: Noti, position: Int) {
+            binding.noti = noti
+            binding.ivDelete.setOnClickListener { notiClickListener.onClick(noti, position) }
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         if (item != null) {
-            holder.bind(item)
+            holder.bind(item, position)
         }
     }
 

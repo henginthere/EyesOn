@@ -176,6 +176,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                 return
             }
             binding.inputImageView.bringToFront()
+            binding.frameLayoutCamera.bringToFront()
         }
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
@@ -353,6 +354,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
 
                     requireActivity().runOnUiThread {
                         binding.inputImageView.setImageBitmap(imgWithResult)
+                       // binding.frameLayoutCamera.bringToFront()
                     }
 
                     currentFrameImage.close()

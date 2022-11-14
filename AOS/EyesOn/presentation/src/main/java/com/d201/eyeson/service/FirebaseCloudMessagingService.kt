@@ -13,6 +13,11 @@ import com.d201.eyeson.view.blind.BlindMainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.ServiceScoped
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 import javax.inject.Inject
 
 private const val TAG = "FirebaseCloudMessagingService"
@@ -28,18 +33,6 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
         Log.d(TAG, "onNewToken: ${token}")
     }
 
-    override fun handleIntent(intent: Intent?) {
-        super.handleIntent(intent)
-        val bundle = intent?.extras
-
-        if(bundle != null){
-            for (key in bundle.keySet()){
-                val value = bundle.get(key)
-                Log.d(TAG, "handleIntent: ${key} | ${value}")
-            }
-        }
-    }
-
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
@@ -48,7 +41,7 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
             val messageContent = it!!.body
             val action = message.data["action"]
 
-            notiRepository.insertNoti(Noti(0, messageTitle!!, messageContent!!))
+            Log.d(TAG, "onMessageReceived: title : ${it.title} | body : ${it.body}")
 
              val builder = when(action){
                 "AngelHelp" -> {
@@ -70,6 +63,13 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
                         .setAutoCancel(true)
                 }
                 else -> {
+                    val now = Date(System.currentTimeMillis())
+                    val formatter = SimpleDateFormat("MM/dd hh:mm", Locale.KOREA)
+
+                    val notiTime = formatter.format(now)
+
+                    notiRepository.insertNoti(Noti(0, messageTitle!!, messageContent!!, notiTime))
+
                     val mainIntent = Intent(this, BlindMainActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                         putExtra("action", action)

@@ -61,6 +61,7 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
 
         binding.tvRecognizeText.bringToFront()
         binding.frameLayoutCamera.bringToFront()
+        binding.constraintLayoutTop.bringToFront()
         //binding.tvTitle.bringToFront()
         //binding.btnBack.bringToFront()
     }
