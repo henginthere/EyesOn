@@ -31,6 +31,7 @@ import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.support.image.TensorImage
@@ -94,8 +95,13 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
         lifecycleScope.launch(Dispatchers.IO){
             viewModel.recordText.collectLatest {
                 if(it.isNotEmpty()){
-                    objectToFind = it
-                    speakOut("${it}를 찾습니다")
+                    when(it){
+                        "마우스" -> objectToFind = "mouse"
+                        "키보드" -> objectToFind = "keyboard"
+                        "컵" -> objectToFind = "cup"
+                    }
+
+                    speakOut("${objectToFind}를 찾습니다")
                 }
             }
         }
@@ -124,6 +130,12 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
             btnBack.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener { requireActivity().finish() }
+            }
+            btnRecord.setOnClickListener {
+                objectToFind = ""
+                tts.stop()
+                speakOut("찾을 물건을 말해주세요")
+                viewModel.startRecord(requireContext())
             }
         }
     }
@@ -367,7 +379,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                     // 가로 모드
                     val depthImage = frame.acquireDepthImage16Bits()
 
-                    CoroutineScope(Dispatchers.Default).launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
                         val detectionResults = runObjectDetection(bitmap!!)
 
@@ -377,7 +389,6 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
 
                         requireActivity().runOnUiThread {
                             binding.inputImageView.setImageBitmap(imgWithResult)
-                            // binding.frameLayoutCamera.bringToFront()
                         }
 
                         currentFrameImage.close()
@@ -440,19 +451,20 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
         }
 
         for(text in resultText){
-            Log.d(TAG, "runObjectDetection: ${text}")
-        }
+            if(text == objectToFind){
+                // Step 4: 탐지 결과를 파싱하여 보여줍니다.
+                return results.map {
+                    // Get the top-1 category and craft the display text
+                    val category = it.categories.first()
+                    val text = category.label
+                    val score = category.score.times(100).toInt()
 
-        // Step 4: 탐지 결과를 파싱하여 보여줍니다.
-        return results.map {
-            // Get the top-1 category and craft the display text
-            val category = it.categories.first()
-            val text = category.label
-            val score = category.score.times(100).toInt()
-
-            // 탐지 결과를 표시할 데이터 객체 생성
-            DetectionResult(it.boundingBox, text, score)
+                    // 탐지 결과를 표시할 데이터 객체 생성
+                    DetectionResult(it.boundingBox, text, score)
+                }
+            }
         }
+        return listOf()
     }
 
     private fun drawDetectionResult(
