@@ -10,6 +10,7 @@ import com.d201.arcore.depth.common.TEXT_RECOGNITION_KOREAN
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentScanTextBinding
+import com.d201.eyeson.util.accessibilityEvent
 import com.d201.mlkit.CameraSource
 import com.d201.mlkit.CameraSourcePreview
 import com.d201.mlkit.GraphicOverlay
@@ -48,7 +49,10 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
 
     private fun initView(){
         binding.apply {
-            btnBack.setOnClickListener { requireActivity().finish() }
+            btnBack.apply{
+                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                setOnClickListener { requireActivity().finish() }
+            }
             layoutContent.setOnClickListener {
                 tts.stop()
                 lastSpeakTime -= 3000

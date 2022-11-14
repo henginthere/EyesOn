@@ -6,7 +6,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="24dp"
         android:background="@drawable/gradient_user"
         tools:context=".view.login.join.SelectGenderFragment">
 
@@ -21,6 +20,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:text="성별을 선택해 주세요"
+            android:fontFamily="@font/noto_sans_medium"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -33,6 +33,7 @@
             android:layout_marginHorizontal="40dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/shape_button_corner"
+            android:backgroundTint="@color/angel_blue"
             android:textColor="@color/black"
             android:textSize="36sp"
             android:textStyle="bold"
@@ -49,6 +50,7 @@
             android:layout_marginHorizontal="40dp"
             android:layout_marginBottom="160dp"
             android:background="@drawable/shape_button_corner"
+            android:backgroundTint="@color/angel_red"
             android:textColor="@color/black"
             android:textSize="36sp"
             android:textStyle="bold"
