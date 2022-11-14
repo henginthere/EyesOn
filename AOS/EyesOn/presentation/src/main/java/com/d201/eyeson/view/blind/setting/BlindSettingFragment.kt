@@ -8,6 +8,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentBlindSettingBinding
 import com.d201.eyeson.util.JWT
+import com.d201.eyeson.util.accessibilityEvent
 import com.d201.eyeson.view.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -33,9 +34,13 @@ class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.
 
     private fun initListener() {
         binding.apply {
-
-            btnBack.setOnClickListener{
-                findNavController().popBackStack()
+            btnBack.apply{
+                setOnClickListener{
+                    accessibilityDelegate = accessibilityEvent(this, requireContext())
+                    setOnClickListener {
+                        findNavController().popBackStack()
+                    }
+                }
             }
 
             btnReplayGuide.setOnClickListener {  }
