@@ -8,4 +8,6 @@ interface NotiRepository{
     fun insertNoti(noti: Noti)
 
     fun selectAllNotis() : Flow<ResultType<List<Noti>>>
+
+    fun deleteNoti(noti: Noti)
 }
