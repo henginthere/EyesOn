@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".view.blind.help.BlindHelpActivity">
 
+    <!--전체 뷰-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--상대방 화면-->
         <RelativeLayout
             android:id="@+id/views_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -35,25 +36,61 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_loading"
+        <!--입장 전 화면-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_loading"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/angel_blue"
-            android:gravity="center"
-            android:text="연결 대기중"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/views_container"
-            app:layout_constraintEnd_toEndOf="@id/views_container"
-            app:layout_constraintStart_toStartOf="@id/views_container"
-            app:layout_constraintTop_toTopOf="@id/views_container" />
+            android:contentDescription="@string/lottie_loading"
+            app:layout_constraintBottom_toTopOf="@id/cl_menu"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_top">
 
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lav_loading"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:focusable="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/angel_loading" />
+
+            <ImageView
+                android:id="@+id/iv_angel"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="16dp"
+                android:focusable="false"
+                android:src="@drawable/ic_angel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:focusable="false"
+                android:gravity="center"
+                android:text="엔젤과 연결 중입니다. \n잠시만 기다려주세요"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--내 화면-->
         <FrameLayout
             android:id="@+id/peer_container"
-            android:layout_width="155dp"
-            android:layout_height="200dp"
+            android:layout_width="115dp"
+            android:layout_height="140dp"
             android:layout_margin="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -65,165 +102,148 @@
                 android:visibility="visible" />
         </FrameLayout>
 
-        <Button
-            android:id="@+id/btn_change_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="카메라 전환"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/btn_disconnect"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/btn_disconnect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="종료"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
+        <!--타이틀-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_top"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="200dp"
+            android:background="@drawable/gradient_camera"
             android:contentDescription="@string/frag_blind_help"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <FrameLayout
-                android:id="@+id/frame_layout_camera"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@drawable/gradient_camera"
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:focusable="false"
+                android:fontFamily="@font/noto_sans_bold"
+                android:gravity="center"
+                android:importantForAccessibility="no"
+                android:includeFontPadding="false"
+                android:text="엔젤과 연결"
+                android:textColor="@color/white"
+                android:textSize="32sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraint_layout_top"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp">
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:layout_marginTop="16dp"
-                        android:contentDescription="@string/frag_complaints_submit"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <TextView
-                            android:id="@+id/tv_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:contentDescription="@string/frag_complaints"
-                            android:fontFamily="@font/noto_sans_bold"
-                            android:gravity="center"
-                            android:importantForAccessibility="no"
-                            android:includeFontPadding="false"
-                            android:text="엔젤과 연결"
-                            android:textColor="@color/white"
-                            android:textSize="32sp" />
-
-                        <ImageButton
-                            android:id="@+id/btn_back"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="3dp"
-                            android:background="@color/none"
-                            android:contentDescription="@string/button_back"
-                            android:src="@drawable/btn_back"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                    </FrameLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </FrameLayout>
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!--메뉴-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_menu"
             android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:paddingHorizontal="24dp"
+            android:layout_height="96dp"
+            android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="160dp"
+            android:background="@drawable/shape_trans"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <FrameLayout
-                android:id="@+id/fl_menu"
+
+            <ImageView
+                android:id="@+id/iv_disconnect"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/shape_button_circle_red"
+                android:src="@drawable/btn_call_end"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!--카메라 전환-->
+            <ImageView
+                android:id="@+id/iv_camera_switch"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="24dp"
+                android:src="@drawable/btn_camera_switch"
+                app:layout_constraintEnd_toStartOf="@id/iv_disconnect"
+                app:layout_constraintTop_toTopOf="@id/iv_disconnect" />
+
+            <TextView
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@drawable/shape_trans"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="전환"
+                android:textColor="@color/white"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@id/cl_menu"
-                app:layout_constraintEnd_toEndOf="@id/cl_menu"
-                app:layout_constraintStart_toStartOf="@id/cl_menu"
-                app:layout_constraintTop_toTopOf="@id/cl_menu" >
+                app:layout_constraintEnd_toEndOf="@id/iv_camera_switch"
+                app:layout_constraintStart_toStartOf="@id/iv_camera_switch"
+                app:layout_constraintTop_toBottomOf="@id/iv_camera_switch" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            <!--카메라 ON OFF-->
+            <ImageView
+                android:id="@+id/iv_camera"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="24dp"
+                android:src="@drawable/btn_camera"
+                app:layout_constraintEnd_toStartOf="@id/iv_camera_switch"
+                app:layout_constraintTop_toTopOf="@id/iv_disconnect" />
 
-                    <ImageView
-                        android:id="@+id/iv_disconnect"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/btn_call_end"
-                        android:background="@drawable/shape_button_circle_red"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="카메라"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/cl_menu"
+                app:layout_constraintEnd_toEndOf="@id/iv_camera"
+                app:layout_constraintStart_toStartOf="@id/iv_camera"
+                app:layout_constraintTop_toBottomOf="@id/iv_camera" />
 
-                    <ImageView
-                        android:id="@+id/iv_camera_switch"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="24dp"
-                        android:src="@drawable/btn_camera_switch"
-                        app:layout_constraintTop_toTopOf="@id/iv_disconnect"
-                        app:layout_constraintEnd_toStartOf="@id/iv_disconnect"/>
+            <!--소리 출력 모드-->
+            <ImageView
+                android:id="@+id/iv_sound_mode"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="24dp"
+                android:src="@drawable/btn_speaker_on"
+                app:layout_constraintStart_toEndOf="@id/iv_disconnect"
+                app:layout_constraintTop_toTopOf="@id/iv_disconnect" />
 
-                    <ImageView
-                        android:id="@+id/iv_camera_on_off"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="24dp"
-                        android:src="@drawable/btn_camera"
-                        app:layout_constraintTop_toTopOf="@id/iv_disconnect"
-                        app:layout_constraintEnd_toStartOf="@id/iv_camera_switch"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="스피커"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/cl_menu"
+                app:layout_constraintEnd_toEndOf="@id/iv_sound_mode"
+                app:layout_constraintStart_toStartOf="@id/iv_sound_mode"
+                app:layout_constraintTop_toBottomOf="@id/iv_sound_mode" />
 
-                    <ImageView
-                        android:id="@+id/iv_sound_mode"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="24dp"
-                        android:src="@drawable/btn_campaign"
-                        app:layout_constraintTop_toTopOf="@id/iv_disconnect"
-                        app:layout_constraintStart_toEndOf="@id/iv_disconnect"/>
+            <!--마이크-->
+            <ImageView
+                android:id="@+id/iv_mic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="24dp"
+                android:src="@drawable/btn_mic"
+                app:layout_constraintStart_toEndOf="@id/iv_sound_mode"
+                app:layout_constraintTop_toTopOf="@id/iv_disconnect" />
 
-                    <ImageView
-                        android:id="@+id/iv_mic"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="24dp"
-                        android:src="@drawable/btn_mic"
-                        app:layout_constraintTop_toTopOf="@id/iv_disconnect"
-                        app:layout_constraintStart_toEndOf="@id/iv_sound_mode"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </FrameLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="마이크"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/cl_menu"
+                app:layout_constraintEnd_toEndOf="@id/iv_mic"
+                app:layout_constraintStart_toStartOf="@id/iv_mic"
+                app:layout_constraintTop_toBottomOf="@id/iv_mic" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
