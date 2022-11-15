@@ -27,14 +27,13 @@ import com.google.ar.core.exceptions.*
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.Executor
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -75,12 +74,35 @@ class ScanObstacleFragment :
 
     private var lastSpeakTime = 0L
 
+    private lateinit var detector: ObjectDetector
+    private lateinit var gpuThread: Executor
     override fun init() {
-        checkPermission()
         initView()
+        checkPermission()
+        gpuThread = newSingleThreadContext("plz").executor
+        gpuThread.execute {
+            Log.d(TAG, "initView: ${Thread.currentThread()}")
+            val baseOptions = BaseOptions.builder().useGpu().build()
+//            .setBaseOptions(baseOptions)
+
+            // Step 2: Initialize the detector object
+            val options = ObjectDetector.ObjectDetectorOptions.builder()
+                .setMaxResults(MAX_RESULT)
+                .setBaseOptions(baseOptions)
+                .setScoreThreshold(SCORE_THRESHOLD)
+                .build()
+            detector = ObjectDetector.createFromFileAndOptions(
+                requireContext(),
+                "custom_models/${MODEL_FILE}",
+                options
+            )
+        }
     }
 
     private fun initView() {
+        CoroutineScope(newSingleThreadContext("plz")).launch(CoroutineName("plz")) {
+
+        }
         displayRotationHelper = DisplayRotationHelper(requireContext())
         trackingStateHelper = TrackingStateHelper(requireActivity())
         depthTexture = DepthTextureHandler(requireContext())
@@ -345,22 +367,40 @@ class ScanObstacleFragment :
                 // 가로 모드
                 val depthImage = frame.acquireDepthImage16Bits()
 
-                CoroutineScope(Dispatchers.Default).launch {
-                    // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
+                gpuThread.execute {
+                                        // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
                     val detectionResults = runObjectDetection(bitmap!!)
 
                     // 비트맵에 검출 결과를 그려서 보여줍니다
                     // 음성으로 출력
                     val imgWithResult = drawDetectionResult(bitmap, depthImage, detectionResults)
-
+                    Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
                     requireActivity().runOnUiThread {
+                        Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
                         binding.inputImageView.setImageBitmap(imgWithResult)
                     }
-
                     currentFrameImage.close()
                     depthImage.close()
                     bitmap.recycle()
                 }
+
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
+//                    // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
+//                    val detectionResults = runObjectDetection(bitmap!!)
+//
+//                    // 비트맵에 검출 결과를 그려서 보여줍니다
+//                    // 음성으로 출력
+//                    val imgWithResult = drawDetectionResult(bitmap, depthImage, detectionResults)
+//
+//                    requireActivity().runOnUiThread {
+//                        binding.inputImageView.setImageBitmap(imgWithResult)
+//                    }
+//
+//                    currentFrameImage.close()
+//                    depthImage.close()
+//                    bitmap.recycle()
+//                }
             } catch (e: Exception) {
                 Log.d(TAG, "onDrawFrame: ${e.message}")
             }
@@ -407,26 +447,16 @@ class ScanObstacleFragment :
                 t
             )
         }
+
+
     }
 
     private fun runObjectDetection(bitmap: Bitmap): List<DetectionResult> {
         // Step 1: Create TFLite's TensorImage object
         val image = TensorImage.fromBitmap(bitmap)
 
-        val baseOptions = BaseOptions.builder().useGpu().build()
-//            .setBaseOptions(baseOptions)
 
-        // Step 2: Initialize the detector object
-        val options = ObjectDetector.ObjectDetectorOptions.builder()
-            .setMaxResults(MAX_RESULT)
-            .setScoreThreshold(SCORE_THRESHOLD)
-            .build()
-        val detector = ObjectDetector.createFromFileAndOptions(
-            requireContext(),
-            "custom_models/${MODEL_FILE}",
-            options
-        )
-
+        Log.d(TAG, "runObjectDetection: ${Thread.currentThread()}")
         // Step 3:주어진 이미지를 감지기에 공급
         val results = detector.detect(image)
 
