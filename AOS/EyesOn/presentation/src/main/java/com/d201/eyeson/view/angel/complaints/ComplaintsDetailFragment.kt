@@ -1,5 +1,6 @@
 package com.d201.eyeson.view.angel.complaints
 
+import android.Manifest
 import android.content.*
 import android.content.Context.CLIPBOARD_SERVICE
 import android.graphics.Bitmap
@@ -22,8 +23,11 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentComplaintsDetailBinding
 import com.d201.eyeson.util.S3_URL
+import com.d201.eyeson.view.angel.RegisterComplaintsListener
 import com.d201.eyeson.view.angel.ReturnConfirmListener
 import com.d201.eyeson.view.angel.TitleConfirmListener
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -67,10 +71,7 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
             vm = complaintsViewModel
 
             btnGoSafetyEReport.setOnClickListener {
-                copyComplaints()
-                imageUrlToCacheFileAsync(requireContext(), complaints.image!!)
-                openWebPage()
-                btnRegisterTitle.visibility = View.VISIBLE
+                checkPermission()
             }
             btnReject.setOnClickListener {
                 ReturnComplaintsDialog(complaintsViewModel.complaints.value!!, returnConfirmListener).let {
@@ -81,6 +82,9 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
                 RegisterTitleDialog(complaintsViewModel.complaints.value!!, titleConfirmListener).let{
                     it.show(parentFragmentManager, "RegisterTitle")
                 }
+            }
+            btnComplaintsDone.setOnClickListener {
+                RegisterComplaintsResultDialog(complaintsViewModel.complaints.value!!, registerComplaintsListener).show(parentFragmentManager, "RegisterResult")
             }
             btnBack.setOnClickListener {
                 findNavController().popBackStack()
@@ -140,5 +144,34 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
         override fun onClick(complaints: Complaints) {
             complaintsViewModel.submitComplaints(complaints)
         }
+    }
+
+    private val registerComplaintsListener = object : RegisterComplaintsListener {
+        override fun onClick(complaints: Complaints) {
+            complaintsViewModel.completeComplaints(complaints)
+        }
+    }
+
+    private fun checkPermission() {
+        val permissionListener = object : PermissionListener {
+            override fun onPermissionGranted() {
+                copyComplaints()
+                imageUrlToCacheFileAsync(requireContext(), complaints.image!!)
+                openWebPage()
+                binding.btnRegisterTitle.visibility = View.VISIBLE
+            }
+
+            override fun onPermissionDenied(deniedPermissions: List<String>) {
+                showToast("권한을 허용해야 이용이 가능합니다.")
+            }
+
+        }
+        TedPermission.create()
+            .setPermissionListener(permissionListener)
+            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
+            .setPermissions(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            .check()
     }
 }

@@ -14,6 +14,10 @@ interface TitleConfirmListener{
     fun onClick(complaints: Complaints)
 }
 
+interface RegisterComplaintsListener{
+    fun onClick(complaints: Complaints)
+}
+
 interface ComplaintsImageClickListener{
     fun onClick(image: String)
 }

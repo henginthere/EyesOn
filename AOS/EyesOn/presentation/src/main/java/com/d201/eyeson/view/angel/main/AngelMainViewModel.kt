@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.d201.domain.model.AngelInfo
 import com.d201.domain.model.Complaints
 import com.d201.domain.usecase.complaints.SelectAllCompUseCase
+import com.d201.domain.usecase.complaints.SelectCompByAngelUseCase
 import com.d201.domain.usecase.user.GetAngelInfoUseCase
 import com.d201.domain.utils.ResultType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +22,11 @@ import javax.inject.Inject
 
 private const val TAG ="AngelMainViewModel"
 @HiltViewModel
-class AngelMainViewModel @Inject constructor(private val angelInfoUseCase: GetAngelInfoUseCase, private val selectAllCompUseCase: SelectAllCompUseCase): ViewModel(){
+class AngelMainViewModel @Inject constructor(
+    private val angelInfoUseCase: GetAngelInfoUseCase,
+    private val selectCompByAngelUseCase: SelectCompByAngelUseCase,
+    private val selectAllCompUseCase: SelectAllCompUseCase
+    ): ViewModel(){
 
     private val _angelInfo: MutableStateFlow<AngelInfo?> = MutableStateFlow(null)
     val angelInfoData get() = _angelInfo.asStateFlow()
@@ -37,8 +43,23 @@ class AngelMainViewModel @Inject constructor(private val angelInfoUseCase: GetAn
         }
     }
 
-    fun getComplaintsList(): Flow<PagingData<Complaints>> {
-        return selectAllCompUseCase.excute()
+    private val _complaintsList: MutableStateFlow<PagingData<Complaints>?> = MutableStateFlow(null)
+    val complaintsList get() = _complaintsList.asStateFlow()
+
+    fun getComplaintsByAngelList(){
+        viewModelScope.launch(Dispatchers.IO){
+            selectCompByAngelUseCase.excute().cachedIn(this).collectLatest {
+                _complaintsList.value = it
+            }
+        }
+    }
+
+    fun getComplaintsList(){
+        viewModelScope.launch(Dispatchers.IO){
+            selectAllCompUseCase.excute().cachedIn(this).collectLatest {
+                _complaintsList.value = it
+            }
+        }
     }
 
 //    private val _complaintsList: MutableStateFlow<Int> = MutableStateFlow(0)

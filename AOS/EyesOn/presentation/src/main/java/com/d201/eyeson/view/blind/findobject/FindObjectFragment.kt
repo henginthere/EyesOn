@@ -11,6 +11,7 @@ import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.get
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.d201.depth.depth.DepthTextureHandler
@@ -243,6 +244,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
             displayRotationHelper!!.onPause()
             surfaceView.onPause()
             session!!.pause()
+            tts.stop()
         }
     }
 
@@ -534,10 +536,40 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                     box.centerY(), pen
                 )
 
+                var location = ""
+                val w = bitmap.width / 3
+                val h = bitmap.height / 3
+
+                if(centerX in 0.. w){
+                    if(centerY in 0.. h){
+                        location = "11시 방향"
+                    }else if(centerY in h .. h * 2){
+                        location = "9시 방향"
+                    }else if(centerY in h * 2 .. bitmap.height){
+                        location = "7시 방향"
+                    }
+                }else if(centerX in w .. w * 2){
+                    if(centerY in 0.. h){
+                        location = "12시 방향"
+                    }else if(centerY in h .. h * 2){
+                        location = "중앙"
+                    }else if(centerY in h * 2 .. bitmap.height){
+                        location = "6시 방향"
+                    }
+                }else if(centerX in w * 2 .. bitmap.width){
+                    if(centerY in 0.. h){
+                        location = "1시 방향"
+                    }else if(centerY in h .. h * 2){
+                        location = "3시 방향"
+                    }else if(centerY in h * 2 .. bitmap.height){
+                        location = "5시 방향"
+                    }
+                }
+
                 // 음성 출력
                 if (System.currentTimeMillis() - lastSpeakTime > INTERVAL) {
                     lastSpeakTime = System.currentTimeMillis()
-                    speakOut("전방 ${convertedDistance}에 ${it.text}가 있습니다")
+                    speakOut("$location ${convertedDistance}에 ${it.text}가 있습니다")
                 }
             }
         }

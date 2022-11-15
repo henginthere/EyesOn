@@ -80,10 +80,12 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         }
     }
 
-    private fun initViewModelCallback() {
-        job = lifecycleScope.launch {
-            angelMainViewModel.getComplaintsList().collectLatest {
-                angelMainAdapter.submitData(it)
+    private fun initViewModelCallback(){
+        job = lifecycleScope.launch { 
+            angelMainViewModel.complaintsList.collectLatest {
+                if(it != null) {
+                    angelMainAdapter.submitData(it)
+                }
             }
         }
         lifecycleScope.launch {
@@ -92,7 +94,7 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
                 }
             }
         }
-
+        angelMainViewModel.getComplaintsList()
 
     }
 

@@ -56,7 +56,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun initAction() {
         val intent = requireActivity().intent
         val extra = intent.extras
-        if(intent != null && extra != null){
+        if(intent != null && extra?.getString("action") != null){
             action = extra.getString("action")!!
         }
     }
