@@ -7,9 +7,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/gradient_user"
-        >
+        android:layout_height="match_parent">
+
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/frame_blind_help"
@@ -17,9 +16,11 @@
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph_blind_help"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="32dp"
-            />
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

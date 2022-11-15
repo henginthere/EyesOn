@@ -25,9 +25,20 @@
             android:text="@{noti.title}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_delete"
             app:layout_constraintBottom_toTopOf="@id/tv_body"
             tools:text="민원 처리 완료"/>
+
+        <ImageView
+            android:id="@+id/iv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/btn_cancel_yellow"
+            app:layout_constraintTop_toTopOf="@id/tv_title"
+            app:layout_constraintStart_toEndOf="@id/tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"/>
 
         <TextView
             android:id="@+id/tv_body"
@@ -41,9 +52,23 @@
             android:text="@{noti.body}"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_date"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="신청한 민원처리가 완료되었습니다." />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textSize="16sp"
+            android:textColor="@color/blind_yellow"
+            android:text="@{noti.date}"
+            app:layout_constraintTop_toTopOf="@id/tv_body"
+            app:layout_constraintStart_toEndOf="@id/tv_body"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_body"
+            tools:text="11/14 09:54"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

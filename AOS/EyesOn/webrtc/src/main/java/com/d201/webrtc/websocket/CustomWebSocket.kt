@@ -14,6 +14,7 @@ import com.d201.webrtc.openvidu.LocalParticipant
 import com.d201.webrtc.openvidu.Participant
 import com.d201.webrtc.openvidu.RemoteParticipant
 import com.d201.webrtc.openvidu.Session
+import com.d201.webrtc.utils.ParticipantListener
 import com.d201.webrtc.utils.createRemoteParticipantVideo
 import com.d201.webrtc.utils.createRemoteScreenVideo
 import com.d201.webrtc.utils.resizeView
@@ -42,7 +43,7 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompatActivity?) :
+class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompatActivity?, participantListener: ParticipantListener?) :
     AsyncTask<AppCompatActivity?, Void?, Void?>(), WebSocketListener {
 
     private val TAG = "CustomWebSocketListener"
@@ -78,6 +79,7 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
     private lateinit var websocket: WebSocket
     private var websocketCancelled = false
     private var num = 0
+    private var participantListener = participantListener
 
     @Throws(Exception::class)
     override fun onTextMessage(websocket: WebSocket, text: String) {
@@ -92,6 +94,7 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
 
     @Throws(JSONException::class)
     private fun handleServerResponse(json: JSONObject) {
+        Log.d(TAG, "handleServerResponse: $json")
         val rpcId = json.getInt(JsonConstants.ID)
         val result = JSONObject(json.getString(JsonConstants.RESULT))
         if (result.has("value") && result.getString("value") == "pong") {
@@ -262,13 +265,23 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
         if (!json.has(JsonConstants.PARAMS)) {
             Log.e(TAG, "No params $json")
         } else {
+            Log.d(TAG, "handleServerEvent: $json")
             val params = JSONObject(json.getString(JsonConstants.PARAMS))
             val method = json.getString(JsonConstants.METHOD)
             when (method) {
                 JsonConstants.ICE_CANDIDATE -> iceCandidateEvent(params)
-                JsonConstants.PARTICIPANT_JOINED -> participantJoinedEvent(params)
+                JsonConstants.PARTICIPANT_JOINED -> {
+                    if(participantListener != null){
+                        participantListener!!.join()
+                    }
+                    participantJoinedEvent(params)}
                 JsonConstants.PARTICIPANT_PUBLISHED -> participantPublishedEvent(params)
-                JsonConstants.PARTICIPANT_LEFT -> participantLeftEvent(params)
+                JsonConstants.PARTICIPANT_LEFT -> {
+                    if(participantListener != null){
+                        participantListener!!.left()
+                    }
+                    participantLeftEvent(params)
+                }
                 else -> throw JSONException("Unknown method: $method")
             }
         }

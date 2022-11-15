@@ -29,7 +29,7 @@ public class FcmMessage {
     @NoArgsConstructor
     @Getter
     public static class Data{
-        private String click_action;
+        private String action;
     }
 
     @Builder
@@ -40,6 +40,5 @@ public class FcmMessage {
         private String title;
         private String body;
         private String image;
-//        private String click_action;
     }
 }

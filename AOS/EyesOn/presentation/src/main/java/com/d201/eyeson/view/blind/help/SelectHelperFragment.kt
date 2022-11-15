@@ -1,7 +1,6 @@
 package com.d201.eyeson.view.blind.help
 
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.d201.eyeson.R

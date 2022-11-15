@@ -1,14 +1,11 @@
 package com.d201.eyeson.view.angel.complaints
 
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.d201.domain.model.Complaints
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseDialogFragment
 import com.d201.eyeson.databinding.DialogReturnComplaintsBinding
 import com.d201.eyeson.view.angel.ReturnConfirmListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 private const val TAG = "ReturnComplaintsDialog"
 @AndroidEntryPoint

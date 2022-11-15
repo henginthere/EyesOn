@@ -18,6 +18,7 @@ package com.google.mlkit.vision.demo.kotlin.textdetector
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.d201.mlkit.GraphicOverlay
 import com.d201.mlkit.PreferenceUtils
 import com.d201.mlkit.VisionProcessorBase
@@ -39,6 +40,8 @@ class TextRecognitionProcessor(
   private val showLanguageTag: Boolean = PreferenceUtils.showLanguageTag(context)
   private val showConfidence: Boolean = PreferenceUtils.shouldShowTextConfidence(context)
 
+  val textLiveData = MutableLiveData("")
+
   override fun stop() {
     super.stop()
     textRecognizer.close()
@@ -49,8 +52,7 @@ class TextRecognitionProcessor(
   }
 
   override fun onSuccess(text: Text, graphicOverlay: GraphicOverlay) {
-    Log.d(TAG, "On-device Text detection successful")
-    logExtrasForTesting(text)
+    textLiveData.postValue(text.text)
     graphicOverlay.add(
       TextGraphic(
         graphicOverlay,

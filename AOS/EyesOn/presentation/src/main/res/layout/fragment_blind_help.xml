@@ -37,6 +37,19 @@
 
         </RelativeLayout>
 
+        <TextView
+            android:id="@+id/tv_loading"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/angel_blue"
+            android:gravity="center"
+            android:text="연결 대기중"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="@id/views_container"
+            app:layout_constraintStart_toStartOf="@id/views_container"
+            app:layout_constraintEnd_toEndOf="@id/views_container"
+            app:layout_constraintBottom_toBottomOf="@id/views_container"/>
 
         <FrameLayout
             android:id="@+id/peer_container"

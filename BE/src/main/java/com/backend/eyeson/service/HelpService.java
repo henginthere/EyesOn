@@ -41,28 +41,31 @@ public class HelpService {
         int hour = LocalDateTime.now().getHour();
 
         String day = String.valueOf(LocalDate.now().getDayOfWeek());
-        int days = 0;
+        int todayNum = 0;
         switch (day){
             case "MONDAY":
-                days = 1;
+                todayNum = 32;
                 break;
             case "TUESDAY":
-                days = 2;
+                todayNum = 16;
                 break;
             case "WEDNESDAY":
-                days = 3;
+                todayNum = 8;
                 break;
             case "THURSDAY":
-                days = 4;
+                todayNum = 4;
                 break;
             case "FRIDAY":
-                days = 5;
+                todayNum = 2;
                 break;
             case "SATURDAY":
-                days = 6;
+                todayNum = 1;
                 break;
             case "SUNDAY":
-                days = 0;
+                todayNum = 64;
+                break;
+            default:
+                todayNum = 0;
                 break;
         }
 
@@ -73,43 +76,29 @@ public class HelpService {
         for(int i=0; i<angelList.get().size();i++){
             AngelInfoEntity angelInfoEntity = angelList.get().get(i);
 
-            // 2진수로 바꾸기
+            // 사용자 시간 받아오기
             int angelDay = angelInfoEntity.getAngelAlarmDay();
-            String binaryDay = Integer.toBinaryString(angelDay);
 
-            String res = "";
-            if(binaryDay.length() !=7){
-                for(int z=0; z<7-binaryDay.length(); z++){
-                    res+="0";
-                }
-                for(int j=0;j<binaryDay.length();j++){
-                    res += binaryDay.charAt(j);
-                }
-            }else{
-                res = binaryDay;
-            }
-            
-            char[] chArray = res.toCharArray();
-            
             // 요일에 있고 시간안에 있으면 배열에 추가
-            if(chArray[days] == '1' && (angelInfoEntity.getAngelAlarmStart()) <= hour && angelInfoEntity.getAngelAlarmEnd() >= hour){
+            if(angelInfoEntity.isAngelActive() && ((todayNum & angelDay) != 0) && (angelInfoEntity.getAngelAlarmStart()) <= hour && angelInfoEntity.getAngelAlarmEnd() >= hour){
                 canAngelList.add(angelInfoEntity);
             }
         }
-
-
 
         // 알림 제목
         String title = "도움 요청이 도착했어요 !";
 
         // 알림 내용
         String body = "사용자를 따뜻한 마음으로 도와주세요 !";
+        
+        // click_action 처리
+        String action = "AngelHelp";
 
         // 알림 보내기
         for(int i=0; i<canAngelList.size(); i++){
             // fcm 토큰
             String fcmToken = canAngelList.get(i).getUserEntity().getUserFcm();
-            firebaseService.sendMessageTo(fcmToken, title, body);
+            firebaseService.sendMessageTo(fcmToken, title, body, action);
         }
 
         if(canAngelList.size() == 0) return false;

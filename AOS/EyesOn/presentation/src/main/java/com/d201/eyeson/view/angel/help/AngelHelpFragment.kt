@@ -1,22 +1,21 @@
 package com.d201.eyeson.view.angel.help
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.content.Context
+import android.media.AudioManager
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelHelpBinding
 import com.d201.eyeson.util.OPENVIDU_URL
+import com.d201.eyeson.view.angel.AngelHelpDisconnectListener
 import com.d201.webrtc.openvidu.LocalParticipant
 import com.d201.webrtc.openvidu.Session
 import com.d201.webrtc.utils.CustomHttpClient
+import com.d201.webrtc.utils.ParticipantListener
 import com.d201.webrtc.websocket.CustomWebSocket
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -42,13 +41,16 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     lateinit var httpClient: CustomHttpClient
 
     private lateinit var session: Session
+    private lateinit var audioManager: AudioManager
+    private lateinit var participantListener: ParticipantListener
+    private lateinit var angelHelpDisconnectListener: AngelHelpDisconnectListener
 
     override fun init() {
+
+        initWebRTC()
         initListener()
         initViewModelCallback()
-        checkPermission()
         getSessionId()
-        initWebRTC()
     }
 
     override fun onStop() {
@@ -58,12 +60,27 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
 
 
     private fun initListener() {
+        angelHelpDisconnectListener = object : AngelHelpDisconnectListener {
+            override fun onClick() {
+                requireActivity().finish()
+            }
+        }
+
+        participantListener = object : ParticipantListener {
+            override fun join() {
+                Log.d(TAG, "join: 감지됨")
+            }
+
+            override fun left() {
+                AngelHelpDisconnectDialog(angelHelpDisconnectListener).show(parentFragmentManager, "AngelHelpDisconnectDialog")
+                Log.d(TAG, "left: 감지됨")
+            }
+        }
         binding.apply {
             btnChangeCamera.setOnClickListener {
                 session.getLocalParticipant()!!.switchCamera()
             }
             btnDisconnect.setOnClickListener {
-                leaveSession()
                 requireActivity().finish()
             }
         }
@@ -72,7 +89,9 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     private fun initViewModelCallback() {
         lifecycleScope.launch {
             angelHelpViewModel.sessionId.collectLatest {
-                getToken("${angelHelpViewModel.sessionId.value}-session")
+                if(it > 0) getToken("${angelHelpViewModel.sessionId.value}-session")
+                Log.d(TAG, "initViewModelCallback: $it-session")
+
             }
         }
     }
@@ -82,9 +101,9 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     }
 
     private fun initWebRTC() {
-        if (allPermissionsGranted()) {
-            initSurfaceView()
-        }
+        initSurfaceView()
+        audioManager = requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.mode = AudioManager.MODE_NORMAL
     }
 
     private fun getToken(sessionId: String) {
@@ -169,16 +188,11 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     }
 
     private fun initSurfaceView() {
-        if (allPermissionsGranted()) {
-            val rootEgleBase = EglBase.create()
-            binding.localGlSurfaceView.init(rootEgleBase.eglBaseContext, null)
-            binding.localGlSurfaceView.setMirror(true)
-            binding.localGlSurfaceView.setEnableHardwareScaler(true)
-            binding.localGlSurfaceView.setZOrderMediaOverlay(true)
-        } else {
-            showToast("권한을 허용해야 이용이 가능합니다.")
-            requireActivity().finish()
-        }
+        val rootEgleBase = EglBase.create()
+        binding.localGlSurfaceView.init(rootEgleBase.eglBaseContext, null)
+        binding.localGlSurfaceView.setMirror(false)
+        binding.localGlSurfaceView.setEnableHardwareScaler(true)
+        binding.localGlSurfaceView.setZOrderMediaOverlay(true)
     }
 
     private fun getTokenSuccess(token: String, sessionId: String) {
@@ -199,7 +213,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
                 requireActivity().applicationContext,
                 binding.localGlSurfaceView
             )
-        localParticipant.startCamera()
+        localParticipant.startCamera("Angel")
 
         // Initialize and connect the websocket to OpenVidu Server
         startWebSocket()
@@ -216,13 +230,16 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
 
     private fun startWebSocket() {
         val webSocket =
-            CustomWebSocket(session, OPENVIDU_URL, requireActivity() as AppCompatActivity)
+            CustomWebSocket(session, OPENVIDU_URL, requireActivity() as AppCompatActivity, participantListener)
         webSocket.execute()
         session.setWebSocket(webSocket)
     }
 
     private fun leaveSession() {
-        this.session.leaveSession()
+        angelHelpViewModel.disconnectHelp()
+        if(::session.isInitialized) {
+            this.session.leaveSession()
+        }
         this.httpClient.dispose()
         requireActivity().runOnUiThread {
             binding.localGlSurfaceView.clearImage()
@@ -231,37 +248,5 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
             binding.remoteGlSurfaceView.release()
         }
 
-    }
-
-    private fun allPermissionsGranted() = mutableListOf(
-        Manifest.permission.CAMERA,
-        Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.MODIFY_AUDIO_SETTINGS
-    ).toTypedArray().all {
-        ContextCompat.checkSelfPermission(
-            requireActivity().baseContext, it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun checkPermission() {
-        val permissionListener = object : PermissionListener {
-            override fun onPermissionGranted() {
-            }
-
-            override fun onPermissionDenied(deniedPermissions: List<String>) {
-                showToast("권한을 허용해야 이용이 가능합니다.")
-                requireActivity().finish()
-            }
-
-        }
-        TedPermission.create()
-            .setPermissionListener(permissionListener)
-            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
-            .setPermissions(
-                Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS
-            )
-            .check()
     }
 }

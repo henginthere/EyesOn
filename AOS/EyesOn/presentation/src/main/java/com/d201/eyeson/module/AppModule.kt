@@ -24,7 +24,6 @@ class AppModule {
     fun provideSharedPreferences(app: Application) =
         app.getSharedPreferences("app_preference", Context.MODE_PRIVATE)!!
 
-    @Singleton
     @Provides
     fun provideHttpClient() = CustomHttpClient(
         OPENVIDU_URL, "Basic " + Base64.encodeToString(

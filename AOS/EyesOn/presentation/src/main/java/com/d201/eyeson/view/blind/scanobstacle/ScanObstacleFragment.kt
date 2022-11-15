@@ -1,55 +1,49 @@
 package com.d201.eyeson.view.blind.scanobstacle
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.*
+import android.media.Image
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import com.d201.arcore.depth.common.OBJECT_DETECTION_CUSTOM
-import com.d201.arcore.depth.common.getDeviceSize
+import androidx.core.content.ContextCompat
 import com.d201.depth.depth.DepthTextureHandler
-import com.d201.depth.depth.common.*
+import com.d201.depth.depth.common.CameraPermissionHelper
+import com.d201.depth.depth.common.DisplayRotationHelper
+import com.d201.depth.depth.common.SnackbarHelper
+import com.d201.depth.depth.common.TrackingStateHelper
 import com.d201.depth.depth.rendering.BackgroundRenderer
 import com.d201.depth.depth.rendering.ObjectRenderer
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentScanObstacleBinding
-import com.d201.eyeson.util.RotateBitmap
-import com.d201.eyeson.util.imageToBitmap
+import com.d201.eyeson.util.*
 import com.google.ar.core.*
-import com.google.ar.core.Camera
-import com.google.ar.core.Point
 import com.google.ar.core.exceptions.*
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.tensorflow.lite.support.image.TensorImage
+import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.Executor
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "ScanObstacleFragment"
-private const val MAX_FONT_SIZE = 96F
+
 @AndroidEntryPoint
-class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.fragment_scan_obstacle),
+class ScanObstacleFragment :
+    BaseFragment<FragmentScanObstacleBinding>(R.layout.fragment_scan_obstacle),
     GLSurfaceView.Renderer, TextToSpeech.OnInitListener {
     private lateinit var tts: TextToSpeech
-
-    private var frameWidth = 0
-    private  var frameHeight = 0
-
-    private var processing = false
-    private var pending = false
-    private var lastFrame: Bitmap? = null
-
-    private var selectedModel = OBJECT_DETECTION_CUSTOM
 
     private lateinit var surfaceView: GLSurfaceView
 
@@ -60,7 +54,6 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
     private val messageSnackbarHelper: SnackbarHelper = SnackbarHelper()
     private var displayRotationHelper: DisplayRotationHelper? = null
     private lateinit var trackingStateHelper: TrackingStateHelper
-    private var tapHelper: TapHelper? = null
 
     private lateinit var depthTexture: DepthTextureHandler
     private val backgroundRenderer: BackgroundRenderer = BackgroundRenderer()
@@ -79,57 +72,71 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     private var showDepthMap = false
 
+    private var lastSpeakTime = 0L
 
+    private lateinit var detector: ObjectDetector
+    private lateinit var gpuThread: Executor
     override fun init() {
         initView()
+        checkPermission()
+        gpuThread = newSingleThreadContext("plz").executor
+        gpuThread.execute {
+            Log.d(TAG, "initView: ${Thread.currentThread()}")
+            val baseOptions = BaseOptions.builder().useGpu().build()
+//            .setBaseOptions(baseOptions)
+
+            // Step 2: Initialize the detector object
+            val options = ObjectDetector.ObjectDetectorOptions.builder()
+                .setMaxResults(MAX_RESULT)
+                .setBaseOptions(baseOptions)
+                .setScoreThreshold(SCORE_THRESHOLD)
+                .build()
+            detector = ObjectDetector.createFromFileAndOptions(
+                requireContext(),
+                "custom_models/${MODEL_FILE}",
+                options
+            )
+        }
     }
 
-    private fun initView(){
-        surfaceView = binding.surfaceview
-        displayRotationHelper = DisplayRotationHelper( /*context=*/requireContext())
+    private fun initView() {
+        CoroutineScope(newSingleThreadContext("plz")).launch(CoroutineName("plz")) {
+
+        }
+        displayRotationHelper = DisplayRotationHelper(requireContext())
         trackingStateHelper = TrackingStateHelper(requireActivity())
         depthTexture = DepthTextureHandler(requireContext())
 
         // Set up renderer.
+        surfaceView = binding.surfaceview
         surfaceView.setPreserveEGLContextOnPause(true)
         surfaceView.setEGLContextClientVersion(2)
         surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0) // Alpha used for plane blending.
-
         surfaceView.setRenderer(this)
         surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY)
         surfaceView.setWillNotDraw(false)
 
         installRequested = false
 
-        val toggleDepthButton = binding.toggleDepthButton
-        toggleDepthButton.setOnClickListener { view: View? ->
-            if (isDepthSupported) {
-                showDepthMap = !showDepthMap
-                toggleDepthButton.setText(if (showDepthMap) "숨기기" else "보기")
-            } else {
-                showDepthMap = false
-                toggleDepthButton.setText("깊이이용불가")
+        tts = TextToSpeech(requireContext(), this)
+        lastSpeakTime = System.currentTimeMillis()
+
+        binding.apply {
+            btnBack.apply {
+                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                setOnClickListener { requireActivity().finish() }
             }
         }
-
-        tts = TextToSpeech(requireContext(), this)
     }
 
     override fun onResume() {
         super.onResume()
-        val params: ViewGroup.LayoutParams? = requireActivity().window.attributes
-        val deviceWidth = getDeviceSize(requireActivity()).x
-        val deviceHeight = deviceWidth / 3 * 4
-        params?.width = deviceWidth
-        params?.height = deviceHeight
-        binding.surfaceview.layoutParams = params
-        binding.surfaceview.layout(0, 0,deviceWidth,deviceHeight)
-
         if (session == null) {
             var exception: Exception? = null
             var message: String? = null
             try {
-                when (ArCoreApk.getInstance().requestInstall(requireActivity(), !installRequested)) {
+                when (ArCoreApk.getInstance()
+                    .requestInstall(requireActivity(), !installRequested)) {
                     ArCoreApk.InstallStatus.INSTALL_REQUESTED -> {
                         installRequested = true
                         return
@@ -150,6 +157,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                 val filter = CameraConfigFilter(session)
                 filter.targetFps = EnumSet.of(CameraConfig.TargetFps.TARGET_FPS_30) // 30프레임
                 filter.depthSensorUsage.add(CameraConfig.DepthSensorUsage.REQUIRE_AND_USE) // tof 사용
+//                filter.depthSensorUsage.add(CameraConfig.DepthSensorUsage.DO_NOT_USE) // tof 미사용
                 val cameraConfigList = session!!.getSupportedCameraConfigs(filter)
                 session!!.cameraConfig = cameraConfigList[1]
                 isDepthSupported = session!!.isDepthModeSupported(Config.DepthMode.AUTOMATIC)
@@ -189,18 +197,20 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                 )
                 return
             }
-            binding.tvDistance.bringToFront()
             binding.inputImageView.bringToFront()
-
         }
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
+        // 순서가 중요 onPause()의 반대로 적용
         try {
             session!!.resume()
             session!!.pause()
             session!!.resume()
         } catch (e: CameraNotAvailableException) {
-            messageSnackbarHelper.showError(requireActivity(), "Camera not available. Try restarting the app.")
+            messageSnackbarHelper.showError(
+                requireActivity(),
+                "Camera not available. Try restarting the app."
+            )
             session = null
             return
         }
@@ -215,11 +225,20 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // Note that the order matters - GLSurfaceView is paused first so that it does not try
             // to query the session. If Session is paused before GLSurfaceView, GLSurfaceView may
             // still call session.update() and get a SessionPausedException.
+            // GLSurfaceView가 먼저 일시중지되어 세션 쿼리를 시도하지 않음
+            // 세션이 GLSurfaceView 전에 일시중지된 경우 GLSurfaceView는 여전히 세션 호출 가능
+            // update() 및 SessionPausedException을 가져옴
             displayRotationHelper!!.onPause()
             surfaceView.onPause()
             session!!.pause()
             tts.stop()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tts.stop()
+
     }
 
     override fun onRequestPermissionsResult(
@@ -245,15 +264,19 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
 
         // Prepare the rendering objects. This involves reading shaders, so may throw an IOException.
+        // 렌더링 개체 준비
         try {
             // The depth texture is used for object occlusion and rendering.
             depthTexture.createOnGlThread()
 
             // Create the texture and pass it to ARCore session to be filled during update().
+            // 텍스처 생성 후 update() 중에 채워질 ARCore 세션에 전달
             backgroundRenderer.createOnGlThread( /*context=*/requireContext())
-            backgroundRenderer.createDepthShaders( /*context=*/requireContext(), depthTexture.getDepthTexture())
-            virtualObject.createOnGlThread( /*context=*/requireContext(), "models/andy.obj", "models/andy.png")
-            virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f)
+            backgroundRenderer.createDepthShaders( /*context=*/requireContext(),
+                depthTexture.getDepthTexture()
+            )
+            //virtualObject.createOnGlThread( /*context=*/requireContext(), "models/andy.obj", "models/andy.png")
+            //virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f)
         } catch (e: IOException) {
             Log.e(
                 TAG,
@@ -270,6 +293,7 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
 
     override fun onDrawFrame(gl: GL10?) {
         // Clear screen to notify driver it should not load any pixels from previous frame.
+        // 이전 프레임에서 픽셀을 로드하지 않도록 드라이버에 알리기 위해 화면을 지운다.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         if (session == null) {
             return
@@ -287,15 +311,16 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             val camera = frame.camera
 
             // Retrieves the latest depth image for this frame.
+            // 이 프레임의 최신 깊이 이미지를 검색
             if (isDepthSupported) {
                 depthTexture.update(frame)
-//                Log.d(TAG, "onDrawFrame: ${getMillimetersDepth(frame.acquireDepthImage16Bits(), 0, 0)}")
+                // Log.d(TAG, "isDepthSupported ${camera.pose.xAxis}  ${camera.pose.yAxis}  ${camera.pose.zAxis}")
             }
-
             // Handle one tap per frame.
 //            handleTap(frame, camera)
 
             // If frame is ready, render camera preview image to the GL surface.
+            // 프레임이 준비되면 카메라 미리보기 이미지를 GL 표면으로 렌더링
             backgroundRenderer.draw(frame)
             if (showDepthMap) {
                 backgroundRenderer.drawDepth(frame)
@@ -307,7 +332,8 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             // If not tracking, don't draw 3D objects, show tracking failure reason instead.
             if (camera.trackingState == TrackingState.PAUSED) {
                 messageSnackbarHelper.showMessage(
-                    requireActivity(), TrackingStateHelper(requireActivity()).getTrackingFailureReasonString(camera)!!
+                    requireActivity(),
+                    TrackingStateHelper(requireActivity()).getTrackingFailureReasonString(camera)!!
                 )
                 return
             }
@@ -327,35 +353,70 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
             frame.lightEstimate.getColorCorrection(colorCorrectionRgba, 0)
 
             try {
-                val image = frame.acquireCameraImage()
-                val bitmap = RotateBitmap(imageToBitmap(image, requireContext())!!, 90f)
+                // 현재 프레임에 해당하는 이미지 객체를 가져옴
+                // 가로 모드
+                val currentFrameImage = frame.acquireCameraImage()
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    runObjectDetection(bitmap!!)
-                    image.close()
+                // 객체를 탐지할 비트맵
+                // 세로 모드
+                val bitmap = RotateBitmap(
+                    imageToBitmap(currentFrameImage, requireContext())!!,
+                    90f
+                )
+                // Depth 비트맵
+                // 가로 모드
+                val depthImage = frame.acquireDepthImage16Bits()
+
+                gpuThread.execute {
+                                        // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
+                    val detectionResults = runObjectDetection(bitmap!!)
+
+                    // 비트맵에 검출 결과를 그려서 보여줍니다
+                    // 음성으로 출력
+                    val imgWithResult = drawDetectionResult(bitmap, depthImage, detectionResults)
+                    Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
+                    requireActivity().runOnUiThread {
+                        Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
+                        binding.inputImageView.setImageBitmap(imgWithResult)
+                    }
+                    currentFrameImage.close()
+                    depthImage.close()
                     bitmap.recycle()
                 }
 
-            }catch (e: Exception){
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
+//                    // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
+//                    val detectionResults = runObjectDetection(bitmap!!)
+//
+//                    // 비트맵에 검출 결과를 그려서 보여줍니다
+//                    // 음성으로 출력
+//                    val imgWithResult = drawDetectionResult(bitmap, depthImage, detectionResults)
+//
+//                    requireActivity().runOnUiThread {
+//                        binding.inputImageView.setImageBitmap(imgWithResult)
+//                    }
+//
+//                    currentFrameImage.close()
+//                    depthImage.close()
+//                    bitmap.recycle()
+//                }
+            } catch (e: Exception) {
                 Log.d(TAG, "onDrawFrame: ${e.message}")
             }
 
-
-
             // No tracking error at this point. Inform user of what to do based on if planes are found.
-            var messageToShow = ""
-            messageToShow = if (hasTrackingPlane()) {
-                PLANES_FOUND_MESSAGE
-            } else {
-                SEARCHING_PLANE_MESSAGE
-            }
-            if (!isDepthSupported) {
-                messageToShow += """
-                
-                ${DEPTH_NOT_AVAILABLE_MESSAGE}
-                """.trimIndent()
-            }
-            messageSnackbarHelper.showMessage(requireActivity(), messageToShow)
+//            var messageToShow = if (!hasTrackingPlane()) {
+//                SEARCHING_PLANE_MESSAGE
+//            } else {
+//                ""
+//            }
+//            if (!isDepthSupported) {
+//                messageToShow += """
+//                ${DEPTH_NOT_AVAILABLE_MESSAGE}
+//                """.trimIndent()
+//            }
+//            messageSnackbarHelper.showMessage(requireActivity(), messageToShow)
 
             // Visualize anchors created by touch.
             val scaleFactor = 1.0f
@@ -386,39 +447,153 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
                 t
             )
         }
+
+
     }
 
-    // Handle only one tap per frame, as taps are usually low frequency compared to frame rate.
-    private fun handleTap(frame: Frame, camera: Camera) {
-        val tap = tapHelper!!.poll()
-        if (tap != null && camera.trackingState == TrackingState.TRACKING) {
-            for (hit in frame.hitTest(tap)) {
-                // Check if any plane was hit, and if it was hit inside the plane polygon
-                val trackable = hit.trackable
-                // Creates an anchor if a plane or an oriented point was hit.
-                if ((trackable is Plane
-                            && trackable.isPoseInPolygon(hit.hitPose)
-                            && calculateDistanceToPlane(hit.hitPose, camera.pose) > 0)
-                    || (trackable is Point
-                            && trackable.orientationMode
-                            == Point.OrientationMode.ESTIMATED_SURFACE_NORMAL)
-                ) {
-                    // Hits are sorted by depth. Consider only closest hit on a plane or oriented point.
-                    // Cap the number of objects created. This avoids overloading both the
-                    // rendering system and ARCore.
-                    if (anchors.size >= 20) {
-                        anchors[0].detach()
-                        anchors.removeAt(0)
-                    }
+    private fun runObjectDetection(bitmap: Bitmap): List<DetectionResult> {
+        // Step 1: Create TFLite's TensorImage object
+        val image = TensorImage.fromBitmap(bitmap)
 
-                    // Adding an Anchor tells ARCore that it should track this position in
-                    // space. This anchor is created on the Plane to place the 3D model
-                    // in the correct position relative both to the world and to the plane.
-                    anchors.add(hit.createAnchor())
-                    break
+
+        Log.d(TAG, "runObjectDetection: ${Thread.currentThread()}")
+        // Step 3:주어진 이미지를 감지기에 공급
+        val results = detector.detect(image)
+
+        // Step 4: 탐지 결과를 파싱하여 보여줍니다.
+        return results.map {
+            // Get the top-1 category and craft the display text
+            val category = it.categories.first()
+            val text = category.label
+            val score = category.score.times(100).toInt()
+
+            // 탐지 결과를 표시할 데이터 객체 생성
+            DetectionResult(it.boundingBox, text, score)
+        }
+    }
+
+    private fun drawDetectionResult(
+        bitmap: Bitmap,
+        depthImage: Image,
+        detectionResults: List<DetectionResult>
+    ): Bitmap {
+        val outputBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(outputBitmap)
+        val pen = Paint()
+
+        detectionResults.forEach {
+            if (it.boundingBox.width() < 1000) {
+                // 박스 그리기
+                pen.color = Color.RED
+                pen.strokeWidth = 8F
+                pen.style = Paint.Style.STROKE
+                val box = it.boundingBox
+                canvas.drawRect(box, pen)
+
+                // 중점 그리기
+                canvas.drawCircle(it.boundingBox.centerX(), it.boundingBox.centerY(), 8F, pen)
+
+                // 객체 이름, 점수 그리기
+                pen.style = Paint.Style.FILL_AND_STROKE
+                pen.color = Color.YELLOW
+                pen.strokeWidth = 2F
+                pen.textAlign = Paint.Align.LEFT
+                pen.textSize = MAX_FONT_SIZE
+
+                val objectText = "${it.text} ${it.score}%"
+
+                val tagSize = Rect(0, 0, 0, 0)
+                pen.getTextBounds(objectText, 0, objectText.length, tagSize)
+                val fontSize: Float = pen.textSize * box.width() / tagSize.width()
+
+                // adjust the font size so texts are inside the bounding box
+                if (fontSize < pen.textSize) pen.textSize = fontSize
+
+                var margin = (box.width() - tagSize.width()) / 2.0F
+                if (margin < 0F) margin = 0F
+                canvas.drawText(
+                    objectText, box.left + margin,
+                    box.top + tagSize.height().times(1F), pen
+                )
+
+                // 객체와의 거리 그리기
+                val centerX = it.boundingBox.centerX().toInt()
+                val centerY = it.boundingBox.centerY().toInt()
+
+                val ratio = bitmap.height / depthImage.width
+                val depthX = centerY / ratio
+                val depthY = depthImage.height - (centerX / ratio)
+
+                val distance = depthTexture.getMillimetersDepth(depthImage, depthX, depthY)
+
+                var cm = (distance / 10.0).toFloat()
+                var convertedDistance = ""
+                if (cm > 100) {
+                    cm /= 100
+                    convertedDistance = "%.1f m".format(cm)
+                } else {
+                    convertedDistance = "${cm.toInt()} cm"
+                }
+                canvas.drawText(
+                    convertedDistance, box.centerX(),
+                    box.centerY(), pen
+                )
+
+                var location = ""
+                val w = bitmap.width / 3
+                val h = bitmap.height / 3
+
+                if(centerX in 0.. w){
+                    if(centerY in 0.. h){
+                        location = "11시 방향"
+                    }else if(centerY in h .. h * 2){
+                        location = "9시 방향"
+                    }else if(centerY in h * 2 .. bitmap.height){
+                        location = "7시 방향"
+                    }
+                }else if(centerX in w .. w * 2){
+                    if(centerY in 0.. h){
+                        location = "12시 방향"
+                    }else if(centerY in h .. h * 2){
+                        location = "중앙"
+                    }else if(centerY in h * 2 .. bitmap.height){
+                        location = "6시 방향"
+                    }
+                }else if(centerX in w * 2 .. bitmap.width){
+                    if(centerY in 0.. h){
+                        location = "1시 방향"
+                    }else if(centerY in h .. h * 2){
+                        location = "3시 방향"
+                    }else if(centerY in h * 2 .. bitmap.height){
+                        location = "5시 방향"
+                    }
+                }
+
+                // 음성 출력
+                if (System.currentTimeMillis() - lastSpeakTime > INTERVAL) {
+                    lastSpeakTime = System.currentTimeMillis()
+                    speakOut("$location ${convertedDistance}에 ${it.text}가 있습니다")
                 }
             }
         }
+        return outputBitmap
+    }
+
+    override fun onInit(p0: Int) {
+        if (p0 == TextToSpeech.SUCCESS) {
+            tts.setLanguage(Locale.KOREAN)
+            tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                override fun onStart(p0: String?) {}
+                override fun onDone(p0: String?) {}
+                override fun onError(p0: String?) {}
+            })
+        }
+    }
+
+    private fun speakOut(text: String) {
+        tts.setPitch(1f)
+        tts.setSpeechRate(3.5f)
+        tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
     }
 
     // Checks if we detected at least one plane.
@@ -443,110 +618,33 @@ class ScanObstacleFragment : BaseFragment<FragmentScanObstacleBinding>(R.layout.
         // Compute dot product of plane's normal with vector from camera to plane center.
         return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
     }
-
-    private fun runObjectDetection(bitmap: Bitmap) {
-        // Step 1: Create TFLite's TensorImage object
-        val image = TensorImage.fromBitmap(bitmap)
-
-        // Step 2: Initialize the detector object
-        val options = ObjectDetector.ObjectDetectorOptions.builder()
-            .setMaxResults(5)
-            .setScoreThreshold(0.3f)
-            .build()
-        val detector = ObjectDetector.createFromFileAndOptions(
-            requireContext(),
-            "custom_models/best-fp16.tflite",
-            options
-        )
-
-        // Step 3: Feed given image to the detector
-        val results = detector.detect(image)
-
-        // Step 4: Parse the detection result and show it
-        val resultToDisplay = results.map {
-            // Get the top-1 category and craft the display text
-            val category = it.categories.first()
-            val text = "${category.label}, ${category.score.times(100).toInt()}%"
-
-            // Create a data object to display the detection result
-            DetectionResult(it.boundingBox, text)
-        }
-        // Draw the detection result on the bitmap and show it.
-        val imgWithResult = drawDetectionResult(bitmap, resultToDisplay)
-        requireActivity().runOnUiThread {
-            binding.inputImageView.setImageBitmap(imgWithResult)
-        }
+    private fun allPermissionsGranted() = mutableListOf(
+        Manifest.permission.CAMERA
+    ).toTypedArray().all {
+        ContextCompat.checkSelfPermission(
+            requireActivity().baseContext, it
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun drawDetectionResult(
-        bitmap: Bitmap,
-        detectionResults: List<DetectionResult>
-    ): Bitmap {
-        val outputBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-        val canvas = Canvas(outputBitmap)
-        val pen = Paint()
-        pen.textAlign = Paint.Align.LEFT
+    private fun checkPermission() {
+        val permissionListener = object : PermissionListener {
+            override fun onPermissionGranted() {
+            }
 
-        detectionResults.forEach {
-            // draw bounding box
-            pen.color = Color.RED
-            pen.strokeWidth = 8F
-            pen.style = Paint.Style.STROKE
-            val box = it.boundingBox
-            canvas.drawRect(box, pen)
+            override fun onPermissionDenied(deniedPermissions: List<String>) {
+                showToast("권한을 허용해야 이용이 가능합니다.")
+                requireActivity().finish()
+            }
 
-
-            val tagSize = Rect(0, 0, 0, 0)
-
-            // calculate the right font size
-            pen.style = Paint.Style.FILL_AND_STROKE
-            pen.color = Color.YELLOW
-            pen.strokeWidth = 2F
-
-            pen.textSize = MAX_FONT_SIZE
-            pen.getTextBounds(it.text, 0, it.text.length, tagSize)
-            val fontSize: Float = pen.textSize * box.width() / tagSize.width()
-
-            // adjust the font size so texts are inside the bounding box
-            if (fontSize < pen.textSize) pen.textSize = fontSize
-
-            var margin = (box.width() - tagSize.width()) / 2.0F
-            if (margin < 0F) margin = 0F
-            canvas.drawText(
-                it.text, box.left + margin,
-                box.top + tagSize.height().times(1F), pen
+        }
+        TedPermission.create()
+            .setPermissionListener(permissionListener)
+            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
+            .setPermissions(
+                Manifest.permission.CAMERA
             )
-        }
-        return outputBitmap
-    }
-
-
-    fun onUpdateDepthImage(distance: Int) {
-        var cm = (distance / 10.0).toFloat()
-        if(cm > 100){
-            cm /= 100
-            binding.tvDistance.text = "%.1f m".format(cm)
-        }else{
-            binding.tvDistance.text = "${cm.toInt()} cm"
-        }
-    }
-
-    override fun onInit(p0: Int) {
-        if(p0 == TextToSpeech.SUCCESS) {
-            tts.setLanguage(Locale.KOREAN)
-            tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-                override fun onStart(p0: String?) {}
-                override fun onDone(p0: String?) {}
-                override fun onError(p0: String?) {}
-            })
-        }
-    }
-
-    fun speakOut(text: String) {
-        tts.setPitch(1f)
-        tts.setSpeechRate(1f)
-        tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
+            .check()
     }
 }
 
-data class DetectionResult(val boundingBox: RectF, val text: String)
+data class DetectionResult(val boundingBox: RectF, val text: String, val score: Int)

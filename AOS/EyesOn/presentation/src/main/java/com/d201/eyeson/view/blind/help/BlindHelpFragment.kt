@@ -1,24 +1,23 @@
 package com.d201.eyeson.view.blind.help
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
+import androidx.lifecycle.lifecycleScope
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentBlindHelpBinding
 import com.d201.eyeson.util.OPENVIDU_URL
+import com.d201.eyeson.view.angel.AngelHelpDisconnectListener
+import com.d201.eyeson.view.blind.BlindHelpDisconnectListener
 import com.d201.webrtc.openvidu.LocalParticipant
 import com.d201.webrtc.openvidu.Session
 import com.d201.webrtc.utils.CustomHttpClient
+import com.d201.webrtc.utils.ParticipantListener
 import com.d201.webrtc.websocket.CustomWebSocket
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -31,6 +30,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 private const val TAG = "BlindHelpFragment"
+
 @AndroidEntryPoint
 class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragment_blind_help) {
 
@@ -40,10 +40,11 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     lateinit var httpClient: CustomHttpClient
 
     private lateinit var session: Session
+    private lateinit var participantListener: ParticipantListener
+    private lateinit var blindHelpDisconnectListener: BlindHelpDisconnectListener
 
     override fun init() {
         initListener()
-        checkPermission()
         initWebRTC()
     }
 
@@ -54,23 +55,41 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
 
 
     private fun initListener() {
+        blindHelpDisconnectListener = object : BlindHelpDisconnectListener {
+            override fun onClick() {
+                requireActivity().finish()
+            }
+        }
+        participantListener = object : ParticipantListener {
+            override fun join() {
+                Log.d(TAG, "ParticipantListener : join: ")
+                lifecycleScope.launch {
+                    binding.viewsContainer.bringToFront()
+                    binding.tvLoading.visibility = View.GONE
+                }
+            }
+
+            override fun left() {
+                Log.d(TAG, "ParticipantListener : left: ")
+                BlindHelpDisconnectDialog(blindHelpDisconnectListener).show(
+                    parentFragmentManager,
+                    "BlindHelpDisconnectDialog"
+                )
+            }
+        }
         binding.apply {
             btnChangeCamera.setOnClickListener {
                 session.getLocalParticipant()!!.switchCamera()
             }
             btnDisconnect.setOnClickListener {
-                leaveSession()
                 requireActivity().finish()
             }
         }
     }
 
     private fun initWebRTC() {
-        if (allPermissionsGranted()) {
-            initSurfaceView()
-            getToken("${blindHelpViewModel.sessionId.value}-session")
-        }
-
+        initSurfaceView()
+        getToken("${blindHelpViewModel.sessionId.value}-session")
     }
 
     private fun getToken(sessionId: String) {
@@ -141,21 +160,22 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     }
 
     private fun initSurfaceView() {
-        if (allPermissionsGranted()) {
-            val rootEgleBase = EglBase.create()
-            binding.localGlSurfaceView.init(rootEgleBase.eglBaseContext, null)
-            binding.localGlSurfaceView.setMirror(true)
-            binding.localGlSurfaceView.setEnableHardwareScaler(true)
-            binding.localGlSurfaceView.setZOrderMediaOverlay(true)
-        } else {
-            showToast("권한을 허용해야 이용이 가능합니다.")
-            requireActivity().finish()
-        }
+        val rootEgleBase = EglBase.create()
+        binding.localGlSurfaceView.init(rootEgleBase.eglBaseContext, null)
+        binding.localGlSurfaceView.setMirror(false)
+        binding.localGlSurfaceView.setEnableHardwareScaler(true)
+        binding.localGlSurfaceView.setZOrderMediaOverlay(true)
+
     }
 
     private fun getTokenSuccess(token: String, sessionId: String) {
         // Initialize our session
-        session = Session(sessionId, token, requireActivity() as AppCompatActivity, binding.viewsContainer)
+        session = Session(
+            sessionId,
+            token,
+            requireActivity() as AppCompatActivity,
+            binding.viewsContainer
+        )
 
         // Initialize our local participant and start local camera
         val participantName: String = "customerName"
@@ -166,7 +186,7 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
                 requireActivity().applicationContext,
                 binding.localGlSurfaceView
             )
-        localParticipant.startCamera()
+        localParticipant.startCamera("Blind")
 
         // Initialize and connect the websocket to OpenVidu Server
         startWebSocket()
@@ -182,13 +202,19 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     }
 
     private fun startWebSocket() {
-        val webSocket = CustomWebSocket(session, OPENVIDU_URL, requireActivity() as AppCompatActivity)
+        val webSocket =
+            CustomWebSocket(
+                session,
+                OPENVIDU_URL,
+                requireActivity() as AppCompatActivity,
+                participantListener
+            )
         webSocket.execute()
         session.setWebSocket(webSocket)
     }
 
     private fun leaveSession() {
-        if(::session.isInitialized){
+        if (::session.isInitialized) {
             this.session.leaveSession()
         }
         this.httpClient.dispose()
@@ -201,35 +227,4 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
 
     }
 
-    private fun allPermissionsGranted() = mutableListOf(
-        Manifest.permission.CAMERA,
-        Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.MODIFY_AUDIO_SETTINGS
-    ).toTypedArray().all {
-        ContextCompat.checkSelfPermission(
-            requireActivity().baseContext, it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun checkPermission() {
-        val permissionListener = object : PermissionListener {
-            override fun onPermissionGranted() {
-            }
-
-            override fun onPermissionDenied(deniedPermissions: List<String>) {
-                showToast("권한을 허용해야 이용이 가능합니다.")
-                requireActivity().finish()
-            }
-
-        }
-        TedPermission.create()
-            .setPermissionListener(permissionListener)
-            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
-            .setPermissions(
-                Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS
-            )
-            .check()
-    }
 }

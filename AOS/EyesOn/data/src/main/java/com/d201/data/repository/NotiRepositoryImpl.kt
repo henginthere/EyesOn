@@ -1,5 +1,6 @@
 package com.d201.data.repository
 
+import android.util.Log
 import com.d201.data.datasource.NotiLocalDataSource
 import com.d201.data.mapper.mapperToNotiEntity
 import com.d201.data.mapper.mapperToNotis
@@ -21,11 +22,12 @@ class NotiRepositoryImpl @Inject constructor(
 
     override fun selectAllNotis(): Flow<ResultType<List<Noti>>> = flow {
         emit(ResultType.Loading)
-        notiLocalDataSource.selectAllNoti().collect{
-            when(it.size){
-                0 -> emit(ResultType.Empty)
-                else -> emit(ResultType.Success(it.mapperToNotis()))
-            }
+        notiLocalDataSource.selectAllNoti().collect {
+            emit(ResultType.Success(it.mapperToNotis()))
         }
+    }
+
+    override fun deleteNoti(noti: Noti) {
+        notiLocalDataSource.deleteNoti(noti.mapperToNotiEntity())
     }
 }

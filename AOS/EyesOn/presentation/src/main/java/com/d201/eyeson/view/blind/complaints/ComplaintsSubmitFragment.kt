@@ -49,7 +49,8 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
             btnSubmit.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
-                    if(!currentPhotoPath.isNullOrEmpty()){
+                    Log.d(TAG, "initView: $photoURI")
+                    if(photoURI != null){
                         findNavController().navigate(ComplaintsSubmitFragmentDirections.actionComplaintsSubmitFragmentToComplaintsSubmitRecordFragment(currentPhotoPath!!))
                     }else{
                         showToast("사진을 촬영해 주세요")
@@ -65,6 +66,8 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
                 binding.ivSelectedImage.setImageURI(it)
                 Log.d(TAG, "photoURI = ${photoURI!!.path}")
             }
+        }else{
+            photoURI = null
         }
     }
 

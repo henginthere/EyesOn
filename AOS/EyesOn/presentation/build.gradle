@@ -46,6 +46,7 @@ dependencies {
     implementation project(':data')
     implementation project(':arcore')
     implementation project(':webrtc')
+    implementation project(':mlkit')
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -90,6 +91,8 @@ dependencies {
 
     // TFLite
     implementation 'org.tensorflow:tensorflow-lite-task-vision:0.4.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.4.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.9.0'
 
     // Text features
     implementation 'com.google.mlkit:common:18.5.0'

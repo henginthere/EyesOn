@@ -6,31 +6,101 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_user">
+        <FrameLayout
+            android:id="@+id/layout_tv_logo"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="엔젤과 연결 화면입니다">
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/btn_blind_back_yellow"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_gravity="center_vertical"
+                android:background="@color/none"
+                android:contentDescription="@string/button_back"/>
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:contentDescription="@string/frag_blind_help"
+                android:fontFamily="@font/noto_sans_bold"
+                android:gravity="center"
+                android:importantForAccessibility="no"
+                android:includeFontPadding="false"
+                android:text="엔젤과 연결"
+                android:textColor="@color/blind_yellow"
+                android:textSize="32sp" />
+        </FrameLayout>
 
         <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_detail_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="72dp"
+            android:contentDescription="@string/frag_blind_help"
+            android:fontFamily="@font/noto_sans_regular"
+            android:gravity="center"
+            android:importantForAccessibility="no"
+            android:includeFontPadding="false"
             android:text="어떤 엔젤이 편하신가요?"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            app:layout_constraintTop_toBottomOf="@id/layout_tv_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+        <androidx.appcompat.widget.AppCompatButton
 
-        <Button
-            android:id="@+id/btn_same_gender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="같은 성별"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
             android:id="@+id/btn_anyone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="누구나"
-            app:layout_constraintTop_toBottomOf="@id/btn_same_gender"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:elevation="20dp"
+            android:layout_marginTop="72dp"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/shape_button_corner"
+            android:backgroundTint="@color/angel_blue"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:text="아무나"
+            android:fontFamily="@font/noto_sans_medium"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_same_gender"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_same_gender"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:elevation="20dp"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginBottom="104dp"
+            android:background="@drawable/shape_button_corner"
+            android:backgroundTint="@color/blind_yellow"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:text="같은 성별"
+            android:fontFamily="@font/noto_sans_medium"
+            app:layout_constraintTop_toBottomOf="@id/btn_anyone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

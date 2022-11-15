@@ -12,7 +12,6 @@ import com.d201.domain.model.Login
 import com.d201.domain.repository.UserRepository
 import com.d201.domain.utils.ResultType
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -68,6 +67,19 @@ class UserRepositoryImpl @Inject constructor(
                     it.status,
                     it.data.mapperToAngelInfo()
                 )))
+        }
+    }
+
+    override fun deleteUser(): Flow<ResultType<BaseResponse<Void>>> = flow {
+        emit(ResultType.Loading)
+        userRemoteDataSource.deleteUser().collect(){
+            emit(ResultType.Success(
+                BaseResponse(
+                    it.message,
+                    it.status,
+                    it.data
+                )
+            ))
         }
     }
 }

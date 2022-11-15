@@ -10,6 +10,18 @@ interface ReturnConfirmListener{
     fun onClick(complaints: Complaints)
 }
 
+interface TitleConfirmListener{
+    fun onClick(complaints: Complaints)
+}
+
+interface RegisterComplaintsListener{
+    fun onClick(complaints: Complaints)
+}
+
 interface ComplaintsImageClickListener{
     fun onClick(image: String)
+}
+
+interface AngelHelpDisconnectListener{
+    fun onClick()
 }
