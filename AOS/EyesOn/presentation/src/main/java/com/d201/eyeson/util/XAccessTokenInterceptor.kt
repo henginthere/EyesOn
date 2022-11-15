@@ -2,6 +2,9 @@ package com.d201.eyeson.util
 
 import android.content.SharedPreferences
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -14,12 +17,12 @@ class XAccessTokenInterceptor @Inject constructor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
 
-//        var token = CoroutineScope(Dispatchers.Main).launch{
-//            sharedPref.getString(JWT,"")!!
-//        }
-        var token = runBlocking {
+        var token = CoroutineScope(Dispatchers.Main).launch{
             sharedPref.getString(JWT,"")!!
         }
+//        var token = runBlocking {
+//            sharedPref.getString(JWT,"")!!
+//        }
         val request = chain.request().newBuilder()
             .addHeader(JWT, "Bearer $token")
             .build()
