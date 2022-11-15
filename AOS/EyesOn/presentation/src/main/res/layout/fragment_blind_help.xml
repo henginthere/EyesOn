@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.blind.help.BlindHelpActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp">
+
+        <RelativeLayout
+            android:id="@+id/views_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@id/peer_container"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <FrameLayout
+                android:id="@+id/peer_container_remote"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:translationZ="90dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <org.webrtc.SurfaceViewRenderer
+                    android:id="@+id/remote_gl_surface_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_loading"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/angel_blue"
+            android:gravity="center"
+            android:text="연결 대기중"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="@id/views_container"
+            app:layout_constraintStart_toStartOf="@id/views_container"
+            app:layout_constraintEnd_toEndOf="@id/views_container"
+            app:layout_constraintBottom_toBottomOf="@id/views_container"/>
+
+        <FrameLayout
+            android:id="@+id/peer_container"
+            android:layout_width="155dp"
+            android:layout_height="200dp"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <org.webrtc.SurfaceViewRenderer
+                android:id="@+id/local_gl_surface_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/btn_change_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="카메라 전환"
+            app:layout_constraintBottom_toTopOf="@id/btn_disconnect"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btn_disconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="종료"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

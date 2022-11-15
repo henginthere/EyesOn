@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.d201.eyeson.view.login.login.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_selectRoleFragment"
+            app:destination="@id/selectRoleFragment"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/selectRoleFragment"
+        android:name="com.d201.eyeson.view.login.join.SelectRoleFragment"
+        android:label="SelectRoleFragment" >
+        <action
+            android:id="@+id/action_selectRoleFragment_to_selectGenderFragment"
+            app:destination="@id/selectGenderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectGenderFragment"
+        android:name="com.d201.eyeson.view.login.join.SelectGenderFragment"
+        android:label="SelectGenderFragment">
+        <argument
+            android:name="role"
+            app:argType="string"
+            android:defaultValue=""
+            />
+        <action
+            android:id="@+id/action_selectGenderFragment_to_joinSuccessFragment"
+            app:destination="@id/joinSuccessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/joinSuccessFragment"
+        android:name="com.d201.eyeson.view.login.join.JoinSuccessFragment"
+        android:label="JoinSuccessFragment" >
+        <argument
+            android:name="role"
+            app:argType="string" />
+        <argument android:name="gender"
+            app:argType="string" />
+    </fragment>
+</navigation>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="data"
+            type="com.d201.domain.model.Complaints" />
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_complaints"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_complaints_image"
+                    android:layout_width="90dp"
+                    android:layout_height="120dp"
+                    android:layout_marginHorizontal="32dp"
+                    app:cardCornerRadius="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_complaints_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        imageLoader="@{data.image}"
+                        tools:src="@drawable/icon_no_image"
+                        app:circularflow_radiusInDP="16"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/tv_complaints_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:fontFamily="@font/noto_sans_bold"
+                    android:text="@{data.title}"
+                    android:textSize="16sp"
+                    android:visibility="@{data.title == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/cv_complaints_image"
+                    app:layout_constraintTop_toTopOf="@id/cv_complaints_image"
+                    tools:text="민원 제목" />
+
+
+                <TextView
+                    android:id="@+id/tv_complaints_content"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginVertical="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="1"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@{data.content}"
+                    textSize="@{data.title}"
+                    app:layout_constraintBottom_toTopOf="@id/tv_complaints_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/cv_complaints_image"
+                    app:layout_constraintTop_toBottomOf="@id/tv_complaints_title"
+                    tools:text="민원 내용 민원 내용 민원 내용 민원 내용" />
+
+                <TextView
+                    android:id="@+id/tv_complaints_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginVertical="8dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@{data.regTime}"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="@id/cv_complaints_image"
+                    app:layout_constraintStart_toEndOf="@id/cv_complaints_image"
+                    tools:text="2022-01-01 10:10" />
+
+                <TextView
+                    android:id="@+id/tv_complaints_status_processing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/tv_complaints_address"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_complaints_address"
+                    app:layout_constraintStart_toEndOf="@id/tv_complaints_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="처리중"
+                    android:padding="4dp"
+                    android:background="@drawable/btn_border_yellow_focus"
+                    android:visibility="gone"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_complaints_status_return"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/tv_complaints_address"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_complaints_address"
+                    app:layout_constraintStart_toEndOf="@id/tv_complaints_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="반환됨"
+                    android:padding="4dp"
+                    android:background="@drawable/btn_border_red_focus"
+                    android:visibility="gone"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_complaints_status_done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/tv_complaints_address"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_complaints_address"
+                    app:layout_constraintStart_toEndOf="@id/tv_complaints_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="완료"
+                    android:padding="4dp"
+                    android:background="@drawable/btn_border_green_focus"
+                    android:visibility="gone"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

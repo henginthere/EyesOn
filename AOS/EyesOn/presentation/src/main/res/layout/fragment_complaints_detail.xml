@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.d201.eyeson.view.angel.complaints.ComplaintsViewModel" />
+        <import type="android.view.View"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.angel.complaints.ComplaintsDetailFragment"
+        android:background="@drawable/gradient_angel"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_top"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="민원 상세 보기"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/angel_text"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/ic_baseline_arrow_back"
+                android:paddingHorizontal="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_top"
+            app:layout_constraintBottom_toTopOf="@id/layout_button">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/layout_top"
+                app:layout_constraintBottom_toTopOf="@id/layout_button"
+                android:layout_marginHorizontal="24dp"
+                >
+                <TextView
+                    android:id="@+id/tv_detail_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{vm.complaints.title}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/iv_complaints_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    tools:src="@drawable/icon_no_image"
+                    imageLoader="@{vm.complaints.image}"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintDimensionRatio="H,3:4"/>
+
+                <TextView
+                    android:id="@+id/tv_title_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="신고 발생 지역"
+                    android:textSize="20sp"
+                    android:layout_marginVertical="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/iv_complaints_image"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title_address"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@{vm.complaints.address}"
+                    tools:text="주소 경상북도 구미시 "
+                    android:textSize="16sp"
+                    android:layout_marginVertical="8dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_title_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="신고 내용"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_address"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginVertical="16dp"/>
+
+                <TextView
+                    android:id="@+id/tv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="@{vm.complaints.content}"
+                    android:textSize="16sp"
+                    tools:text="신고 내용신고 내용신고 내용신고 내용"
+                    android:layout_marginVertical="16dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            complaintsRegistVisible="@{vm.complaints.state}"
+            >
+
+            <Button
+                android:id="@+id/btn_go_safety_e_report"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="민원 신청하러 가기"
+                android:backgroundTint="@color/angel_blue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn_reject"
+                app:layout_constraintBottom_toTopOf="@id/btn_register_title"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="24dp"/>
+
+            <Button
+                android:id="@+id/btn_reject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="민원 반환"
+                android:backgroundTint="@color/angel_red"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@id/btn_go_safety_e_report"
+                app:layout_constraintBottom_toTopOf="@id/btn_register_title"/>
+
+            <Button
+                android:id="@+id/btn_register_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="민원 신청 결과 입력"
+                android:backgroundTint="@color/angel_blue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginHorizontal="24dp"
+                android:visibility="gone"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btn_complaints_done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="민원 처리 결과 입력"
+            android:backgroundTint="@color/angel_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginHorizontal="24dp"
+            complaintsDoneVisible="@{vm.complaints.state}"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

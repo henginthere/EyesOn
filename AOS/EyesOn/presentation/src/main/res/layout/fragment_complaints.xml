@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_user"
+        tools:context=".view.blind.complaints.ComplaintsFragment">
+
+        <FrameLayout
+            android:id="@+id/layout_tv_logo"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/frag_complaints">
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/btn_blind_back_yellow"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@color/none"
+                android:contentDescription="@string/button_back"/>
+            <TextView
+                android:id="@+id/iv_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:contentDescription="@string/frag_complaints"
+                android:fontFamily="@font/noto_sans_bold"
+                android:importantForAccessibility="no"
+                android:includeFontPadding="false"
+                android:text="민원 신청 및 확인"
+                android:textColor="@color/blind_yellow"
+                android:textSize="32sp" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/btn_new_complaints"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="72dp"
+            android:layout_marginBottom="56dp"
+            android:layout_marginHorizontal="32dp"
+            android:text="민원 신청"
+            android:textSize="32sp"
+            android:fontFamily="@font/noto_sans_bold"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_border_blue"
+            android:gravity="center"
+            android:elevation="20dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_tv_logo"
+            app:layout_constraintBottom_toTopOf="@id/btn_my_complaints"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/btn_my_complaints"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="내 민원 확인"
+            android:textSize="32sp"
+            android:fontFamily="@font/noto_sans_bold"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_border_green_focus"
+            android:gravity="center"
+            android:elevation="20dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_new_complaints"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginBottom="104dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

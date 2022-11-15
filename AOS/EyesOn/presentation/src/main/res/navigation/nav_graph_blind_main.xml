@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_blind_main"
+    app:startDestination="@id/blindMainFragment">
+
+    <fragment
+        android:id="@+id/blindMainFragment"
+        android:name="com.d201.eyeson.view.blind.BlindMainFragment"
+        android:label="BlindMainFragment" >
+        <action
+            android:id="@+id/action_blindMainFragment_to_blindNotificationFragment"
+            app:destination="@id/blindNotiFragment" />
+        <action
+            android:id="@+id/action_blindMainFragment_to_blindSettingFragment"
+            app:destination="@id/blindSettingFragment" />
+        <action
+            android:id="@+id/action_blindMainFragment_to_complaintsFragment"
+            app:destination="@id/complaintsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/blindNotiFragment"
+        android:name="com.d201.eyeson.view.blind.notification.BlindNotiFragment"
+        android:label="BlindNotificationFragment" />
+    <fragment
+        android:id="@+id/blindSettingFragment"
+        android:name="com.d201.eyeson.view.blind.setting.BlindSettingFragment"
+        android:label="BlindSettingFragment" />
+    <fragment
+        android:id="@+id/complaintsFragment"
+        android:name="com.d201.eyeson.view.blind.complaints.ComplaintsFragment"
+        android:label="ComplaintsFragment" >
+        <action
+            android:id="@+id/action_complaintsFragment_to_complaintsSubmitFragment"
+            app:destination="@id/complaintsSubmitFragment" />
+        <action
+            android:id="@+id/action_complaintsFragment_to_myComplaintsFragment"
+            app:destination="@id/myComplaintsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/complaintsSubmitFragment"
+        android:name="com.d201.eyeson.view.blind.complaints.ComplaintsSubmitFragment"
+        android:label="ComplaintsSubmitFragment" >
+        <action
+            android:id="@+id/action_complaintsSubmitFragment_to_complaintsSubmitRecordFragment"
+            app:destination="@id/complaintsSubmitRecordFragment"
+            app:popUpTo="@id/complaintsSubmitFragment"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/myComplaintsFragment"
+        android:name="com.d201.eyeson.view.blind.complaints.MyComplaintsFragment"
+        android:label="MyComplaintsFragment" >
+        <action
+            android:id="@+id/action_myComplaintsFragment_to_myComplaintsDetailFragment"
+            app:destination="@id/myComplaintsDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/complaintsSubmitRecordFragment"
+        android:name="com.d201.eyeson.view.blind.complaints.ComplaintsSubmitRecordFragment"
+        android:label="ComplaintsSubmitRecordFragment">
+        <argument
+            app:argType="string"
+            android:name="image"
+            app:nullable="false"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/myComplaintsDetailFragment"
+        android:name="com.d201.eyeson.view.blind.complaints.MyComplaintsDetailFragment"
+        android:label="MyComplaintsDetailFragment">
+        <argument
+            android:name="complaintSeq"
+            app:argType="long"/>
+    </fragment>
+
+</navigation>
