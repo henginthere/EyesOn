@@ -28,7 +28,6 @@
                 android:layout_height="match_parent"
                 android:text="민원 내용 입력"
                 android:fontFamily="@font/noto_sans_bold"
-
                 android:textSize="32sp"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -43,7 +42,7 @@
                 android:id="@+id/btn_back"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:src="@drawable/btn_blind_back_yellow"
                 android:background="@color/none"
                 android:paddingHorizontal="16dp"

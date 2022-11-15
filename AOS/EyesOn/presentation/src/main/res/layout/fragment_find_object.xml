@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="vm"
+            type="com.d201.eyeson.view.blind.findobject.FindObjectViewModel" />
+        <import type="android.view.View"/>
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -57,13 +64,12 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:contentDescription="@string/frag_complaints_submit">
+                        android:contentDescription="물건 찾기 화면입니다">
                         <ImageButton
                             android:id="@+id/btn_back"
                             android:layout_width="56dp"
                             android:layout_height="56dp"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="3dp"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/btn_blind_back_yellow"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -92,6 +98,25 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <TextView
+            android:id="@+id/tv_object"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="마우스"
+            android:text="@{vm.recordText}"
+            android:textSize="32sp"
+            android:gravity="center"
+            android:layout_marginHorizontal="80dp"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_trans"
+            android:padding="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_record"
+            android:visibility="@{vm.recordText == `` ? View.GONE : View.VISIBLE}"
+            />
+
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/btn_record"
             android:layout_width="160dp"
@@ -99,7 +124,6 @@
             android:layout_marginBottom="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/animation_record" />

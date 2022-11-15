@@ -13,6 +13,8 @@ import android.renderscript.ScriptIntrinsicYuvToRGB
 import android.util.Log
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED
+import android.view.accessibility.AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -65,6 +67,20 @@ private fun blindImageViewFocused(context: Context, view: ImageView, eventType: 
         AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED -> {
             view.imageTintList = ColorStateList.valueOf(context.getColor(R.color.blind_yellow))
             view.setBackgroundResource(R.drawable.btn_border_yellow)
+        }
+    }
+}
+
+fun blindImageViewButtonFocused(view: ImageView, context: Context) = object : View.AccessibilityDelegate(){
+    override fun onInitializeAccessibilityEvent(host: View, event: AccessibilityEvent) {
+        super.onInitializeAccessibilityEvent(host, event)
+        when(event.eventType){
+            TYPE_VIEW_ACCESSIBILITY_FOCUSED -> {
+                view.imageTintList = ColorStateList.valueOf(context.getColor(R.color.blind_yellow))
+            }
+            TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED -> {
+                view.imageTintList = ColorStateList.valueOf(context.getColor(R.color.white))
+            }
         }
     }
 }

@@ -128,6 +128,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
         lastSpeakTime = System.currentTimeMillis()
 
         binding.apply {
+            vm = viewModel
             btnBack.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener { requireActivity().finish() }
@@ -209,9 +210,12 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                 )
                 return
             }
-            binding.inputImageView.bringToFront()
-            binding.frameLayoutCamera.bringToFront()
-            binding.btnRecord.bringToFront()
+            binding.apply {
+                inputImageView.bringToFront()
+                frameLayoutCamera.bringToFront()
+                btnRecord.bringToFront()
+                tvObject.bringToFront()
+            }
         }
 
         // Note that order matters - see the note in onPause(), the reverse applies here.

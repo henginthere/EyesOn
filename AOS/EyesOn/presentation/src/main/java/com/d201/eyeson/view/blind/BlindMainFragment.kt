@@ -26,14 +26,14 @@ class BlindMainFragment : BaseFragment<FragmentBlindMainBinding>(R.layout.fragme
     private fun initListener() {
         binding.apply {
             btnNotification.apply {
-                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                accessibilityDelegate = blindImageViewButtonFocused(this, requireContext())
                 setOnClickListener {
                     findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToBlindNotificationFragment())
                 }
             }
 
             btnSetting.apply {
-                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                accessibilityDelegate = blindImageViewButtonFocused(this, requireContext())
                 setOnClickListener {
                     findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToBlindSettingFragment())
                 }
