@@ -64,8 +64,11 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
             override fun join() {
                 Log.d(TAG, "ParticipantListener : join: ")
                 lifecycleScope.launch {
-                    binding.viewsContainer.bringToFront()
-                    binding.tvLoading.visibility = View.GONE
+                    binding.apply {
+                        viewsContainer.bringToFront()
+                        clMenu.bringToFront()
+                        tvLoading.visibility = View.GONE
+                    }
                 }
             }
 

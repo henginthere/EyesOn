@@ -6,15 +6,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="24dp">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/views_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@id/peer_container"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -34,7 +33,6 @@
                     android:visibility="visible" />
             </FrameLayout>
 
-
         </RelativeLayout>
 
         <TextView
@@ -46,10 +44,11 @@
             android:text="연결 대기중"
             android:textSize="40sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="@id/views_container"
-            app:layout_constraintStart_toStartOf="@id/views_container"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/views_container"
             app:layout_constraintEnd_toEndOf="@id/views_container"
-            app:layout_constraintBottom_toBottomOf="@id/views_container"/>
+            app:layout_constraintStart_toStartOf="@id/views_container"
+            app:layout_constraintTop_toTopOf="@id/views_container" />
 
         <FrameLayout
             android:id="@+id/peer_container"
@@ -71,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="카메라 전환"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/btn_disconnect"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -79,8 +79,153 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="종료"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_top"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="@string/frag_blind_help"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent">
+
+            <FrameLayout
+                android:id="@+id/frame_layout_camera"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/gradient_camera"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="16dp"
+                        android:contentDescription="@string/frag_complaints_submit"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/tv_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/frag_complaints"
+                            android:fontFamily="@font/noto_sans_bold"
+                            android:gravity="center"
+                            android:importantForAccessibility="no"
+                            android:includeFontPadding="false"
+                            android:text="엔젤과 연결"
+                            android:textColor="@color/white"
+                            android:textSize="32sp" />
+
+                        <ImageButton
+                            android:id="@+id/btn_back"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="3dp"
+                            android:background="@color/none"
+                            android:contentDescription="@string/button_back"
+                            android:src="@drawable/btn_back"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </FrameLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_menu"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:paddingHorizontal="24dp"
+            android:layout_marginBottom="160dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <FrameLayout
+                android:id="@+id/fl_menu"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/shape_trans"
+                app:layout_constraintBottom_toBottomOf="@id/cl_menu"
+                app:layout_constraintEnd_toEndOf="@id/cl_menu"
+                app:layout_constraintStart_toStartOf="@id/cl_menu"
+                app:layout_constraintTop_toTopOf="@id/cl_menu" >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/iv_disconnect"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/btn_call_end"
+                        android:background="@drawable/shape_button_circle_red"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <ImageView
+                        android:id="@+id/iv_camera_switch"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="24dp"
+                        android:src="@drawable/btn_camera_switch"
+                        app:layout_constraintTop_toTopOf="@id/iv_disconnect"
+                        app:layout_constraintEnd_toStartOf="@id/iv_disconnect"/>
+
+                    <ImageView
+                        android:id="@+id/iv_camera_on_off"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="24dp"
+                        android:src="@drawable/btn_camera"
+                        app:layout_constraintTop_toTopOf="@id/iv_disconnect"
+                        app:layout_constraintEnd_toStartOf="@id/iv_camera_switch"/>
+
+                    <ImageView
+                        android:id="@+id/iv_sound_mode"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="24dp"
+                        android:src="@drawable/btn_campaign"
+                        app:layout_constraintTop_toTopOf="@id/iv_disconnect"
+                        app:layout_constraintStart_toEndOf="@id/iv_disconnect"/>
+
+                    <ImageView
+                        android:id="@+id/iv_mic"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="24dp"
+                        android:src="@drawable/btn_mic"
+                        app:layout_constraintTop_toTopOf="@id/iv_disconnect"
+                        app:layout_constraintStart_toEndOf="@id/iv_sound_mode"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
