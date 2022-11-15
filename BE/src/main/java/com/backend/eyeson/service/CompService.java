@@ -14,6 +14,7 @@ import com.backend.eyeson.repository.CompRepository;
 import com.backend.eyeson.repository.UserRepository;
 import com.backend.eyeson.util.ReverseGeocoding;
 import com.backend.eyeson.util.SecurityUtil;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,6 +183,11 @@ public class CompService {
         String action = "Complaints";
         firebaseService.sendMessageTo(fcmToken, title, body, action);
 
+        return result;
+    }
+
+    public Integer entire() {
+        Integer result = compRepository.entire();
         return result;
     }
 }

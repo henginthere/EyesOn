@@ -9,6 +9,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -19,10 +22,31 @@ import java.util.Queue;
 @RestController
 @RequestMapping("/help")
 @RequiredArgsConstructor
+// scheduler
+@Component
+@EnableAsync
 public class HelpController {
 
     // 시각장애인 userSeq 저장 Queue
     Queue<Long> blindQueue = new LinkedList<>();
+
+    // 들어왔는지 체크
+    static boolean flag = false;
+
+    // 1분 동안 큐에 값이 들어오지 않으면 clear
+    // 대신 있을 때
+    @Scheduled(cron = "0 * * * * *")
+    public void initQueue(){
+        // 큐에 안들어 왔는데 큐가 차있을 경우
+        // 큐 리셋
+        if(!flag && blindQueue.size() > 0){
+            // 초기화
+            blindQueue.clear();
+        }
+
+        flag = false;
+    }
+
 
     private final FirebaseService firebaseService;
 
@@ -49,6 +73,8 @@ public class HelpController {
         if(check) {
             // queue에 추가
             blindQueue.add(userSeq);
+            // 큐에 들어옴 처리
+            flag = true;
             return ResponseFrame.of(userSeq, "도움 요청 성공");
         }else{
             return ResponseFrame.of(HttpStatus.BAD_REQUEST, "엔젤이 없어서 도움 요청 실패");
@@ -105,6 +131,12 @@ public class HelpController {
         }else {
             return ResponseFrame.of(HttpStatus.OK, "도움 종료 성공");
         }
+    }
+
+    @ApiOperation(value = "알림 테스트")
+    @PostMapping("/alarm")
+    public void checkAlarm(@RequestBody Token token) throws IOException {
+        firebaseService.sendMessageTo(token.getFcmToken(), token.getTitle(), token.getBody(), token.getClickAction());
     }
 }
 
