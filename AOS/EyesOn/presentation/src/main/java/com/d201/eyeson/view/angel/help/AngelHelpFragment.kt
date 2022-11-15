@@ -1,7 +1,9 @@
 package com.d201.eyeson.view.angel.help
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -42,12 +44,14 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     lateinit var httpClient: CustomHttpClient
 
     private lateinit var session: Session
+    private lateinit var audioManager: AudioManager
 
     override fun init() {
+
+        initWebRTC()
         initListener()
         initViewModelCallback()
         getSessionId()
-        initWebRTC()
     }
 
     override fun onStop() {
@@ -70,7 +74,10 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     private fun initViewModelCallback() {
         lifecycleScope.launch {
             angelHelpViewModel.sessionId.collectLatest {
+                if(it > 0)
                 getToken("${angelHelpViewModel.sessionId.value}-session")
+                Log.d(TAG, "initViewModelCallback: $it-session")
+
             }
         }
     }
@@ -81,6 +88,8 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
 
     private fun initWebRTC() {
         initSurfaceView()
+        audioManager = requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.mode = AudioManager.MODE_NORMAL
     }
 
     private fun getToken(sessionId: String) {

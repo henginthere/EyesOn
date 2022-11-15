@@ -414,9 +414,10 @@ class ScanObstacleFragment :
         val image = TensorImage.fromBitmap(bitmap)
 
         val baseOptions = BaseOptions.builder().useGpu().build()
+//            .setBaseOptions(baseOptions)
+
         // Step 2: Initialize the detector object
         val options = ObjectDetector.ObjectDetectorOptions.builder()
-            .setBaseOptions(baseOptions)
             .setMaxResults(MAX_RESULT)
             .setScoreThreshold(SCORE_THRESHOLD)
             .build()
