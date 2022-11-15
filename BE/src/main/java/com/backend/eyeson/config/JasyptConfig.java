@@ -23,8 +23,8 @@ public class JasyptConfig {
       # JAR 예
       -Djasypt.encryptor.password=jasypt_password.!
      */
-    @Value("${jasypt.encryptor.password}")
-    private String encryptKey;
+//    @Value("${jasypt.encryptor.password}")
+    private String encryptKey="gumid201";
 
     @Bean(JASYPT_STRING_ENCRYPTOR)
     public StringEncryptor stringEncryptor() {
