@@ -1,6 +1,7 @@
 package com.d201.eyeson.view.login.join
 
 import android.content.Intent
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
@@ -9,6 +10,9 @@ import com.d201.eyeson.util.*
 import com.d201.eyeson.view.angel.main.AngelMainActivity
 import com.d201.eyeson.view.blind.BlindMainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 private const val TAG = "JoinSuccessFragment"
 @AndroidEntryPoint
@@ -19,6 +23,10 @@ class JoinSuccessFragment : BaseFragment<FragmentJoinSuccessBinding>(R.layout.fr
     override fun init() {
         initView()
         initListener()
+        lifecycleScope.launch(Dispatchers.IO){
+            delay(3500)
+            launchMainView()
+        }
     }
 
     private fun initView() {
@@ -34,24 +42,26 @@ class JoinSuccessFragment : BaseFragment<FragmentJoinSuccessBinding>(R.layout.fr
                 GENDER_DEFAULT -> "설정 안됨"
                 else -> "?"
             }
+            animationOk.playAnimation()
         }
     }
 
     private fun initListener() {
         binding.apply {
-            btnContinue.setOnClickListener {
-                when(args.role){
-                    BLIND -> startActivity(Intent(requireContext(), BlindMainActivity::class.java).apply {
-                        putExtra("Gender", args.gender)
-                    })
-                    ANGEL -> startActivity(Intent(requireContext(), AngelMainActivity::class.java).apply {
-                        putExtra("Gender", args.gender)
-                    })
-                    else -> return@setOnClickListener
-                }
-                requireActivity().finish()
-            }
         }
+    }
+
+    private fun launchMainView(){
+        when(args.role){
+            BLIND -> startActivity(Intent(requireContext(), BlindMainActivity::class.java).apply {
+                putExtra("Gender", args.gender)
+            })
+            ANGEL -> startActivity(Intent(requireContext(), AngelMainActivity::class.java).apply {
+                putExtra("Gender", args.gender)
+            })
+            else -> return
+        }
+        requireActivity().finish()
     }
 
 }

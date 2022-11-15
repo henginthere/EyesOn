@@ -7,38 +7,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.blind.setting.BlindSettingFragment"
-        android:background="@color/gray">
-        <LinearLayout
+        android:background="@color/black">
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_tv_logo"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="56dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:orientation="horizontal"
-            android:contentDescription="@string/frag_main">
+            android:contentDescription="@string/frag_setting">
+
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/btn_back"
-                android:contentDescription="@string/button_back"/>
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@color/none"
+                android:contentDescription="@string/button_back"
+                android:src="@drawable/btn_back"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <TextView
                 android:id="@+id/iv_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="150dp"
-                android:contentDescription="@string/frag_complaints"
                 android:fontFamily="@font/noto_sans_medium"
                 android:importantForAccessibility="no"
                 android:includeFontPadding="false"
                 android:text="설정"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="@id/btn_back"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
-        </LinearLayout>
+                android:textSize="32sp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <LinearLayout
             android:id="@+id/layout_setting"
             android:layout_width="match_parent"

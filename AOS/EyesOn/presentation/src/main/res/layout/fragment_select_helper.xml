@@ -16,14 +16,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/frag_complaints_submit">
+            android:contentDescription="엔젤과 연결 화면입니다">
             <ImageButton
                 android:id="@+id/btn_back"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="3dp"
-                android:src="@drawable/btn_back"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/btn_blind_back_yellow"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -42,7 +41,7 @@
                 android:importantForAccessibility="no"
                 android:includeFontPadding="false"
                 android:text="엔젤과 연결"
-                android:textColor="@color/white"
+                android:textColor="@color/blind_yellow"
                 android:textSize="32sp" />
         </FrameLayout>
 

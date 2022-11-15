@@ -17,18 +17,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/frag_main">
+            android:contentDescription="@string/frag_complaints">
             <ImageButton
                 android:id="@+id/btn_back"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="3dp"
-                android:src="@drawable/btn_back"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/btn_blind_back_yellow"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_gravity="center_vertical"
                 android:background="@color/none"
                 android:contentDescription="@string/button_back"/>
             <TextView
@@ -42,7 +40,7 @@
                 android:importantForAccessibility="no"
                 android:includeFontPadding="false"
                 android:text="민원 신청 및 확인"
-                android:textColor="@color/white"
+                android:textColor="@color/blind_yellow"
                 android:textSize="32sp" />
         </FrameLayout>
 
