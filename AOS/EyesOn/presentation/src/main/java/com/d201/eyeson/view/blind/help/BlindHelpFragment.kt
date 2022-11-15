@@ -109,6 +109,7 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
                 }
                 lifecycleScope.launch {
                     binding.apply {
+                        this@BlindHelpFragment.showToast("엔젤과 연결되었습니다.")
                         clLoading.visibility = View.GONE
                         lavLoading.pauseAnimation()
                         viewsContainer.bringToFront()
