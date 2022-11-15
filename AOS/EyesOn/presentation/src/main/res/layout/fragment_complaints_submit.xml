@@ -7,58 +7,53 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.blind.complaints.ComplaintsSubmitFragment"
-        android:background="@drawable/gradient_user"
-        >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/gradient_user">
+        <FrameLayout
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/frag_complaints_submit"
-            >
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="민원 신청"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:textColor="@color/blind_yellow"
-                android:importantForAccessibility="no"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
+            android:contentDescription="@string/frag_complaints_submit">
             <ImageButton
                 android:id="@+id/btn_back"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:src="@drawable/btn_blind_back_yellow"
-                android:background="@color/none"
-                android:paddingHorizontal="16dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/btn_back"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:contentDescription="@string/button_back"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_gravity="center_vertical"
+                android:background="@color/none"
+                android:contentDescription="@string/button_back"/>
+            <TextView
+                android:id="@+id/iv_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:contentDescription="@string/frag_complaints"
+                android:fontFamily="@font/noto_sans_bold"
+                android:importantForAccessibility="no"
+                android:includeFontPadding="false"
+                android:text="민원 신청"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
+        </FrameLayout>
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/layout_top"
-            app:layout_constraintBottom_toBottomOf="parent"
-            >
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/iv_selected_image"
@@ -69,40 +64,45 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginVertical="24dp"
                     app:layout_constraintDimensionRatio="H,3:4"
-                    android:contentDescription="촬영한 사진"
-                    />
+                    android:contentDescription="촬영한 사진"/>
 
-                <ImageView
+                <TextView
                     android:id="@+id/btn_camera"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/ic_camera_on"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:gravity="center"
+                    android:text="다시찍기"
+                    android:textSize="32sp"
+                    android:textColor="@color/black"
                     android:background="@drawable/btn_border_yellow"
+                    app:layout_constraintEnd_toStartOf="@id/btn_submit"
                     app:layout_constraintTop_toBottomOf="@id/iv_selected_image"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     android:contentDescription="@string/frag_complaints_submit_camera"
-                    android:layout_marginVertical="16dp"
                     android:padding="16dp"
                     app:tint="@color/blind_yellow" />
 
                 <TextView
                     android:id="@+id/btn_submit"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginVertical="24dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:fontFamily="@font/noto_sans_medium"
                     android:background="@drawable/btn_border_yellow"
-                    android:fontFamily="@font/noto_sans_bold"
                     android:gravity="center"
-                    android:text="민원 내용 입력"
-                    android:textColor="@color/blind_yellow"
-                    android:textSize="40sp"
+                    android:text="다음"
+                    android:textColor="@color/black"
+                    android:textSize="32sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/btn_camera"
-                    />
+                    app:layout_constraintStart_toEndOf="@id/btn_camera"
+                    app:layout_constraintTop_toBottomOf="@id/iv_selected_image" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

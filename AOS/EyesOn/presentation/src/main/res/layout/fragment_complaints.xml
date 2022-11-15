@@ -22,7 +22,8 @@
                 android:id="@+id/btn_back"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="3dp"
                 android:src="@drawable/btn_back"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +35,7 @@
                 android:id="@+id/iv_logo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="24dp"
+                android:layout_marginStart="12dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:contentDescription="@string/frag_complaints"
@@ -43,7 +44,7 @@
                 android:includeFontPadding="false"
                 android:text="민원 신청 및 확인"
                 android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:textSize="32sp" />
         </FrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,7 +69,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginVertical="56dp"/>
+                android:layout_marginTop="56dp"/>
 
             <View
                 android:id="@+id/divider_center"
@@ -93,7 +94,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginVertical="56dp"
+                android:layout_marginBottom="56dp"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
