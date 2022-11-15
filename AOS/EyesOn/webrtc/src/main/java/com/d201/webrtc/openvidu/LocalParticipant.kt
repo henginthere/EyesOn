@@ -24,7 +24,7 @@ class LocalParticipant(
         getSession()?.setLocalParticipant(this)
     }
 
-    fun startCamera(){
+    fun startCamera(role: String){
         val eglBaseContext = EglBase.create().eglBaseContext
         val peerConnectionFactory = getSession()?.getPeerConnectionFactory()!!
 
@@ -34,7 +34,7 @@ class LocalParticipant(
         surfaceTextureHelper = SurfaceTextureHelper.create(
             "CaptureThread", eglBaseContext
         )
-        val videoCapturer = createCameraCapturer()
+        val videoCapturer = createCameraCapturer(role)
         val videoSource = peerConnectionFactory.createVideoSource(videoCapturer!!.isScreencast)
         videoCapturer.initialize(surfaceTextureHelper, context, videoSource.capturerObserver)
         videoCapturer.startCapture(480, 640, 30)
@@ -43,7 +43,7 @@ class LocalParticipant(
         getVideoTrack().addSink(surfaceViewRenderer)
     }
 
-    fun createCameraCapturer(): VideoCapturer?{
+    fun createCameraCapturer(role: String): VideoCapturer?{
         var enumerator: CameraEnumerator
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
@@ -54,11 +54,25 @@ class LocalParticipant(
 
         val devicenames = enumerator.deviceNames
 
-        for(i in devicenames.iterator()){
-            if(enumerator.isFrontFacing(i)){
-                videoCapturer = enumerator.createCapturer(i, null)
-                if(videoCapturer != null){
-                    return videoCapturer
+        when(role){
+            "Angel" -> {
+                for(i in devicenames.iterator()){
+                    if(enumerator.isFrontFacing(i)){
+                        videoCapturer = enumerator.createCapturer(i, null)
+                        if(videoCapturer != null){
+                            return videoCapturer
+                        }
+                    }
+                }
+            }
+            else -> {
+                for(i in devicenames.iterator()){
+                    if(enumerator.isBackFacing(i)){
+                        videoCapturer = enumerator.createCapturer(i, null)
+                        if(videoCapturer != null){
+                            return videoCapturer
+                        }
+                    }
                 }
             }
         }

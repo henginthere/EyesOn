@@ -1,17 +1,23 @@
 package com.d201.eyeson.view.blind.help
 
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentBlindHelpBinding
 import com.d201.eyeson.util.OPENVIDU_URL
+import com.d201.eyeson.view.angel.AngelHelpDisconnectListener
+import com.d201.eyeson.view.blind.BlindHelpDisconnectListener
 import com.d201.webrtc.openvidu.LocalParticipant
 import com.d201.webrtc.openvidu.Session
 import com.d201.webrtc.utils.CustomHttpClient
+import com.d201.webrtc.utils.ParticipantListener
 import com.d201.webrtc.websocket.CustomWebSocket
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -34,6 +40,8 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     lateinit var httpClient: CustomHttpClient
 
     private lateinit var session: Session
+    private lateinit var participantListener: ParticipantListener
+    private lateinit var blindHelpDisconnectListener: BlindHelpDisconnectListener
 
     override fun init() {
         initListener()
@@ -47,6 +55,28 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
 
 
     private fun initListener() {
+        blindHelpDisconnectListener = object : BlindHelpDisconnectListener {
+            override fun onClick() {
+                requireActivity().finish()
+            }
+        }
+        participantListener = object : ParticipantListener {
+            override fun join() {
+                Log.d(TAG, "ParticipantListener : join: ")
+                lifecycleScope.launch {
+                    binding.viewsContainer.bringToFront()
+                    binding.tvLoading.visibility = View.GONE
+                }
+            }
+
+            override fun left() {
+                Log.d(TAG, "ParticipantListener : left: ")
+                BlindHelpDisconnectDialog(blindHelpDisconnectListener).show(
+                    parentFragmentManager,
+                    "BlindHelpDisconnectDialog"
+                )
+            }
+        }
         binding.apply {
             btnChangeCamera.setOnClickListener {
                 session.getLocalParticipant()!!.switchCamera()
@@ -132,7 +162,7 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     private fun initSurfaceView() {
         val rootEgleBase = EglBase.create()
         binding.localGlSurfaceView.init(rootEgleBase.eglBaseContext, null)
-        binding.localGlSurfaceView.setMirror(true)
+        binding.localGlSurfaceView.setMirror(false)
         binding.localGlSurfaceView.setEnableHardwareScaler(true)
         binding.localGlSurfaceView.setZOrderMediaOverlay(true)
 
@@ -156,7 +186,7 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
                 requireActivity().applicationContext,
                 binding.localGlSurfaceView
             )
-        localParticipant.startCamera()
+        localParticipant.startCamera("Blind")
 
         // Initialize and connect the websocket to OpenVidu Server
         startWebSocket()
@@ -173,7 +203,12 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
 
     private fun startWebSocket() {
         val webSocket =
-            CustomWebSocket(session, OPENVIDU_URL, requireActivity() as AppCompatActivity)
+            CustomWebSocket(
+                session,
+                OPENVIDU_URL,
+                requireActivity() as AppCompatActivity,
+                participantListener
+            )
         webSocket.execute()
         session.setWebSocket(webSocket)
     }

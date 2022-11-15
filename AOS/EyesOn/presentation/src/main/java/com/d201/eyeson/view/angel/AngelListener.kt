@@ -21,3 +21,7 @@ interface RegisterComplaintsListener{
 interface ComplaintsImageClickListener{
     fun onClick(image: String)
 }
+
+interface AngelHelpDisconnectListener{
+    fun onClick()
+}

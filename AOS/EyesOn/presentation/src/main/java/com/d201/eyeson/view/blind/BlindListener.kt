@@ -10,3 +10,7 @@ interface BlindComplaintsClickListener {
 interface NotiClickListener {
     fun onClick(noti : Noti, position: Int)
 }
+
+interface BlindHelpDisconnectListener{
+    fun onClick()
+}
