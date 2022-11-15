@@ -41,6 +41,11 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         actionCheck()
     }
 
+    override fun onResume() {
+        super.onResume()
+        angelMainViewModel.getAngelInfo()
+    }
+
     private fun actionCheck() {
         val bundle = requireActivity().intent.extras
         var action = ""
@@ -51,6 +56,7 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
 
         if (action.isNotEmpty() && action == "AngelHelp") {
             Log.d(TAG, "actionCheck: $action")
+            requireActivity().intent.putExtra("action", "")
             checkPermission(VIEW_ANGEL_HELP, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS)
         }
     }

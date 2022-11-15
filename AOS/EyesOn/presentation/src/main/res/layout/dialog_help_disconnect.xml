@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="24dp"
             android:gravity="center"
-            android:text="통화가 종료 되었습니다."
+            android:text="연결이 종료 되었습니다."
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/btn_confirm"
             app:layout_constraintEnd_toEndOf="parent"

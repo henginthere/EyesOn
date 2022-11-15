@@ -2,7 +2,9 @@ package com.d201.eyeson.view.angel.help
 
 import android.content.Context
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.util.Log
+import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -11,6 +13,7 @@ import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelHelpBinding
 import com.d201.eyeson.util.OPENVIDU_URL
 import com.d201.eyeson.view.angel.AngelHelpDisconnectListener
+import com.d201.eyeson.view.blind.help.BlindHelpDisconnectDialog
 import com.d201.webrtc.openvidu.LocalParticipant
 import com.d201.webrtc.openvidu.Session
 import com.d201.webrtc.utils.CustomHttpClient
@@ -45,24 +48,41 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     private lateinit var participantListener: ParticipantListener
     private lateinit var angelHelpDisconnectListener: AngelHelpDisconnectListener
 
-    override fun init() {
+    private var leaveFlag = false
 
-        initWebRTC()
+    private var moveX = 0f
+    private var moveY = 0f
+
+    override fun init() {
+        initDevice()
         initListener()
         initViewModelCallback()
+        initWebRTC()
         getSessionId()
     }
 
     override fun onStop() {
         super.onStop()
-        leaveSession()
+
+        returnResource()
     }
 
+    private fun initDevice() {
+        audioManager =
+            requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        if (audioManager != null) {
+            audioManager.mode = AudioManager.MODE_NORMAL
+            audioManager.isSpeakerphoneOn = true
+            audioManager.isMicrophoneMute = false
+        }
+    }
 
     private fun initListener() {
         angelHelpDisconnectListener = object : AngelHelpDisconnectListener {
             override fun onClick() {
-                requireActivity().finish()
+                requireActivity().runOnUiThread {
+                    requireActivity().finish()
+                }
             }
         }
 
@@ -72,16 +92,82 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
             }
 
             override fun left() {
-                AngelHelpDisconnectDialog(angelHelpDisconnectListener).show(parentFragmentManager, "AngelHelpDisconnectDialog")
-                Log.d(TAG, "left: 감지됨")
+                requireActivity().runOnUiThread {
+                    AngelHelpDisconnectDialog(angelHelpDisconnectListener).show(
+                        parentFragmentManager,
+                        "AngelHelpDisconnectDialog"
+                    )
+                    returnResource()
+                    Log.d(TAG, "left: 감지됨")
+                }
             }
         }
         binding.apply {
-            btnChangeCamera.setOnClickListener {
-                session.getLocalParticipant()!!.switchCamera()
+            peerContainer.setOnTouchListener { v, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        moveX = v.x - event.rawX
+                        moveY = v.y - event.rawY
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        v.animate()
+                            .x(event.rawX + moveX)
+                            .y(event.rawY + moveY)
+                            .setDuration(0)
+                            .start()
+                    }
+                }
+
+                true
             }
-            btnDisconnect.setOnClickListener {
-                requireActivity().finish()
+            ivCamera.setOnClickListener {
+                showToast("카메라")
+            }
+            ivCameraSwitch.setOnClickListener {
+                session.getLocalParticipant()!!.switchCamera()
+                showToast("카메라 전환")
+            }
+            ivDisconnect.setOnClickListener {
+                AngelHelpDisconnectDialog(angelHelpDisconnectListener).show(
+                    parentFragmentManager, "BlindHelpDisconnectDialog"
+                )
+                returnResource()
+            }
+            ivSoundMode.setOnClickListener {
+                // 소리 모드 변경
+                if (audioManager != null) {
+                    audioManager.mode = AudioManager.MODE_NORMAL
+                    audioManager.isSpeakerphoneOn = !audioManager.isSpeakerphoneOn
+                    when (audioManager.isSpeakerphoneOn) {
+                        true -> {
+                            ivSoundMode.setImageResource(R.drawable.btn_speaker_on)
+                            showToast("스피커 모드")
+                        }
+                        false -> {
+                            ivSoundMode.setImageResource(R.drawable.btn_speaker_off)
+                            showToast("통화 모드")
+                        }
+                    }
+
+                }
+            }
+            ivMic.setOnClickListener {
+                // 마이크 OnOff
+                if (audioManager != null) {
+                    audioManager.isMicrophoneMute = !audioManager.isMicrophoneMute
+                    when (audioManager.isMicrophoneMute) {
+                        true -> {
+                            ivMic.setImageResource(R.drawable.btn_mic_off)
+                            showToast("마이크 OFF")
+                        }
+                        false -> {
+                            ivMic.setImageResource(R.drawable.btn_mic)
+                            showToast("마이크 ON")
+                        }
+                    }
+
+                }
             }
         }
     }
@@ -89,7 +175,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     private fun initViewModelCallback() {
         lifecycleScope.launch {
             angelHelpViewModel.sessionId.collectLatest {
-                if(it > 0) getToken("${angelHelpViewModel.sessionId.value}-session")
+                if (it > 0) getToken("${angelHelpViewModel.sessionId.value}-session")
                 Log.d(TAG, "initViewModelCallback: $it-session")
 
             }
@@ -102,8 +188,6 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
 
     private fun initWebRTC() {
         initSurfaceView()
-        audioManager = requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager.mode = AudioManager.MODE_NORMAL
     }
 
     private fun getToken(sessionId: String) {
@@ -230,14 +314,26 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
 
     private fun startWebSocket() {
         val webSocket =
-            CustomWebSocket(session, OPENVIDU_URL, requireActivity() as AppCompatActivity, participantListener)
+            CustomWebSocket(
+                session,
+                OPENVIDU_URL,
+                requireActivity() as AppCompatActivity,
+                participantListener
+            )
         webSocket.execute()
         session.setWebSocket(webSocket)
     }
 
+    private fun returnResource() {
+        if(!leaveFlag) {
+            leaveFlag = true
+            leaveSession()
+        }
+    }
+
     private fun leaveSession() {
         angelHelpViewModel.disconnectHelp()
-        if(::session.isInitialized) {
+        if (::session.isInitialized) {
             this.session.leaveSession()
         }
         this.httpClient.dispose()

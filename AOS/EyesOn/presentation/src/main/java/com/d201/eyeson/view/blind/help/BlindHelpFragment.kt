@@ -1,6 +1,13 @@
 package com.d201.eyeson.view.blind.help
 
+import android.content.Context.AUDIO_SERVICE
+import android.content.Context.CAMERA_SERVICE
+import android.graphics.Camera
+import android.hardware.camera2.CameraManager
+import android.media.AudioManager
+import android.media.MediaPlayer
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
@@ -9,7 +16,6 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentBlindHelpBinding
 import com.d201.eyeson.util.OPENVIDU_URL
-import com.d201.eyeson.view.angel.AngelHelpDisconnectListener
 import com.d201.eyeson.view.blind.BlindHelpDisconnectListener
 import com.d201.webrtc.openvidu.LocalParticipant
 import com.d201.webrtc.openvidu.Session
@@ -29,6 +35,7 @@ import org.webrtc.EglBase
 import java.io.IOException
 import javax.inject.Inject
 
+
 private const val TAG = "BlindHelpFragment"
 
 @AndroidEntryPoint
@@ -40,19 +47,53 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     lateinit var httpClient: CustomHttpClient
 
     private lateinit var session: Session
+    private lateinit var audioManager: AudioManager
     private lateinit var participantListener: ParticipantListener
     private lateinit var blindHelpDisconnectListener: BlindHelpDisconnectListener
 
+    private lateinit var mediaPlayer: MediaPlayer
+
+    private var leaveFlag = false
+
+    private var moveX = 0f
+    private var moveY = 0f
+
     override fun init() {
+        initView()
+        initDevice()
         initListener()
         initWebRTC()
     }
 
-    override fun onStop() {
-        super.onStop()
-        leaveSession()
+    override fun onResume() {
+        super.onResume()
+        mediaPlayer.start()
+        mediaPlayer.isLooping = true
     }
 
+    override fun onStop() {
+        super.onStop()
+
+        returnResource()
+    }
+
+    private fun initView() {
+        binding.apply {
+            lavLoading.playAnimation()
+        }
+    }
+
+    private fun initDevice() {
+        mediaPlayer = MediaPlayer.create(requireActivity(), R.raw.swans_in_flight)
+        audioManager =
+            requireActivity().getSystemService(AUDIO_SERVICE) as AudioManager
+        if (audioManager != null) {
+            audioManager
+            audioManager.mode = AudioManager.MODE_NORMAL
+            audioManager.isSpeakerphoneOn = true
+            audioManager.isMicrophoneMute = false
+        }
+    }
 
     private fun initListener() {
         blindHelpDisconnectListener = object : BlindHelpDisconnectListener {
@@ -63,26 +104,99 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
         participantListener = object : ParticipantListener {
             override fun join() {
                 Log.d(TAG, "ParticipantListener : join: ")
+                if (mediaPlayer.isPlaying) {
+                    mediaPlayer.stop()
+                }
                 lifecycleScope.launch {
-                    binding.viewsContainer.bringToFront()
-                    binding.tvLoading.visibility = View.GONE
+                    binding.apply {
+                        clLoading.visibility = View.GONE
+                        lavLoading.pauseAnimation()
+                        viewsContainer.bringToFront()
+                        clMenu.bringToFront()
+                        layoutTop.bringToFront()
+                    }
                 }
             }
 
             override fun left() {
-                Log.d(TAG, "ParticipantListener : left: ")
-                BlindHelpDisconnectDialog(blindHelpDisconnectListener).show(
-                    parentFragmentManager,
-                    "BlindHelpDisconnectDialog"
-                )
+                requireActivity().runOnUiThread {
+                    Log.d(TAG, "ParticipantListener : left start ")
+                    returnResource()
+                    BlindHelpDisconnectDialog(blindHelpDisconnectListener).show(
+                        parentFragmentManager,
+                        "BlindHelpDisconnectDialog"
+                    )
+                    Log.d(TAG, "ParticipantListener : left end ")
+                }
             }
         }
         binding.apply {
-            btnChangeCamera.setOnClickListener {
-                session.getLocalParticipant()!!.switchCamera()
+            peerContainer.setOnTouchListener { v, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        moveX = v.x - event.rawX
+                        moveY = v.y - event.rawY
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        v.animate()
+                            .x(event.rawX + moveX)
+                            .y(event.rawY + moveY)
+                            .setDuration(0)
+                            .start()
+                    }
+                }
+
+                true
             }
-            btnDisconnect.setOnClickListener {
-                requireActivity().finish()
+            ivCamera.setOnClickListener {
+                showToast("카메라")
+            }
+            ivCameraSwitch.setOnClickListener {
+                session.getLocalParticipant()!!.switchCamera()
+                showToast("카메라 전환")
+            }
+            ivDisconnect.setOnClickListener {
+                returnResource()
+
+                BlindHelpDisconnectDialog(blindHelpDisconnectListener).show(
+                    parentFragmentManager, "BlindHelpDisconnectDialog"
+                )
+            }
+            ivSoundMode.setOnClickListener {
+                // 소리 모드 변경
+                if (audioManager != null) {
+                    audioManager.mode = AudioManager.MODE_NORMAL
+                    audioManager.isSpeakerphoneOn = !audioManager.isSpeakerphoneOn
+                    when (audioManager.isSpeakerphoneOn) {
+                        true -> {
+                            ivSoundMode.setImageResource(R.drawable.btn_speaker_on)
+                            showToast("스피커 모드")
+                        }
+                        false -> {
+                            ivSoundMode.setImageResource(R.drawable.btn_speaker_off)
+                            showToast("통화 모드")
+                        }
+                    }
+
+                }
+            }
+            ivMic.setOnClickListener {
+                // 마이크 OnOff
+                if (audioManager != null) {
+                    audioManager.isMicrophoneMute = !audioManager.isMicrophoneMute
+                    when (audioManager.isMicrophoneMute) {
+                        true -> {
+                            ivMic.setImageResource(R.drawable.btn_mic_off)
+                            showToast("마이크 OFF")
+                        }
+                        false -> {
+                            ivMic.setImageResource(R.drawable.btn_mic)
+                            showToast("마이크 ON")
+                        }
+                    }
+
+                }
             }
         }
     }
@@ -213,6 +327,16 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
         session.setWebSocket(webSocket)
     }
 
+    private fun returnResource() {
+        Log.d(TAG, "returnResource: ")
+        if(!leaveFlag) {
+            leaveFlag = true
+            mediaPlayer.stop()
+            binding.lavLoading.pauseAnimation()
+            leaveSession()
+        }
+    }
+
     private fun leaveSession() {
         if (::session.isInitialized) {
             this.session.leaveSession()
@@ -221,6 +345,7 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
         requireActivity().runOnUiThread {
             binding.localGlSurfaceView.clearImage()
             binding.localGlSurfaceView.release()
+            Log.d(TAG, "leaveSession: clearImage")
             binding.remoteGlSurfaceView.clearImage()
             binding.remoteGlSurfaceView.release()
         }

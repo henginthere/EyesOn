@@ -18,7 +18,9 @@
     <string name="btn_record">녹음 버튼</string>
     <string name="frag_text_detection">글자 인식 화면입니다 아무곳이나 누르면 다시 인식하여 알려줍니다</string>
     <string name="frag_scan_obstacle">장애물 인식 화면입니다</string>
+    <string name="frag_angel_help">도움</string>
     <string name="frag_blind_help">엔젤과 연결</string>
+    <string name="lottie_loading">엔젤과 연결중입니다. 잠시만 기다려주세요</string>
     <string name="frag_find_object">물건 인식 화면입니다 찾을 물건을 입력해 주세요</string>
     <string name="frag_setting">설정화면 입니다</string>
     <string name="frag_noti">알림 확인 화면입니다</string>
