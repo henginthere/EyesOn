@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import com.google.api.client.json.JsonFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 
@@ -109,4 +110,12 @@ public class ComplaintsController {
 
         return new ResponseEntity<>(ResponseFrame.of(result, "민원 처리 완료"), HttpStatus.OK);
     }
+
+//    @ApiParam(value = "TEST API")
+//    @GetMapping(value= "/addressTest")
+//    public String test(@RequestParam String address) throws IOException {
+//        String result = ReverseGeocoding.getAddress(address);
+//        return result;
+//    }
+
 }
