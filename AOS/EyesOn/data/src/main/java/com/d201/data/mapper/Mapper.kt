@@ -89,7 +89,7 @@ fun ComplaintsResponse.mapperToComplaints(): Complaints {
 
 fun List<ComplaintsResponse>.mapperToListComplaints(): List<Complaints> {
     return this.toList().map {
-            it.mapperToComplaints()
+        it.mapperToComplaints()
     }
 }
 
@@ -98,7 +98,8 @@ fun List<NotiEntity>.mapperToNotis(): List<Noti> {
         Noti(
             it.seq,
             it.title,
-            it.body
+            it.body,
+            it.date
         )
     }
 }
@@ -106,8 +107,10 @@ fun List<NotiEntity>.mapperToNotis(): List<Noti> {
 fun Noti.mapperToNotiEntity(): NotiEntity {
     return this.run {
         NotiEntity(
-            title = title,
-            body = body
+            seq,
+            title,
+            body,
+            date
         )
     }
 }

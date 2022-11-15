@@ -1,6 +1,5 @@
 package com.d201.eyeson.module
 
-import com.d201.data.api.ComplaintsApi
 import com.d201.data.datasource.ComplaintsRemoteDataSource
 import com.d201.data.datasource.HelpRemoteDataSource
 import com.d201.data.datasource.NotiLocalDataSource

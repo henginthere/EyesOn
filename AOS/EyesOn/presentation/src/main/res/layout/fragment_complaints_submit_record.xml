@@ -130,6 +130,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:importantForAccessibility="no"
+                    android:enabled="false"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,7 +15,6 @@ import com.d201.eyeson.util.accessibilityEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.File
 
 private const val TAG ="ComplaintsSubmitRecordFragment"
 @AndroidEntryPoint
@@ -57,6 +56,7 @@ class ComplaintsSubmitRecordFragment : BaseFragment<FragmentComplaintsSubmitReco
             location?.observe(viewLifecycleOwner){
                 Log.d(TAG, "initViewModel: GPS LOCATION : ${it}")
                 this@ComplaintsSubmitRecordFragment.location = it
+                binding.btnSubmit.isEnabled = true
             }
         }
     }
@@ -72,9 +72,7 @@ class ComplaintsSubmitRecordFragment : BaseFragment<FragmentComplaintsSubmitReco
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
                     val comp = Complaints("${location.longitude},${location.latitude}",viewModel.recordText.value)
-                    Log.d(TAG, "initView: $comp")
                     val c = comp.mapperToComplaintsRequest()
-                    Log.d(TAG, "initView: $c ${c.address} ${c.content} ${c.seq}")
                     viewModel.submitComplaints(comp, args.image)
                 }
             }

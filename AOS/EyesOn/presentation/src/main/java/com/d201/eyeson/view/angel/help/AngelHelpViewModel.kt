@@ -1,12 +1,10 @@
 package com.d201.eyeson.view.angel.help
 
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d201.domain.usecase.help.ResponseHelpUseCase
 import com.d201.domain.utils.ResultType
-import com.d201.eyeson.util.JWT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

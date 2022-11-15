@@ -6,7 +6,6 @@ import com.d201.domain.model.Complaints
 import com.d201.domain.utils.ResultType
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 
 interface ComplaintsRepository {
     fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<ResultType<BaseResponse<Boolean>>>

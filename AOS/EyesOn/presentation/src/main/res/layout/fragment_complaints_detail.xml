@@ -7,6 +7,8 @@
         <variable
             name="vm"
             type="com.d201.eyeson.view.angel.complaints.ComplaintsViewModel" />
+        <import type="android.view.View"/>
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,6 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     tools:src="@drawable/icon_no_image"
+                    imageLoader="@{vm.complaints.image}"
                     app:layout_constraintTop_toBottomOf="@id/tv_detail_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -133,6 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
+            complaintsRegistVisible="@{vm.complaints.state}"
             >
 
             <Button
@@ -179,7 +183,7 @@
             android:backgroundTint="@color/angel_blue"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginHorizontal="24dp"
-            android:visibility="gone"
+            complaintsDoneVisible="@{vm.complaints.state}"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
