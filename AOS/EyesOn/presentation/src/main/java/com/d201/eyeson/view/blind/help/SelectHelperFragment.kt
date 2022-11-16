@@ -6,6 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentSelectHelperBinding
+import com.d201.eyeson.util.accessibilityEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -29,6 +30,12 @@ class SelectHelperFragment : BaseFragment<FragmentSelectHelperBinding>(R.layout.
             }
             btnAnyone.setOnClickListener {
                 blindHelpViewModel.requestHelp("d")
+            }
+            btnBack.apply {
+                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                setOnClickListener {
+                    findNavController().popBackStack()
+                }
             }
         }
     }
