@@ -2,6 +2,10 @@ package com.d201.eyeson.view.angel.main
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.Color
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,17 +16,19 @@ import com.d201.eyeson.databinding.FragmentAngelMainBinding
 import com.d201.eyeson.util.*
 import com.d201.eyeson.view.angel.ComplaintsClickListener
 import com.d201.eyeson.view.angel.help.AngelHelpActivity
-import com.d201.eyeson.view.blind.BlindMainFragmentDirections
-import com.d201.eyeson.view.blind.findobject.FindObjectActivity
-import com.d201.eyeson.view.blind.help.BlindHelpActivity
-import com.d201.eyeson.view.blind.scanobstacle.ScanObstacleActivity
-import com.d201.eyeson.view.blind.scantext.ScanTextActivity
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.ar.core.dependencies.i
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 
 private const val TAG = "AngelMainFragment"
 
@@ -76,16 +82,43 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             rvComplaintsList.apply {
                 adapter = angelMainAdapter
             }
-            tvTitleComplaints.setOnClickListener {
-                findNavController().navigate(
-                    AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsListFragment()
-                )
-            }
-            cvComplaintsList.setOnClickListener { }
-            cvResponseHelp.setOnClickListener { }
+//            btnMyComplaints.setOnClickListener {
+//                findNavController().navigate(
+//                    AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsListFragment()
+//                )
+//            }
+//            cvComplaintsList.setOnClickListener { }
+//            cvResponseHelp.setOnClickListener { }
+
+            pieChart.getDescription().setEnabled(false)
+            // radius of the center hole in percent of maximum radius
+            // radius of the center hole in percent of maximum radius
+            pieChart.setHoleRadius(45f)
+            pieChart.setTransparentCircleRadius(50f)
+
+            val l: Legend = pieChart.getLegend()
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP)
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT)
+            l.setOrientation(Legend.LegendOrientation.VERTICAL)
+            l.setDrawInside(false)
+
+            pieChart.setData(generatePieData())
         }
     }
-
+    private fun generatePieData(): PieData? {
+        val count = 4
+        val entries1: ArrayList<PieEntry> = ArrayList()
+        entries1.add(PieEntry((Math.random() * 60 + 40).toFloat(), "21개"))
+     //   entries1.add(PieEntry((Math.random() * 60 + 40).toFloat(), "21개"))
+        val ds1 = PieDataSet(entries1, "Quarterly Revenues 2015")
+        ds1.setColors(R.color.gradient_start, R.color.gradient_end, R.color.gradient_center)
+        ds1.setSliceSpace(2f)
+        ds1.setValueTextColor(Color.WHITE)
+        ds1.setValueTextSize(12f)
+        val d = PieData(ds1)
+      //  d.setValueTypeface(tf)
+        return d
+    }
     private fun initViewModelCallback(){
         job = lifecycleScope.launch { 
             angelMainViewModel.complaintsList.collectLatest {
@@ -140,5 +173,10 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             )
             .check()
     }
-
+    private fun generateCenterText(): SpannableString? {
+        val s = SpannableString("Revenues\nQuarters 2015")
+        s.setSpan(RelativeSizeSpan(2f), 0, 8, 0)
+        s.setSpan(ForegroundColorSpan(Color.GRAY), 8, s.length, 0)
+        return s
+    }
 }

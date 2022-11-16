@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.angel.main.AngelMainActivity"
-        android:background="@drawable/gradient_angel">
+        android:background="@color/black">
 
         <androidx.fragment.app.FragmentContainerView
             android:layout_marginTop="35dp"
