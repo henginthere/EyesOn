@@ -197,10 +197,7 @@ class ScanObstacleFragment :
                 )
                 return
             }
-            binding.apply {
-                inputImageView.bringToFront()
-                layoutTop.bringToFront()
-            }
+
 
         }
 
@@ -220,7 +217,10 @@ class ScanObstacleFragment :
         }
         surfaceView.onResume()
         displayRotationHelper!!.onResume()
-
+        binding.apply {
+            inputImageView.bringToFront()
+            layoutTop.bringToFront()
+        }
     }
 
     override fun onPause() {
