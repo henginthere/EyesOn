@@ -7,6 +7,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentSelectHelperBinding
 import com.d201.eyeson.util.GENDER_DEFAULT
+import com.d201.eyeson.util.accessibilityEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -31,6 +32,12 @@ class SelectHelperFragment :
             }
             btnAnyone.setOnClickListener {
                 blindHelpViewModel.requestHelp(GENDER_DEFAULT)
+            }
+            btnBack.apply {
+                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                setOnClickListener {
+                    findNavController().popBackStack()
+                }
             }
         }
     }
