@@ -67,7 +67,7 @@ class ComplaintsDetailFragment :
             btnGoSafetyEReport.setOnClickListener {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
                     copyComplaints()
-                    imageUrlToCacheFileAsync(requireContext(), complaints.image!!)
+                    imageUrlToCacheFileAsync(requireContext(), complaintsViewModel.complaints.value!!.image!!)
                     openWebPage()
                     binding.btnRegisterTitle.visibility = View.VISIBLE
                 }else {

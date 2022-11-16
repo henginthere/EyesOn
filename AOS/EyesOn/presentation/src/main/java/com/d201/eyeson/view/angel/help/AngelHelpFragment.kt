@@ -325,7 +325,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
     }
 
     private fun returnResource() {
-        if(!leaveFlag) {
+        if (!leaveFlag) {
             leaveFlag = true
             leaveSession()
         }
