@@ -23,7 +23,7 @@ pipeline {
                                 sh 'docker container ls -a -f name=back -q \
                                         | xargs -r docker container rm'
 
-                                sh 'docker run -v /home/files:/home/files -e TZ=Asia/Seoul -d --name back -p 8090:8090 backimg'
+                                sh 'docker run -v /home/files:/home/files -e JAVA_OPTS=-Djasypt.encryptor.password=gumid201 -e TZ=Asia/Seoul -d --name back -p 8090:8090 backimg'
                         }
                 }
 		stage('Remove Images'){
