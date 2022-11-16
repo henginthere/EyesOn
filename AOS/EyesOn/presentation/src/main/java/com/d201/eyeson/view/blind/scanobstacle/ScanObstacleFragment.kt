@@ -9,6 +9,7 @@ import android.opengl.GLSurfaceView
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.d201.depth.depth.DepthTextureHandler
@@ -22,6 +23,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentScanObstacleBinding
 import com.d201.eyeson.util.*
+import com.d201.mlkit.GraphicOverlay
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
 import com.gun0912.tedpermission.PermissionListener
@@ -79,6 +81,9 @@ class ScanObstacleFragment :
 
     private lateinit var detector: ObjectDetector
     private lateinit var gpuThread: Executor
+
+    private lateinit var graphicOverlay: ImageView
+
     override fun init() {
         initView()
         checkPermission()
@@ -129,6 +134,7 @@ class ScanObstacleFragment :
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener { requireActivity().finish() }
             }
+            this@ScanObstacleFragment.graphicOverlay = graphicOverlay
         }
     }
 
@@ -223,6 +229,7 @@ class ScanObstacleFragment :
         binding.apply {
             inputImageView.bringToFront()
             layoutTop.bringToFront()
+            graphicOverlay.bringToFront()
         }
     }
 
@@ -384,7 +391,7 @@ class ScanObstacleFragment :
                     Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
                     requireActivity().runOnUiThread {
                         Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
-                        binding.inputImageView.setImageBitmap(imgWithResult)
+//                        binding.inputImageView.setImageBitmap(imgWithResult)
                     }
                     currentFrameImage.close()
                     depthImage.close()
@@ -581,6 +588,8 @@ class ScanObstacleFragment :
                     lastSpeakTime = System.currentTimeMillis()
                     speakOut("$location ${convertedDistance}에 ${it.text}가 있습니다")
                 }
+                graphicOverlay.draw(canvas)
+                graphicOverlay.bringToFront()
             }
         }
         return outputBitmap

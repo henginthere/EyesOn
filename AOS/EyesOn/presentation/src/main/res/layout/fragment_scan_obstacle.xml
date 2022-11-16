@@ -19,6 +19,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/graphic_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ImageView
             android:id="@+id/input_image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
