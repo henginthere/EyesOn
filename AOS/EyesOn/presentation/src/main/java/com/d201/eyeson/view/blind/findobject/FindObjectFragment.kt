@@ -210,12 +210,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                 )
                 return
             }
-            binding.apply {
-                inputImageView.bringToFront()
-                frameLayoutCamera.bringToFront()
-                btnRecord.bringToFront()
-                tvObject.bringToFront()
-            }
+
         }
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
@@ -234,6 +229,13 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
         }
         surfaceView.onResume()
         displayRotationHelper!!.onResume()
+        binding.apply {
+            inputImageView.bringToFront()
+            frameLayoutCamera.bringToFront()
+            btnRecord.bringToFront()
+            tvObject.bringToFront()
+            layoutTop.bringToFront()
+        }
     }
 
     override fun onPause() {
