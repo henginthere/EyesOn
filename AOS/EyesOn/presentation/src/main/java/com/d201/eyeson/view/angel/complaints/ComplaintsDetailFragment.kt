@@ -6,10 +6,13 @@ import android.content.Context.CLIPBOARD_SERVICE
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import android.provider.MediaStore.Images
 import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -33,6 +36,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.io.OutputStream
 
 
 private const val TAG = "ComplaintsDetailFragment"
@@ -71,7 +75,14 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
             vm = complaintsViewModel
 
             btnGoSafetyEReport.setOnClickListener {
-                checkPermission()
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                    copyComplaints()
+                    imageUrlToCacheFileAsync(requireContext(), complaints.image!!)
+                    openWebPage()
+                    binding.btnRegisterTitle.visibility = View.VISIBLE
+                }else {
+                    checkPermission()
+                }
             }
             btnReject.setOnClickListener {
                 ReturnComplaintsDialog(complaintsViewModel.complaints.value!!, returnConfirmListener).let {
@@ -109,21 +120,7 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    val newFile = File(
-                        context.cacheDir.path,
-                        complaints.image!!
-                    ).apply {
-                        createNewFile()
-                    }
-                    FileOutputStream(newFile).use {
-                        resource.compress(Bitmap.CompressFormat.JPEG, 100, it)
-                    }
-                    val values = ContentValues()
-                    values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis())
-                    values.put(Images.Media.MIME_TYPE, "image/jpeg")
-                    values.put(MediaStore.MediaColumns.DATA, "${context.cacheDir.path}/${complaints.image}")
-                    Log.d(TAG, "onResourceReady: ${context.cacheDir.path}/${complaints.image}")
-                    context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                    saveMediaToStorage(resource)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
@@ -149,6 +146,32 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
     private val registerComplaintsListener = object : RegisterComplaintsListener {
         override fun onClick(complaints: Complaints) {
             complaintsViewModel.completeComplaints(complaints)
+        }
+    }
+
+    fun saveMediaToStorage(bitmap: Bitmap) {
+        val filename = "${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            context?.contentResolver?.also { resolver ->
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                }
+                val imageUri: Uri? =
+                    resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                fos = imageUri?.let { resolver.openOutputStream(it) }
+            }
+        } else {
+            val imagesDir =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val image = File(imagesDir, filename)
+            fos = FileOutputStream(image)
+        }
+        fos?.use {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
         }
     }
 
