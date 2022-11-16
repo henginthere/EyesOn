@@ -197,7 +197,11 @@ class ScanObstacleFragment :
                 )
                 return
             }
-            binding.inputImageView.bringToFront()
+            binding.apply {
+                inputImageView.bringToFront()
+                layoutTop.bringToFront()
+            }
+
         }
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
