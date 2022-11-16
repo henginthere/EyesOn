@@ -156,6 +156,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="64dp"
             app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            complaintsRegistVisible="@{vm.complaints.state}"
+            >
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_go_safety_e_report"

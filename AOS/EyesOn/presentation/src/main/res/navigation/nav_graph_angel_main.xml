@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_angelMainFragment_to_complaintsDetailFragment"
             app:destination="@id/complaintsDetailFragment" />
+        <action
+            android:id="@+id/action_angelMainFragment_to_complaintAngelListFragment"
+            app:destination="@id/complaintAngelListFragment" />
     </fragment>
     <fragment
         android:id="@+id/angelSettingFragment"
@@ -37,5 +40,13 @@
         <argument
             android:name="complaintsSeq"
             app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/complaintAngelListFragment"
+        android:name="com.d201.eyeson.view.angel.complaints.ComplaintAngelListFragment"
+        android:label="ComplaintAngelListFragment" >
+        <action
+            android:id="@+id/action_complaintAngelListFragment_to_complaintsDetailFragment"
+            app:destination="@id/complaintsDetailFragment" />
     </fragment>
 </navigation>

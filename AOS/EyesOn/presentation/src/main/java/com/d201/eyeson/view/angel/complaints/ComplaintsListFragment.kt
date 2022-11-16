@@ -1,5 +1,6 @@
 package com.d201.eyeson.view.angel.complaints
 
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,7 +18,7 @@ private const val TAG = "ComplaintsListFragment"
 class ComplaintsListFragment :
     BaseFragment<FragmentComplaintsListBinding>(R.layout.fragment_complaints_list) {
 
-    private val complaintsListviewModel: ComplaintsListViewModel by viewModels()
+    private val complaintsListviewModel: ComplaintsListViewModel by activityViewModels()
     private lateinit var complaintsAdapter: ComplaintsAdapter
 
     override fun init() {
@@ -37,6 +38,7 @@ class ComplaintsListFragment :
                 )
             }
         }
+
         complaintsAdapter = ComplaintsAdapter(complaintsClickListener)
         binding.apply {
             rvComplaintsList.apply {
@@ -48,7 +50,6 @@ class ComplaintsListFragment :
 
     private fun initListener() {
         binding.apply {
-
             btnBack.setOnClickListener {
                 findNavController().popBackStack()
             }

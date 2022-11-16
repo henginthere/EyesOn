@@ -26,10 +26,13 @@ class ComplaintsListViewModel @Inject constructor(
     private val _complaintsList: MutableStateFlow<PagingData<Complaints>?> = MutableStateFlow(null)
     val complaintsList get() = _complaintsList.asStateFlow()
 
+    private val _complaintsMyList: MutableStateFlow<PagingData<Complaints>?> = MutableStateFlow(null)
+    val complaintsMyList get() = _complaintsMyList.asStateFlow()
+
     fun getComplaintsByAngelList() {
         viewModelScope.launch(Dispatchers.IO) {
             selectCompByAngelUseCase.execute().cachedIn(this).collectLatest {
-                _complaintsList.value = it
+                _complaintsMyList.value = it
             }
         }
     }
