@@ -7,7 +7,6 @@ import androidx.paging.cachedIn
 import com.d201.domain.model.Complaints
 import com.d201.domain.usecase.complaints.SelectAllCompUseCase
 import com.d201.domain.usecase.complaints.SelectCompByAngelUseCase
-import com.d201.domain.usecase.user.GetAngelInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -331,7 +331,7 @@ public class BitmapUtils {
     }
 
     private static ByteBuffer imageToByteBuffer(final Image image) {
-        Log.d(TAG, "imageToByteBuffer: "+ image.getWidth());
+        Log.d(TAG, "imageToByteBuffer: " + image.getWidth());
         final Rect crop = image.getCropRect();
         final int width = crop.width();
         final int height = crop.height();
@@ -392,8 +392,7 @@ public class BitmapUtils {
         return output;
     }
 
-    public static Bitmap RotateBitmap(Bitmap source, float angle)
-    {
+    public static Bitmap RotateBitmap(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);

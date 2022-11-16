@@ -6,6 +6,7 @@ import com.d201.eyeson.databinding.ActivityScanTextBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "ScanTextActivity"
+
 @AndroidEntryPoint
 class ScanTextActivity : BaseActivity<ActivityScanTextBinding>(R.layout.activity_scan_text) {
 
@@ -13,9 +14,10 @@ class ScanTextActivity : BaseActivity<ActivityScanTextBinding>(R.layout.activity
         initView()
     }
 
-    private fun initView(){
+    private fun initView() {
         binding.apply {
-            supportFragmentManager.beginTransaction().replace(R.id.frame_scan_text, ScanTextFragment()).commit()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frame_scan_text, ScanTextFragment()).commit()
         }
     }
 

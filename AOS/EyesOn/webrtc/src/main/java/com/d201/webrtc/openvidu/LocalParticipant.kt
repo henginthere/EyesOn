@@ -13,7 +13,6 @@ class LocalParticipant(
 ) : Participant(participantName, session) {
 
 
-
     private var surfaceTextureHelper: SurfaceTextureHelper? = null
     private var videoCapturer: VideoCapturer? = null
 
@@ -24,7 +23,7 @@ class LocalParticipant(
         getSession()?.setLocalParticipant(this)
     }
 
-    fun startCamera(role: String){
+    fun startCamera(role: String) {
         val eglBaseContext = EglBase.create().eglBaseContext
         val peerConnectionFactory = getSession()?.getPeerConnectionFactory()!!
 
@@ -43,33 +42,33 @@ class LocalParticipant(
         getVideoTrack().addSink(surfaceViewRenderer)
     }
 
-    fun createCameraCapturer(role: String): VideoCapturer?{
+    fun createCameraCapturer(role: String): VideoCapturer? {
         var enumerator: CameraEnumerator
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             enumerator = Camera2Enumerator(this.context)
-        }else{
+        } else {
             enumerator = Camera1Enumerator(false)
         }
 
         val devicenames = enumerator.deviceNames
 
-        when(role){
+        when (role) {
             "Angel" -> {
-                for(i in devicenames.iterator()){
-                    if(enumerator.isFrontFacing(i)){
+                for (i in devicenames.iterator()) {
+                    if (enumerator.isFrontFacing(i)) {
                         videoCapturer = enumerator.createCapturer(i, null)
-                        if(videoCapturer != null){
+                        if (videoCapturer != null) {
                             return videoCapturer
                         }
                     }
                 }
             }
             else -> {
-                for(i in devicenames.iterator()){
-                    if(enumerator.isBackFacing(i)){
+                for (i in devicenames.iterator()) {
+                    if (enumerator.isBackFacing(i)) {
                         videoCapturer = enumerator.createCapturer(i, null)
-                        if(videoCapturer != null){
+                        if (videoCapturer != null) {
                             return videoCapturer
                         }
                     }
@@ -80,9 +79,9 @@ class LocalParticipant(
         return null
     }
 
-    fun switchCamera(){
-        if(videoCapturer != null){
-            if(videoCapturer is CameraVideoCapturer){
+    fun switchCamera() {
+        if (videoCapturer != null) {
+            if (videoCapturer is CameraVideoCapturer) {
                 val cameraVideoCapturer = videoCapturer as CameraVideoCapturer
                 cameraVideoCapturer.switchCamera(null)
             }

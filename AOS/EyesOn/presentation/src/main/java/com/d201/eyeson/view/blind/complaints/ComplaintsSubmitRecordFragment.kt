@@ -16,9 +16,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-private const val TAG ="ComplaintsSubmitRecordFragment"
+private const val TAG = "ComplaintsSubmitRecordFragment"
+
 @AndroidEntryPoint
-class ComplaintsSubmitRecordFragment : BaseFragment<FragmentComplaintsSubmitRecordBinding>(R.layout.fragment_complaints_submit_record) {
+class ComplaintsSubmitRecordFragment :
+    BaseFragment<FragmentComplaintsSubmitRecordBinding>(R.layout.fragment_complaints_submit_record) {
 
     private val args: ComplaintsSubmitRecordFragmentArgs by navArgs()
     private val viewModel: ComplaintsSubmitRecordViewModel by viewModels()
@@ -29,10 +31,10 @@ class ComplaintsSubmitRecordFragment : BaseFragment<FragmentComplaintsSubmitReco
         initViewModel()
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         lifecycleScope.launch {
             viewModel.statusSTT.collectLatest {
-                when(it){
+                when (it) {
                     true -> binding.btnRecord.playAnimation()
                     false -> binding.btnRecord.pauseAnimation()
                 }
@@ -40,20 +42,20 @@ class ComplaintsSubmitRecordFragment : BaseFragment<FragmentComplaintsSubmitReco
         }
         viewModel.apply {
             initTTS(requireContext())
-            successResultEvent.observe(viewLifecycleOwner){
+            successResultEvent.observe(viewLifecycleOwner) {
                 showToast("민원이 접수되었습니다")
                 findNavController().popBackStack()
             }
             setLocationRepository(requireContext())
             enableLocationServices()
-            locationRepository?.let{
-                it.observe(viewLifecycleOwner){
+            locationRepository?.let {
+                it.observe(viewLifecycleOwner) {
                     it.let {
                         this.setLocationItem(it!!)
                     }
                 }
             }
-            location?.observe(viewLifecycleOwner){
+            location?.observe(viewLifecycleOwner) {
                 Log.d(TAG, "initViewModel: GPS LOCATION : ${it}")
                 this@ComplaintsSubmitRecordFragment.location = it
                 binding.btnSubmit.isEnabled = true
@@ -71,7 +73,10 @@ class ComplaintsSubmitRecordFragment : BaseFragment<FragmentComplaintsSubmitReco
             btnSubmit.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
-                    val comp = Complaints("${location.longitude},${location.latitude}",viewModel.recordText.value)
+                    val comp = Complaints(
+                        "${location.longitude},${location.latitude}",
+                        viewModel.recordText.value
+                    )
                     val c = comp.mapperToComplaintsRequest()
                     viewModel.submitComplaints(comp, args.image)
                 }
@@ -86,7 +91,7 @@ class ComplaintsSubmitRecordFragment : BaseFragment<FragmentComplaintsSubmitReco
         }
     }
 
-    private fun record(){
+    private fun record() {
         viewModel.startRecord(requireContext())
     }
 

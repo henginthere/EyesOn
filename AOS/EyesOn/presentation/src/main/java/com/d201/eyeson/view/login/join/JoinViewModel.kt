@@ -15,18 +15,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "SelectGenderViewModel"
+
 @HiltViewModel
-class SelectGenderViewModel @Inject constructor(private val putUserRoleUseCase: PutUserRoleUseCase): ViewModel() {
+class SelectGenderViewModel @Inject constructor(private val putUserRoleUseCase: PutUserRoleUseCase) :
+    ViewModel() {
 
     private val _info: MutableStateFlow<Login?> = MutableStateFlow(null)
     val info get() = _info.asStateFlow()
 
-    fun putUserRole(role: String, gender: String){
-        viewModelScope.launch(Dispatchers.IO){
+    fun putUserRole(role: String, gender: String) {
+        viewModelScope.launch(Dispatchers.IO) {
             putUserRoleUseCase.execute(role, gender).collectLatest {
-                if(it is ResultType.Success && it.data.status == 200){
+                if (it is ResultType.Success && it.data.status == 200) {
                     _info.value = it.data.data
-                }else{
+                } else {
                     Log.d(TAG, "putUserRole: ${it}")
                 }
             }

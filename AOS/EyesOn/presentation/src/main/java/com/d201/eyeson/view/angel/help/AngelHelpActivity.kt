@@ -1,6 +1,5 @@
 package com.d201.eyeson.view.angel.help
 
-import android.content.Intent
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.d201.eyeson.R

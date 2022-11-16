@@ -5,15 +5,14 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.blind.scanobstacle.ScanObstacleActivity"
-        android:background="@drawable/gradient_user">
+        android:background="@drawable/gradient_user"
+        tools:context=".view.blind.scanobstacle.ScanObstacleActivity">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/frame_scan_obstacle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_scan_obstacle"
-            />
+            tools:layout="@layout/fragment_scan_obstacle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

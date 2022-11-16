@@ -21,10 +21,12 @@ import kotlinx.coroutines.launch
 private const val TAG = "AngelSettingFragment"
 private const val PICK_MIN = 0
 private const val PICK_MAX = 24
-@AndroidEntryPoint
-class AngelSettingFragment : BaseFragment<FragmentAngelSettingBinding>(R.layout.fragment_angel_setting) {
 
-    private lateinit var buttonList : List<ToggleButton>
+@AndroidEntryPoint
+class AngelSettingFragment :
+    BaseFragment<FragmentAngelSettingBinding>(R.layout.fragment_angel_setting) {
+
+    private lateinit var buttonList: List<ToggleButton>
     private val viewModel: AngelSettingViewModel by viewModels()
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     override fun init() {
@@ -34,7 +36,8 @@ class AngelSettingFragment : BaseFragment<FragmentAngelSettingBinding>(R.layout.
 
     private fun initView() {
         binding.apply {
-            buttonList = listOf(toggleSun, toggleMon, toggleTue, toggleWed, toggleThu, toggleFri, toggleSat)
+            buttonList =
+                listOf(toggleSun, toggleMon, toggleTue, toggleWed, toggleThu, toggleFri, toggleSat)
             btnBack.setOnClickListener {
                 findNavController().popBackStack()
             }
@@ -52,16 +55,26 @@ class AngelSettingFragment : BaseFragment<FragmentAngelSettingBinding>(R.layout.
             numpickEnd.minValue = PICK_MIN
             numpickStart.maxValue = PICK_MAX
             numpickEnd.maxValue = PICK_MAX
-            for(button in buttonList) {
+            for (button in buttonList) {
                 button.setOnCheckedChangeListener { view, b ->
-                    when(b){
+                    when (b) {
                         true -> {
                             view.setBackgroundResource(R.drawable.shape_layout_border_blue)
-                            view.setTextColor(requireActivity().resources.getColor(R.color.angel_blue, null))
+                            view.setTextColor(
+                                requireActivity().resources.getColor(
+                                    R.color.angel_blue,
+                                    null
+                                )
+                            )
                         }
                         false -> {
                             view.setBackgroundResource(R.drawable.shape_layout_border)
-                            view.setTextColor(requireActivity().resources.getColor(R.color.black, null))
+                            view.setTextColor(
+                                requireActivity().resources.getColor(
+                                    R.color.black,
+                                    null
+                                )
+                            )
                         }
                     }
                 }
@@ -72,24 +85,24 @@ class AngelSettingFragment : BaseFragment<FragmentAngelSettingBinding>(R.layout.
     private fun initViewModel() {
         viewModel.apply {
             getAngelInfo()
-            deleteUserEvent.observe(viewLifecycleOwner){
-                if(it){
+            deleteUserEvent.observe(viewLifecycleOwner) {
+                if (it) {
                     finishActivity()
                 }
             }
-            saveSettingEvent.observe(viewLifecycleOwner){
-                if(it){
+            saveSettingEvent.observe(viewLifecycleOwner) {
+                if (it) {
                     showToast("저장 되었습니다")
                     findNavController().popBackStack()
                 }
             }
         }
-        lifecycleScope.launch(Dispatchers.IO){
+        lifecycleScope.launch(Dispatchers.IO) {
             viewModel.angelInfo.collectLatest {
-                if(it != null){
+                if (it != null) {
                     var alarmDay = it.alarmDay
-                    for(button in buttonList.reversed()){
-                        if(alarmDay and 1 == 1){
+                    for (button in buttonList.reversed()) {
+                        if (alarmDay and 1 == 1) {
                             button.isChecked = true
                         }
                         alarmDay = alarmDay shr 1
@@ -108,25 +121,31 @@ class AngelSettingFragment : BaseFragment<FragmentAngelSettingBinding>(R.layout.
         }
     }
 
-    private fun finishActivity(){
+    private fun finishActivity() {
         requireActivity().startActivity(Intent(requireContext(), LoginActivity::class.java))
         requireActivity().finish()
     }
 
-    private fun saveAlarmInfo(){
+    private fun saveAlarmInfo() {
         binding.apply {
             var alarmDay = 0
             var checkedDay = 64
-            for(item in buttonList){
-                if (item.isChecked){
+            for (item in buttonList) {
+                if (item.isChecked) {
                     alarmDay += checkedDay
                 }
                 checkedDay = checkedDay shr 1
             }
-            viewModel.putAngelInfo(numpickStart.value, numpickEnd.value, alarmDay, switchAlarm.isChecked)
+            viewModel.putAngelInfo(
+                numpickStart.value,
+                numpickEnd.value,
+                alarmDay,
+                switchAlarm.isChecked
+            )
 //            Log.d(TAG, "saveAlarmInfo: ${numpickStart.value} | ${numpickEnd.value} | ${alarmDay} | ${switchAlarm.isChecked}")
         }
     }
+
     private fun logOut() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()

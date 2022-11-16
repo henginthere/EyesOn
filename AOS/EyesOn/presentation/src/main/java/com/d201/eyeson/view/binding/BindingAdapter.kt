@@ -29,30 +29,30 @@ fun imageLoader(view: ImageView, src: String?) {
 
 @BindingAdapter("textSize")
 fun bindTextSize(textView: TextView, title: String?) {
-    if(title == null){
+    if (title == null) {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24.toFloat())
-    }else{
+    } else {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16.toFloat())
     }
 }
 
 @BindingAdapter("complaintsDoneVisible")
-fun complaintsDoneVisible(view: Button, state: String?){
-    if(!state.isNullOrEmpty()){
-        if(state == "REGIST_DONE"){
+fun complaintsDoneVisible(view: Button, state: String?) {
+    if (!state.isNullOrEmpty()) {
+        if (state == "REGIST_DONE") {
             view.visibility = View.VISIBLE
-        }else{
+        } else {
             view.visibility = View.GONE
         }
     }
 }
 
 @BindingAdapter("complaintsRegistVisible")
-fun complaintsRegistVisible(view: ConstraintLayout, state: String?){
-    if(!state.isNullOrEmpty()){
-        if(state == "PROGRESS_IN"){
+fun complaintsRegistVisible(view: ConstraintLayout, state: String?) {
+    if (!state.isNullOrEmpty()) {
+        if (state == "PROGRESS_IN") {
             view.visibility = View.VISIBLE
-        }else{
+        } else {
             view.visibility = View.GONE
         }
     }

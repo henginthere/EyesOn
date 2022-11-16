@@ -6,14 +6,15 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"
-        tools:node="remove"/>
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
+        tools:node="remove" />
 
-    <uses-feature android:name="android.hardware.camera.ar"/>
+    <uses-feature android:name="android.hardware.camera.ar" />
 
     <application
         android:name=".di.ApplicationClass"
@@ -39,7 +40,7 @@
             android:exported="false">
 
             <intent-filter>
-                <action android:name=".view.angel.help.AngelHelpActivity"/>
+                <action android:name=".view.angel.help.AngelHelpActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -104,7 +105,8 @@
                 android:value="" />
         </activity>
 
-        <service android:name=".service.FirebaseCloudMessagingService"
+        <service
+            android:name=".service.FirebaseCloudMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

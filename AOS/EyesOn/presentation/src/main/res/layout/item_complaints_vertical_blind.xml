@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="data"
             type="com.d201.domain.model.Complaints" />
+
         <import type="android.view.View" />
     </data>
 
@@ -40,13 +42,13 @@
 
                     <ImageView
                         android:id="@+id/iv_complaints_image"
+                        imageLoader="@{data.image}"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        imageLoader="@{data.image}"
-                        tools:src="@drawable/icon_no_image"
                         app:circularflow_radiusInDP="16"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@drawable/icon_no_image" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView
@@ -65,6 +67,7 @@
 
                 <TextView
                     android:id="@+id/tv_complaints_content"
+                    textSize="@{data.title}"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginHorizontal="24dp"
@@ -73,7 +76,6 @@
                     android:gravity="start|center"
                     android:maxLines="1"
                     android:text="@{data.content}"
-                    textSize="@{data.title}"
                     app:layout_constraintBottom_toTopOf="@id/tv_complaints_address"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/cv_complaints_image"
@@ -95,43 +97,40 @@
                     android:id="@+id/tv_complaints_status_processing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="@id/tv_complaints_address"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_complaints_address"
-                    app:layout_constraintStart_toEndOf="@id/tv_complaints_address"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:text="처리중"
-                    android:padding="4dp"
                     android:background="@drawable/btn_border_yellow_focus"
+                    android:padding="4dp"
+                    android:text="처리중"
                     android:visibility="gone"
-                    />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_complaints_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_complaints_address"
+                    app:layout_constraintTop_toTopOf="@id/tv_complaints_address" />
 
                 <TextView
                     android:id="@+id/tv_complaints_status_return"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="@id/tv_complaints_address"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_complaints_address"
-                    app:layout_constraintStart_toEndOf="@id/tv_complaints_address"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:text="반환됨"
-                    android:padding="4dp"
                     android:background="@drawable/btn_border_red_focus"
+                    android:padding="4dp"
+                    android:text="반환됨"
                     android:visibility="gone"
-                    />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_complaints_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_complaints_address"
+                    app:layout_constraintTop_toTopOf="@id/tv_complaints_address" />
 
                 <TextView
                     android:id="@+id/tv_complaints_status_done"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="@id/tv_complaints_address"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_complaints_address"
-                    app:layout_constraintStart_toEndOf="@id/tv_complaints_address"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:text="완료"
-                    android:padding="4dp"
                     android:background="@drawable/btn_border_green_focus"
+                    android:padding="4dp"
+                    android:text="완료"
                     android:visibility="gone"
-                    />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_complaints_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_complaints_address"
+                    app:layout_constraintTop_toTopOf="@id/tv_complaints_address" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,10 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.provider.MediaStore.Images
-import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -32,7 +29,6 @@ import com.d201.eyeson.view.angel.TitleConfirmListener
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -65,12 +61,15 @@ class ComplaintsDetailFragment :
     private fun initListener() {
         binding.apply {
             btnGoSafetyEReport.setOnClickListener {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     copyComplaints()
-                    imageUrlToCacheFileAsync(requireContext(), complaintsViewModel.complaints.value!!.image!!)
+                    imageUrlToCacheFileAsync(
+                        requireContext(),
+                        complaintsViewModel.complaints.value!!.image!!
+                    )
                     openWebPage()
                     binding.btnRegisterTitle.visibility = View.VISIBLE
-                }else {
+                } else {
                     checkPermission()
                 }
             }

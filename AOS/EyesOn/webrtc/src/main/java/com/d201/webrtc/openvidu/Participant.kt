@@ -6,7 +6,7 @@ import org.webrtc.*
 abstract class Participant(
     private val participantName: String,
     private var session: Session?
-    ) {
+) {
 
     private lateinit var connectionId: String
     private var iceCandidateList = mutableListOf<IceCandidate>()
@@ -19,50 +19,54 @@ abstract class Participant(
 
     fun getSession() = session
 
-    fun setPeerConnection(peerConnection: PeerConnection){
+    fun setPeerConnection(peerConnection: PeerConnection) {
         this.peerConnection = peerConnection
     }
 
     fun getPeerConnection(): PeerConnection = peerConnection
 
-    fun setConnectionId(connectionId: String){
+    fun setConnectionId(connectionId: String) {
         this.connectionId = connectionId
     }
+
     fun getConnectionId(): String = connectionId
 
-    fun setIceCandidateList(iceCandidates: MutableList<IceCandidate>){
+    fun setIceCandidateList(iceCandidates: MutableList<IceCandidate>) {
         iceCandidateList = iceCandidates
     }
 
     fun getIceCandidateList(): MutableList<IceCandidate> =
         iceCandidateList
-    fun setAudioTrack(audioTrack: AudioTrack){
+
+    fun setAudioTrack(audioTrack: AudioTrack) {
         this.audioTrack = audioTrack
     }
-    fun getAudioTrack(): AudioTrack{
+
+    fun getAudioTrack(): AudioTrack {
         return audioTrack
     }
 
-    fun setVideoTrack(videoTrack: VideoTrack){
+    fun setVideoTrack(videoTrack: VideoTrack) {
         this.videoTrack = videoTrack
     }
 
-    fun getVideoTrack(): VideoTrack{
+    fun getVideoTrack(): VideoTrack {
         return videoTrack
     }
+
     constructor(connectionId: String, participantName: String, session: Session)
-            : this(participantName,session){
-                this.connectionId = connectionId
+            : this(participantName, session) {
+        this.connectionId = connectionId
     }
 
     open fun dispose() {
-        if(peerConnection != null){
-           try{
+        if (peerConnection != null) {
+            try {
                 peerConnection.close()
                 session = null
-           }catch(e : IllegalStateException){
-               Log.e("Dispose PeerConnection" , e.message.toString())
-           }
+            } catch (e: IllegalStateException) {
+                Log.e("Dispose PeerConnection", e.message.toString())
+            }
         }
     }
 

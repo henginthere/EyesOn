@@ -56,7 +56,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun initAction() {
         val intent = requireActivity().intent
         val extra = intent.extras
-        if(intent != null && extra?.getString("action") != null){
+        if (intent != null && extra?.getString("action") != null) {
             action = extra.getString("action")!!
         }
     }
@@ -90,10 +90,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                                 }
                             )
                             ANGEL -> {
-                                val angelMainIntent = Intent(requireContext(),AngelMainActivity::class.java).apply {
-                                    putExtra("Gender", it.gender)
-                                    putExtra("action", this@LoginFragment.action)
-                                }
+                                val angelMainIntent =
+                                    Intent(requireContext(), AngelMainActivity::class.java).apply {
+                                        putExtra("Gender", it.gender)
+                                        putExtra("action", this@LoginFragment.action)
+                                    }
 
                                 startActivity(angelMainIntent)
                             }

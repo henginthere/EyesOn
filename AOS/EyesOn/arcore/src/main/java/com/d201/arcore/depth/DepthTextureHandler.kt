@@ -9,13 +9,16 @@ import com.google.ar.core.Coordinates2d
 import com.google.ar.core.Frame
 import com.google.ar.core.exceptions.NotYetAvailableException
 import java.nio.ByteOrder
+
 private const val TAG = "DepthTextureHandler"
+
 class DepthTextureHandler(var context: Context) {
     private var depthTextureId = -1
     private var depthTextureWidth = -1
     private var depthTextureHeight = -1
-  var distance1 = 0
-  var distance2 = 0
+    var distance1 = 0
+    var distance2 = 0
+
     /**
      * Creates and initializes the depth texture. This method needs to be called on a
      * thread with a EGL context attached.
@@ -53,18 +56,21 @@ class DepthTextureHandler(var context: Context) {
             val depthImage = frame.acquireDepthImage16Bits()
 //            val rawDepthImage = frame.acquireRawDepthImage16Bits()
 
-           // Log.d(TAG, "originImage : ${originImage.width}  ${originImage.height}" )
-            Log.d(TAG, "originImage : ${depthImage.width}  ${depthImage.height}" )
+            // Log.d(TAG, "originImage : ${originImage.width}  ${originImage.height}" )
+            Log.d(TAG, "originImage : ${depthImage.width}  ${depthImage.height}")
 //            Log.d(TAG, "originImage : ${rawDepthImage.width}  ${rawDepthImage.height}" )
             // 160*120 픽셀
             depthTextureWidth = depthImage.width
             depthTextureHeight = depthImage.height
-            Log.d(TAG, "depthTexturepixelStride : ${depthImage.planes[0].pixelStride}" )
-            Log.d(TAG, "depthTexturerowStride : ${depthImage.planes[0].rowStride}" )
-            Log.d(TAG, "depthTexturebuffer : ${depthImage.planes[0].buffer}" )
-            Log.d(TAG, "depthTextureWidth : $depthTextureWidth" )
-            Log.d(TAG, "depthTextureHeight : $depthTextureHeight" )
-            Log.d(TAG, "depthTexturePixelStride : ${(depthTextureWidth*depthImage.planes[0].pixelStride)} : ${(depthTextureHeight*depthImage.planes[0].pixelStride)}" )
+            Log.d(TAG, "depthTexturepixelStride : ${depthImage.planes[0].pixelStride}")
+            Log.d(TAG, "depthTexturerowStride : ${depthImage.planes[0].rowStride}")
+            Log.d(TAG, "depthTexturebuffer : ${depthImage.planes[0].buffer}")
+            Log.d(TAG, "depthTextureWidth : $depthTextureWidth")
+            Log.d(TAG, "depthTextureHeight : $depthTextureHeight")
+            Log.d(
+                TAG,
+                "depthTexturePixelStride : ${(depthTextureWidth * depthImage.planes[0].pixelStride)} : ${(depthTextureHeight * depthImage.planes[0].pixelStride)}"
+            )
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, depthTextureId)
             GLES20.glTexImage2D(
                 GLES20.GL_TEXTURE_2D,
@@ -91,16 +97,21 @@ class DepthTextureHandler(var context: Context) {
         // The depth image has a single plane, which stores depth for each pixel as 16-bit unsigned integers.
         // 깊이 이미지에는 각 픽셀의 깊이를 16비트 부호 없는 정수로 저장하는 단일 평면이 있습니다.
         val plane = depthImage.planes[0]
-        val byteIndex = x * plane.pixelStride + y * plane.rowStride -2
+        val byteIndex = x * plane.pixelStride + y * plane.rowStride - 2
         val buffer = plane.buffer.order(ByteOrder.nativeOrder())
         val depthSample = buffer.getShort(byteIndex)
-        Log.d(TAG, "depthTexture byteIndex : $byteIndex" )
-        Log.d(TAG, "depthTexture buffer: $buffer" )
-        Log.d(TAG, "depthTexture depthSample: $depthSample" )
+        Log.d(TAG, "depthTexture byteIndex : $byteIndex")
+        Log.d(TAG, "depthTexture buffer: $buffer")
+        Log.d(TAG, "depthTexture depthSample: $depthSample")
         return depthSample.toInt()
     }
 
-    fun pointConverter(frame: Frame, depthImage: Image,cpuCoordinateX: Int,cpuCoordinateY: Int): Pair<Int, Int>? {
+    fun pointConverter(
+        frame: Frame,
+        depthImage: Image,
+        cpuCoordinateX: Int,
+        cpuCoordinateY: Int
+    ): Pair<Int, Int>? {
         val cpuCoordinates = floatArrayOf(cpuCoordinateX.toFloat(), cpuCoordinateY.toFloat())
         val textureCoordinates = FloatArray(2)
         frame.transformCoordinates2d(
@@ -116,6 +127,7 @@ class DepthTextureHandler(var context: Context) {
         return (textureCoordinates[0] * depthImage.width).toInt() to
                 (textureCoordinates[1] * depthImage.height).toInt()
     }
+
     fun getDepthTexture(): Int {
         return depthTextureId
     }

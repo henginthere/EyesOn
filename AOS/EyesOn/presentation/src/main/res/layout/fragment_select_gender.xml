@@ -15,16 +15,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="136dp"
             android:layout_marginBottom="80dp"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center"
+            android:text="성별을 선택해 주세요"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:gravity="center"
-            android:text="성별을 선택해 주세요"
-            android:fontFamily="@font/noto_sans_medium"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_male"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_male"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_male"
@@ -34,14 +34,14 @@
             android:layout_marginBottom="24dp"
             android:background="@drawable/shape_button_corner"
             android:backgroundTint="@color/angel_blue"
+            android:text="남성"
             android:textColor="@color/black"
             android:textSize="36sp"
             android:textStyle="bold"
-            android:text="남성"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_female"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_female"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_female"
@@ -51,14 +51,14 @@
             android:layout_marginBottom="160dp"
             android:background="@drawable/shape_button_corner"
             android:backgroundTint="@color/angel_red"
+            android:text="여성"
             android:textColor="@color/black"
             android:textSize="36sp"
             android:textStyle="bold"
-            android:text="여성"
-            app:layout_constraintTop_toBottomOf="@id/btn_male"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_male" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

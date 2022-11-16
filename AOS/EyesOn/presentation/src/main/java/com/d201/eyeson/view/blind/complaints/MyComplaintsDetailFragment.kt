@@ -15,8 +15,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 private const val TAG = "MyComplaintsDetailFragment"
+
 @AndroidEntryPoint
-class MyComplaintsDetailFragment : BaseFragment<FragmentMyComplaintsDetailBinding>(R.layout.fragment_my_complaints_detail) {
+class MyComplaintsDetailFragment :
+    BaseFragment<FragmentMyComplaintsDetailBinding>(R.layout.fragment_my_complaints_detail) {
     private val args: MyComplaintsDetailFragmentArgs by navArgs()
     private val viewModel: MyComplaintsViewModel by viewModels()
     private lateinit var complaints: Complaints
@@ -30,9 +32,9 @@ class MyComplaintsDetailFragment : BaseFragment<FragmentMyComplaintsDetailBindin
         viewModel.apply {
             getComplaints(args.complaintSeq)
         }
-        lifecycleScope.launch{
+        lifecycleScope.launch {
             viewModel.complaints.collectLatest {
-                if(it != null) {
+                if (it != null) {
                     complaints = it
                 }
             }

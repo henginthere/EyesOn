@@ -4,8 +4,7 @@
         android:angle="270"
         android:endColor="#4F1998"
         android:startColor="#000000"
-        android:type="linear"
-        />
+        android:type="linear" />
 
     <!--    <solid android:color="#80FFFFFF" />-->
     <!--    <stroke-->

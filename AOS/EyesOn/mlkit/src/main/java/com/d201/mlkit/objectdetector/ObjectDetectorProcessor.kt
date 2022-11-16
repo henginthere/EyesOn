@@ -31,42 +31,42 @@ import java.io.IOException
 
 /** A processor to run object detector.  */
 class ObjectDetectorProcessor(context: Context, options: ObjectDetectorOptionsBase) :
-  VisionProcessorBase<List<DetectedObject>>(context) {
+    VisionProcessorBase<List<DetectedObject>>(context) {
 
-  private val detector: ObjectDetector = ObjectDetection.getClient(options)
-  val resultData = MutableLiveData<String>()
+    private val detector: ObjectDetector = ObjectDetection.getClient(options)
+    val resultData = MutableLiveData<String>()
 
-  override fun stop() {
-    super.stop()
-    try {
-      detector.close()
-    } catch (e: IOException) {
-      Log.e(
-        TAG,
-        "Exception thrown while trying to close object detector!",
-        e
-      )
+    override fun stop() {
+        super.stop()
+        try {
+            detector.close()
+        } catch (e: IOException) {
+            Log.e(
+                TAG,
+                "Exception thrown while trying to close object detector!",
+                e
+            )
+        }
     }
-  }
 
-  override fun detectInImage(image: InputImage?): Task<List<DetectedObject>> {
-    return detector.process(image!!)
-  }
-
-  override fun onSuccess(results: List<DetectedObject>, graphicOverlay: GraphicOverlay) {
-    for (result in results) {
-      graphicOverlay.add(ObjectGraphic(graphicOverlay, result))
-      if(result.labels.isNotEmpty()) {
-        resultData.postValue(result.labels[0].text)
-      }
+    override fun detectInImage(image: InputImage?): Task<List<DetectedObject>> {
+        return detector.process(image!!)
     }
-  }
 
-  override fun onFailure(e: Exception) {
-    Log.e(TAG, "Object detection failed!", e)
-  }
+    override fun onSuccess(results: List<DetectedObject>, graphicOverlay: GraphicOverlay) {
+        for (result in results) {
+            graphicOverlay.add(ObjectGraphic(graphicOverlay, result))
+            if (result.labels.isNotEmpty()) {
+                resultData.postValue(result.labels[0].text)
+            }
+        }
+    }
 
-  companion object {
-    private const val TAG = "ObjectDetectorProcessor"
-  }
+    override fun onFailure(e: Exception) {
+        Log.e(TAG, "Object detection failed!", e)
+    }
+
+    companion object {
+        private const val TAG = "ObjectDetectorProcessor"
+    }
 }

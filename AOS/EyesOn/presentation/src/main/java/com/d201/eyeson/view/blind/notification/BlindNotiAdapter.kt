@@ -10,8 +10,11 @@ import com.d201.eyeson.databinding.ItemNotificationBinding
 import com.d201.eyeson.view.blind.NotiClickListener
 
 private const val TAG = "BlindNotiAdapter"
-class BlindNotiAdapter(private val notiClickListener : NotiClickListener) : ListAdapter<Noti, BlindNotiAdapter.ViewHolder>(diffUtil) {
-    inner class ViewHolder(private val binding: ItemNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
+
+class BlindNotiAdapter(private val notiClickListener: NotiClickListener) :
+    ListAdapter<Noti, BlindNotiAdapter.ViewHolder>(diffUtil) {
+    inner class ViewHolder(private val binding: ItemNotificationBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(noti: Noti, position: Int) {
             binding.noti = noti
             binding.ivDelete.setOnClickListener { notiClickListener.onClick(noti, position) }
@@ -26,7 +29,8 @@ class BlindNotiAdapter(private val notiClickListener : NotiClickListener) : List
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemNotificationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemNotificationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 

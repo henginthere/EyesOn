@@ -13,14 +13,14 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/frame_blind_help"
             android:name="androidx.navigation.fragment.NavHostFragment"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/nav_graph_blind_help"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:navGraph="@navigation/nav_graph_blind_help" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

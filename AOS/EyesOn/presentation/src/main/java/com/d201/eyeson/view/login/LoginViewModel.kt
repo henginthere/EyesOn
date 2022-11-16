@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "LoginViewModel"
+
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase, private val sharedPreferences: SharedPreferences
@@ -26,14 +27,15 @@ class LoginViewModel @Inject constructor(
     private val _login: MutableStateFlow<Login?> = MutableStateFlow(null)
     val login get() = _login.asStateFlow()
 
-    fun login(idToken: String, fcmToken: String){
+    fun login(idToken: String, fcmToken: String) {
         Log.d(TAG, "login: $idToken \n $fcmToken")
         viewModelScope.launch(Dispatchers.IO) {
             loginUseCase.execute(idToken, fcmToken).collectLatest {
-                if(it is ResultType.Success && it.data.status == 200){
+                if (it is ResultType.Success && it.data.status == 200) {
                     // 로그인 성공 처리
                     _login.value = it.data.data
-                    sharedPreferences.edit().putString(JWT, it.data.data.jwtToken.accessToken).apply()
+                    sharedPreferences.edit().putString(JWT, it.data.data.jwtToken.accessToken)
+                        .apply()
                     Log.d(TAG, "login: ${sharedPreferences.getString(JWT, "null")}")
                 } else {
                     //로그인 실패

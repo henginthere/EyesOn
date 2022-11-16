@@ -9,6 +9,7 @@ import com.d201.eyeson.util.BLIND
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "SelectRoleFragment"
+
 @AndroidEntryPoint
 class SelectRoleFragment : BaseFragment<FragmentSelectRoleBinding>(R.layout.fragment_select_role) {
 
@@ -19,10 +20,18 @@ class SelectRoleFragment : BaseFragment<FragmentSelectRoleBinding>(R.layout.frag
     private fun initView() {
         binding.apply {
             btnSelectAngel.setOnClickListener {
-                findNavController().navigate(SelectRoleFragmentDirections.actionSelectRoleFragmentToSelectGenderFragment(ANGEL))
+                findNavController().navigate(
+                    SelectRoleFragmentDirections.actionSelectRoleFragmentToSelectGenderFragment(
+                        ANGEL
+                    )
+                )
             }
             btnSelectBlind.setOnClickListener {
-                findNavController().navigate(SelectRoleFragmentDirections.actionSelectRoleFragmentToSelectGenderFragment(BLIND))
+                findNavController().navigate(
+                    SelectRoleFragmentDirections.actionSelectRoleFragmentToSelectGenderFragment(
+                        BLIND
+                    )
+                )
             }
         }
     }

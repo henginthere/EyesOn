@@ -13,49 +13,49 @@
             android:id="@+id/layout_tv_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="24dp"
             android:contentDescription="@string/frag_main"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
             <ImageView
                 android:id="@+id/iv_logo"
                 android:layout_width="200dp"
                 android:layout_height="72dp"
-                android:gravity="center|start"
-                android:src="@drawable/logo_main_yellow"
                 android:contentDescription="@string/eyesOn"
-                android:importantForAccessibility="no"/>
+                android:gravity="center|start"
+                android:importantForAccessibility="no"
+                android:src="@drawable/logo_main_yellow" />
         </LinearLayout>
+
         <ImageView
             android:id="@+id/btn_notification"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginEnd="16dp"
-            android:padding="8dp"
-            app:layout_constraintTop_toTopOf="@id/layout_tv_logo"
-            app:layout_constraintBottom_toBottomOf="@id/layout_tv_logo"
-            app:layout_constraintEnd_toStartOf="@id/btn_setting"
-            android:src="@drawable/ic_notification"
             android:backgroundTint="@color/white"
             android:contentDescription="알림"
-            />
+            android:padding="8dp"
+            android:src="@drawable/ic_notification"
+            app:layout_constraintBottom_toBottomOf="@id/layout_tv_logo"
+            app:layout_constraintEnd_toStartOf="@id/btn_setting"
+            app:layout_constraintTop_toTopOf="@id/layout_tv_logo" />
 
         <ImageView
             android:id="@+id/btn_setting"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:padding="8dp"
-            android:layout_marginEnd="24dp"
             android:layout_marginStart="20dp"
-            android:src="@drawable/ic_setting"
+            android:layout_marginEnd="24dp"
             android:backgroundTint="@color/white"
-            app:layout_constraintTop_toTopOf="@id/layout_tv_logo"
+            android:contentDescription="설정"
+            android:padding="8dp"
+            android:src="@drawable/ic_setting"
             app:layout_constraintBottom_toBottomOf="@id/layout_tv_logo"
             app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="설정"
-            />
+            app:layout_constraintTop_toTopOf="@id/layout_tv_logo" />
 
 
         <TextView
@@ -63,29 +63,27 @@
             android:layout_width="0dp"
             android:layout_height="104dp"
             android:layout_gravity="center"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/btn_border_yellow"
             android:fontFamily="@font/noto_sans_bold"
             android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_tv_logo"
-            android:layout_marginTop="40dp"
-            android:layout_marginHorizontal="24dp"
             android:text="         글자 보기"
             android:textColor="@color/black"
             android:textSize="24sp"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_tv_logo" />
 
         <ImageView
             android:id="@+id/iv_text"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:src="@drawable/ic_text"
-            app:layout_constraintStart_toStartOf="@id/btn_scan_text"
-            app:layout_constraintTop_toTopOf="@id/btn_scan_text"
-            app:layout_constraintBottom_toBottomOf="@id/btn_scan_text"
             android:layout_marginStart="48dp"
-            />
+            android:src="@drawable/ic_text"
+            app:layout_constraintBottom_toBottomOf="@id/btn_scan_text"
+            app:layout_constraintStart_toStartOf="@id/btn_scan_text"
+            app:layout_constraintTop_toTopOf="@id/btn_scan_text" />
 
         <FrameLayout
             android:id="@+id/frame_scan_text"
@@ -129,9 +127,10 @@
                 android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="50dp"
-                android:src="@drawable/ic_search"/>
+                android:src="@drawable/ic_search" />
 
         </FrameLayout>
+
         <FrameLayout
             android:id="@+id/frame_scan_obstacle"
             android:layout_width="0dp"
@@ -154,13 +153,14 @@
                 android:text="             장애물 인식"
                 android:textColor="@color/black"
                 android:textSize="24sp" />
+
             <ImageView
                 android:id="@+id/iv_obstacle"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="50dp"
-                android:src="@drawable/ic_obstacle"/>
+                android:src="@drawable/ic_obstacle" />
         </FrameLayout>
 
         <FrameLayout
@@ -190,9 +190,9 @@
                 android:id="@+id/iv_help"
                 android:layout_width="72dp"
                 android:layout_height="64dp"
-                android:layout_marginStart="50dp"
                 android:layout_marginVertical="20dp"
-                android:src="@drawable/ic_angel"/>
+                android:layout_marginStart="50dp"
+                android:src="@drawable/ic_angel" />
 
         </FrameLayout>
 
@@ -200,9 +200,9 @@
             android:id="@+id/frmae_complaints"
             android:layout_width="0dp"
             android:layout_height="104dp"
+            android:layout_marginHorizontal="24dp"
             android:layout_marginTop="32dp"
             android:gravity="center"
-            android:layout_marginHorizontal="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/frame_help">
@@ -225,7 +225,7 @@
                 android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="48dp"
-                android:src="@drawable/ic_complaints"/>
+                android:src="@drawable/ic_complaints" />
 
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

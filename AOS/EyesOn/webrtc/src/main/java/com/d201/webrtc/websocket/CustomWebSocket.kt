@@ -43,7 +43,12 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompatActivity?, participantListener: ParticipantListener?) :
+class CustomWebSocket(
+    session: Session,
+    openviduUrl: String,
+    activity: AppCompatActivity?,
+    participantListener: ParticipantListener?
+) :
     AsyncTask<AppCompatActivity?, Void?, Void?>(), WebSocketListener {
 
     private val TAG = "CustomWebSocketListener"
@@ -138,7 +143,8 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
             val remoteSdpAnswer =
                 SessionDescription(
                     SessionDescription.Type.ANSWER,
-                    result.getString("sdpAnswer"))
+                    result.getString("sdpAnswer")
+                )
             localParticipant.getPeerConnection().setRemoteDescription(
                 CustomSdpObserver("publishVideo_setRemoteDescription"),
                 remoteSdpAnswer
@@ -152,7 +158,8 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
             val remoteSdpOffer =
                 SessionDescription(
                     SessionDescription.Type.OFFER,
-                    result.getString("sdpOffer"))
+                    result.getString("sdpOffer")
+                )
             remoteParticipant.getPeerConnection().setRemoteDescription(object :
                 CustomSdpObserver("prepareReceiveVideoFrom_setRemoteDescription") {
                 override fun onSetSuccess() {
@@ -240,7 +247,8 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
         }
         IDS_RECEIVEVIDEO[this.sendJson(
             JsonConstants.RECEIVEVIDEO_METHOD,
-            receiveVideoFromParams)] =
+            receiveVideoFromParams
+        )] =
             remoteParticipant.getConnectionId()
     }
 
@@ -271,13 +279,14 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
             when (method) {
                 JsonConstants.ICE_CANDIDATE -> iceCandidateEvent(params)
                 JsonConstants.PARTICIPANT_JOINED -> {
-                    if(participantListener != null){
+                    if (participantListener != null) {
                         participantListener!!.join()
                     }
-                    participantJoinedEvent(params)}
+                    participantJoinedEvent(params)
+                }
                 JsonConstants.PARTICIPANT_PUBLISHED -> participantPublishedEvent(params)
                 JsonConstants.PARTICIPANT_LEFT -> {
-                    if(participantListener != null){
+                    if (participantListener != null) {
                         participantListener!!.left()
                     }
                     participantLeftEvent(params)
@@ -328,8 +337,10 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
             } catch (e: Exception) {
                 //Sometimes when we enter in room the other participants have no stream
                 //We catch that in this way the iteration of participants doesn't stop
-                Log.e(TAG, "Error in addRemoteParticipantsAlreadyInRoom: "
-                        + e.localizedMessage)
+                Log.e(
+                    TAG, "Error in addRemoteParticipantsAlreadyInRoom: "
+                            + e.localizedMessage
+                )
             }
         }
     }
@@ -370,12 +381,10 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
     @Throws(JSONException::class)
     private fun participantPublishedEvent(params: JSONObject) {
         val remoteParticipantId = params.getString(JsonConstants.ID)
-        val remoteParticipant: RemoteParticipant
-        = session?.getRemoteParticipant(remoteParticipantId)!!
+        val remoteParticipant: RemoteParticipant =
+            session?.getRemoteParticipant(remoteParticipantId)!!
 
-        val streamId = params.
-        getJSONArray("streams").
-        getJSONObject(0).getString("id")
+        val streamId = params.getJSONArray("streams").getJSONObject(0).getString("id")
 
         subscribe(remoteParticipant, streamId)
     }
@@ -387,7 +396,7 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
         remoteParticipant.dispose()
         val mainHandler: Handler = Handler(activity!!.mainLooper)
         val myRunnable = Runnable {
-            if(remoteParticipant.getView() != null){
+            if (remoteParticipant.getView() != null) {
                 session?.removeView(remoteParticipant.getView()!!)
             }
         }
@@ -414,13 +423,15 @@ class CustomWebSocket(session: Session, openviduUrl: String, activity: AppCompat
         val remoteParticipant = RemoteParticipant(connectionId, participantName!!, session!!)
 
 
-        if(participantName.contains("SCREEN")){
+        if (participantName.contains("SCREEN")) {
             activity?.createRemoteScreenVideo(
-                remoteParticipant, CONTAINER_VIEW, PEER_LAYOUT, num++)
+                remoteParticipant, CONTAINER_VIEW, PEER_LAYOUT, num++
+            )
             activity?.resizeView(true, REMOTE_CONTAINER_VIEW)
-        }else{
+        } else {
             activity?.createRemoteParticipantVideo(
-                remoteParticipant,REMOTE_VIDEO_VIEW, REMOTE_CONTAINER_VIEW)
+                remoteParticipant, REMOTE_VIDEO_VIEW, REMOTE_CONTAINER_VIEW
+            )
         }
         session?.createRemotePeerConnection(remoteParticipant.getConnectionId())
         return remoteParticipant

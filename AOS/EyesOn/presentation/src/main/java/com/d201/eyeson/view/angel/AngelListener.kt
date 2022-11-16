@@ -2,26 +2,26 @@ package com.d201.eyeson.view.angel
 
 import com.d201.domain.model.Complaints
 
-interface ComplaintsClickListener{
+interface ComplaintsClickListener {
     fun onClick(complaintsSeq: Long)
 }
 
-interface ReturnConfirmListener{
+interface ReturnConfirmListener {
     fun onClick(complaints: Complaints)
 }
 
-interface TitleConfirmListener{
+interface TitleConfirmListener {
     fun onClick(complaints: Complaints)
 }
 
-interface RegisterComplaintsListener{
+interface RegisterComplaintsListener {
     fun onClick(complaints: Complaints)
 }
 
-interface ComplaintsImageClickListener{
+interface ComplaintsImageClickListener {
     fun onClick(image: String)
 }
 
-interface AngelHelpDisconnectListener{
+interface AngelHelpDisconnectListener {
     fun onClick()
 }

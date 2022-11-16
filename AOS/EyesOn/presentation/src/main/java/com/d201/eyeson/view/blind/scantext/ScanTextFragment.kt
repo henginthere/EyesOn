@@ -24,14 +24,16 @@ import java.util.*
 
 private const val TAG = "ScanTextFragment"
 private const val INTERVAL = 1000
+
 @AndroidEntryPoint
-class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment_scan_text), TextToSpeech.OnInitListener {
+class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment_scan_text),
+    TextToSpeech.OnInitListener {
 
     private var cameraSource: CameraSource? = null
     private var preview: CameraSourcePreview? = null
     private var graphicOverlay: GraphicOverlay? = null
     private var selectedModel = TEXT_RECOGNITION_KOREAN
-    private lateinit var textRecognitionProcessor :TextRecognitionProcessor
+    private lateinit var textRecognitionProcessor: TextRecognitionProcessor
 
     private lateinit var tts: TextToSpeech
     private var lastSpeakTime = 0L
@@ -47,9 +49,9 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
         checkPermission()
     }
 
-    private fun initView(){
+    private fun initView() {
         binding.apply {
-            btnBack.apply{
+            btnBack.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener { requireActivity().finish() }
             }
@@ -112,13 +114,16 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
-        textRecognitionProcessor = TextRecognitionProcessor(requireContext(), KoreanTextRecognizerOptions.Builder().build())
-        textRecognitionProcessor.textLiveData.observe(viewLifecycleOwner){
-            if(System.currentTimeMillis() - lastSpeakTime > INTERVAL){
+        textRecognitionProcessor = TextRecognitionProcessor(
+            requireContext(),
+            KoreanTextRecognizerOptions.Builder().build()
+        )
+        textRecognitionProcessor.textLiveData.observe(viewLifecycleOwner) {
+            if (System.currentTimeMillis() - lastSpeakTime > INTERVAL) {
                 lastSpeakTime = System.currentTimeMillis()
-                if(!tts.isSpeaking){
+                if (!tts.isSpeaking) {
                     binding.tvRecognizeText.text = it
-                    speakOut(it.replace("\\r\\n|\\r|\\n|\\n\\r".toRegex()," "))
+                    speakOut(it.replace("\\r\\n|\\r|\\n|\\n\\r".toRegex(), " "))
                 }
 
             }
@@ -142,7 +147,7 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
     }
 
     override fun onInit(p0: Int) {
-        if(p0 == TextToSpeech.SUCCESS) {
+        if (p0 == TextToSpeech.SUCCESS) {
             tts.setLanguage(Locale.KOREAN)
             tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
                 override fun onStart(p0: String?) {}

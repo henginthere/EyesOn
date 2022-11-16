@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "BlindHelpViewModel"
+
 @HiltViewModel
 class BlindHelpViewModel @Inject constructor(
     private val requestHelpUseCase: RequestHelpUseCase
@@ -25,7 +26,7 @@ class BlindHelpViewModel @Inject constructor(
     fun requestHelp(gender: String) {
         viewModelScope.launch(Dispatchers.IO) {
             requestHelpUseCase.execute(gender).collectLatest {
-                if(it is ResultType.Success){
+                if (it is ResultType.Success) {
                     _sessionId.value = it.data.data
                     Log.d(TAG, "requestHelp: ${it.data.data}")
                 } else {

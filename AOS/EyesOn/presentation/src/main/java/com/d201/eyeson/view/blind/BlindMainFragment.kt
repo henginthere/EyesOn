@@ -16,6 +16,7 @@ import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "BlindMainFragment"
+
 @AndroidEntryPoint
 class BlindMainFragment : BaseFragment<FragmentBlindMainBinding>(R.layout.fragment_blind_main) {
 
@@ -48,7 +49,11 @@ class BlindMainFragment : BaseFragment<FragmentBlindMainBinding>(R.layout.fragme
             btnFindObject.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
-                    checkPermission(VIEW_FIND_OBJECT, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
+                    checkPermission(
+                        VIEW_FIND_OBJECT,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO
+                    )
                 }
             }
             btnScanObstacle.apply {
@@ -60,13 +65,23 @@ class BlindMainFragment : BaseFragment<FragmentBlindMainBinding>(R.layout.fragme
             btnHelp.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
-                    checkPermission(VIEW_HELP, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS)
+                    checkPermission(
+                        VIEW_HELP,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.MODIFY_AUDIO_SETTINGS
+                    )
                 }
             }
             btnComplaints.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
-                    checkPermission(VIEW_COMPLAINTS, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_FINE_LOCATION)
+                    checkPermission(
+                        VIEW_COMPLAINTS,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
                 }
             }
         }
@@ -75,14 +90,33 @@ class BlindMainFragment : BaseFragment<FragmentBlindMainBinding>(R.layout.fragme
     private fun checkPermission(direction: Int, vararg permissions: String) {
         val permissionListener = object : PermissionListener {
             override fun onPermissionGranted() {
-                when(direction){
-                    VIEW_SCAN_TEXT -> startActivity(Intent(requireContext(), ScanTextActivity::class.java))
-                    VIEW_FIND_OBJECT -> startActivity(Intent(requireContext(), FindObjectActivity::class.java))
-                    VIEW_SCAN_OBSTACLE -> startActivity(Intent(requireContext(), ScanObstacleActivity::class.java))
-                    VIEW_HELP -> startActivity(Intent(requireContext(), BlindHelpActivity::class.java).apply {
-                        val gender = requireActivity().intent.getStringExtra("Gender")
-                        putExtra("Gender", gender)
-                    })
+                when (direction) {
+                    VIEW_SCAN_TEXT -> startActivity(
+                        Intent(
+                            requireContext(),
+                            ScanTextActivity::class.java
+                        )
+                    )
+                    VIEW_FIND_OBJECT -> startActivity(
+                        Intent(
+                            requireContext(),
+                            FindObjectActivity::class.java
+                        )
+                    )
+                    VIEW_SCAN_OBSTACLE -> startActivity(
+                        Intent(
+                            requireContext(),
+                            ScanObstacleActivity::class.java
+                        )
+                    )
+                    VIEW_HELP -> startActivity(
+                        Intent(
+                            requireContext(),
+                            BlindHelpActivity::class.java
+                        ).apply {
+                            val gender = requireActivity().intent.getStringExtra("Gender")
+                            putExtra("Gender", gender)
+                        })
                     VIEW_COMPLAINTS -> findNavController().navigate(BlindMainFragmentDirections.actionBlindMainFragmentToComplaintsFragment())
                 }
             }

@@ -8,9 +8,9 @@ interface BlindComplaintsClickListener {
 }
 
 interface NotiClickListener {
-    fun onClick(noti : Noti, position: Int)
+    fun onClick(noti: Noti, position: Int)
 }
 
-interface BlindHelpDisconnectListener{
+interface BlindHelpDisconnectListener {
     fun onClick()
 }

@@ -6,9 +6,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.login.join.SelectRoleFragment"
         android:background="@drawable/gradient_user"
-        >
+        tools:context=".view.login.join.SelectRoleFragment">
 
         <TextView
             android:id="@+id/tv_title"
@@ -16,16 +15,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="136dp"
             android:layout_marginBottom="80dp"
+            android:fontFamily="@font/noto_sans_medium"
+            android:gravity="center"
+            android:text="도움이 필요하신가요?"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:gravity="center"
-            android:text="도움이 필요하신가요?"
-            android:fontFamily="@font/noto_sans_medium"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_select_blind"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_select_blind"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_select_blind"
@@ -34,15 +33,15 @@
             android:layout_marginHorizontal="40dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/shape_button_corner"
+            android:fontFamily="@font/noto_sans_medium"
+            android:text="도움이 필요해요"
             android:textColor="@color/black"
             android:textSize="36sp"
             android:textStyle="bold"
-            android:text="도움이 필요해요"
-            android:fontFamily="@font/noto_sans_medium"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_select_angel"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_select_angel"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_select_angel"
@@ -51,15 +50,15 @@
             android:layout_marginHorizontal="40dp"
             android:layout_marginBottom="160dp"
             android:background="@drawable/shape_button_corner"
+            android:fontFamily="@font/noto_sans_medium"
+            android:text="도움을 주고싶어요"
             android:textColor="@color/black"
             android:textSize="36sp"
             android:textStyle="bold"
-            android:text="도움을 주고싶어요"
-            android:fontFamily="@font/noto_sans_medium"
-            app:layout_constraintTop_toBottomOf="@id/btn_select_blind"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_select_blind" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

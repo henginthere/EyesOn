@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
 interface ComplaintsRepository {
-    
+
     fun insertComp(
         complaintsRequest: MultipartBody.Part,
         imageFile: MultipartBody.Part

@@ -15,15 +15,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private const val TAG = "JoinSuccessFragment"
+
 @AndroidEntryPoint
-class JoinSuccessFragment : BaseFragment<FragmentJoinSuccessBinding>(R.layout.fragment_join_success) {
+class JoinSuccessFragment :
+    BaseFragment<FragmentJoinSuccessBinding>(R.layout.fragment_join_success) {
 
     private val args: JoinSuccessFragmentArgs by navArgs()
 
     override fun init() {
         initView()
         initListener()
-        lifecycleScope.launch(Dispatchers.IO){
+        lifecycleScope.launch(Dispatchers.IO) {
             delay(3500)
             launchMainView()
         }
@@ -31,12 +33,12 @@ class JoinSuccessFragment : BaseFragment<FragmentJoinSuccessBinding>(R.layout.fr
 
     private fun initView() {
         binding.apply {
-            tvSelectedRole.text = when(args.role){
+            tvSelectedRole.text = when (args.role) {
                 ANGEL -> "엔젤"
                 BLIND -> "시각장애인"
                 else -> "?"
             }
-            tvSelectedGender.text = when(args.gender){
+            tvSelectedGender.text = when (args.gender) {
                 GENDER_MALE -> "남성"
                 GENDER_FEMALE -> "여성"
                 GENDER_DEFAULT -> "설정 안됨"
@@ -51,8 +53,8 @@ class JoinSuccessFragment : BaseFragment<FragmentJoinSuccessBinding>(R.layout.fr
         }
     }
 
-    private fun launchMainView(){
-        when(args.role){
+    private fun launchMainView() {
+        when (args.role) {
             BLIND -> startActivity(Intent(requireContext(), BlindMainActivity::class.java).apply {
                 putExtra("Gender", args.gender)
             })

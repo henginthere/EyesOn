@@ -33,7 +33,7 @@ fun getDeviceSize(activity: Activity): Point {
     return windowManager.currentWindowMetricsPointCompat()
 }
 
-fun WindowManager.currentWindowMetricsPointCompat() : Point {
+fun WindowManager.currentWindowMetricsPointCompat(): Point {
     // R(30) 이상
     return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
         val windowInsets = currentWindowMetrics.windowInsets

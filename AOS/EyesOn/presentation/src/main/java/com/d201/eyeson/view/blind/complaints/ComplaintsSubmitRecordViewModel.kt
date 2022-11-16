@@ -30,18 +30,23 @@ import java.io.File
 import java.util.*
 import javax.inject.Inject
 
-private const val TAG ="ComplaintsSubmitRecordViewModel"
+private const val TAG = "ComplaintsSubmitRecordViewModel"
+
 @HiltViewModel
-class ComplaintsSubmitRecordViewModel @Inject constructor(private val insertCompUseCase: InsertCompUseCase) : ViewModel(), TextToSpeech.OnInitListener{
+class ComplaintsSubmitRecordViewModel @Inject constructor(private val insertCompUseCase: InsertCompUseCase) :
+    ViewModel(), TextToSpeech.OnInitListener {
 
     private val _successResultEvent = SingleLiveEvent<String>()
     val successResultEvent get() = _successResultEvent
 
-    fun submitComplaints(complaints: Complaints, imagePath: String){
-        viewModelScope.launch(Dispatchers.IO){
+    fun submitComplaints(complaints: Complaints, imagePath: String) {
+        viewModelScope.launch(Dispatchers.IO) {
             val file = File(imagePath)
-            insertCompUseCase.execute(complaints.objectToMultipartPart(complaints.mapperToComplaintsRequest()), imagePath.imagePathToPartBody("file", file)).collectLatest {
-                when(it){
+            insertCompUseCase.execute(
+                complaints.objectToMultipartPart(complaints.mapperToComplaintsRequest()),
+                imagePath.imagePathToPartBody("file", file)
+            ).collectLatest {
+                when (it) {
                     is ResultType.Success -> _successResultEvent.postValue(it.data.message)
                     else -> Log.d(TAG, "submitComplaints: ${it}")
                 }
@@ -59,11 +64,11 @@ class ComplaintsSubmitRecordViewModel @Inject constructor(private val insertComp
         locationRepository = LocationService.getInstance(context)
     }
 
-    fun setLocationItem(location: Location){
+    fun setLocationItem(location: Location) {
         _location!!.value = location
     }
 
-    fun enableLocationServices(){
+    fun enableLocationServices() {
         locationRepository?.let {
             it.startService()
         }
@@ -79,7 +84,7 @@ class ComplaintsSubmitRecordViewModel @Inject constructor(private val insertComp
     private val _statusSTT: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val statusSTT get() = _statusSTT
 
-    fun startRecord(context: Context){
+    fun startRecord(context: Context) {
         stopTTS()
         val speechRecognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.packageName)
@@ -96,14 +101,20 @@ class ComplaintsSubmitRecordViewModel @Inject constructor(private val insertComp
 
     private fun recognitionListener() = object :
         RecognitionListener {
-        override fun onReadyForSpeech(params: Bundle?) {_statusSTT.value = true }
+        override fun onReadyForSpeech(params: Bundle?) {
+            _statusSTT.value = true
+        }
+
         override fun onRmsChanged(rmsdB: Float) {}
         override fun onBufferReceived(buffer: ByteArray?) {}
         override fun onPartialResults(partialResults: Bundle?) {}
         override fun onEvent(eventType: Int, params: Bundle?) {}
         override fun onBeginningOfSpeech() {}
         override fun onEndOfSpeech() {}
-        override fun onError(error: Int) {_statusSTT.value = false}
+        override fun onError(error: Int) {
+            _statusSTT.value = false
+        }
+
         override fun onResults(results: Bundle) {
             val result = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)!![0]
             _recordText.value = result
@@ -113,21 +124,23 @@ class ComplaintsSubmitRecordViewModel @Inject constructor(private val insertComp
     }
 
     private lateinit var tts: TextToSpeech
-    fun initTTS(context: Context){
+    fun initTTS(context: Context) {
         tts = TextToSpeech(context, this)
     }
 
     override fun onInit(p0: Int) {
-        if(p0 == TextToSpeech.SUCCESS) {
+        if (p0 == TextToSpeech.SUCCESS) {
             tts.language = Locale.KOREAN
         }
     }
-    private fun speakOut(text: String){
+
+    private fun speakOut(text: String) {
         tts.setPitch(1f)
         tts.setSpeechRate(3.5f)
         tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
     }
-    private fun stopTTS(){
+
+    private fun stopTTS() {
         tts.stop()
     }
 }

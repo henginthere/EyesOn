@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 private const val TAG = "SelectHelperFragment"
+
 @AndroidEntryPoint
 class SelectHelperFragment :
     BaseFragment<FragmentSelectHelperBinding>(R.layout.fragment_select_helper) {

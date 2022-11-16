@@ -14,14 +14,14 @@ import javax.inject.Inject
 @HiltViewModel
 class BlindSettingViewModel @Inject constructor(
     private val deleteUserUseCase: DeleteUserUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _deleteUserEvent = SingleLiveEvent<Boolean>()
     val deleteUserEvent get() = _deleteUserEvent
-    fun deleteUser(){
-        viewModelScope.launch(Dispatchers.IO){
+    fun deleteUser() {
+        viewModelScope.launch(Dispatchers.IO) {
             deleteUserUseCase.execute().collectLatest {
-                if (it is ResultType.Success){
+                if (it is ResultType.Success) {
                     _deleteUserEvent.postValue(true)
                 }
             }

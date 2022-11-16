@@ -27,7 +27,10 @@ import com.google.ar.core.exceptions.*
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
@@ -372,7 +375,7 @@ class ScanObstacleFragment :
                 val depthImage = frame.acquireDepthImage16Bits()
 
                 gpuThread.execute {
-                                        // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
+                    // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
                     val detectionResults = runObjectDetection(bitmap!!)
 
                     // 비트맵에 검출 결과를 그려서 보여줍니다
@@ -547,28 +550,28 @@ class ScanObstacleFragment :
                 val w = bitmap.width / 3
                 val h = bitmap.height / 3
 
-                if(centerX in 0.. w){
-                    if(centerY in 0.. h){
+                if (centerX in 0..w) {
+                    if (centerY in 0..h) {
                         location = "11시 방향"
-                    }else if(centerY in h .. h * 2){
+                    } else if (centerY in h..h * 2) {
                         location = "9시 방향"
-                    }else if(centerY in h * 2 .. bitmap.height){
+                    } else if (centerY in h * 2..bitmap.height) {
                         location = "7시 방향"
                     }
-                }else if(centerX in w .. w * 2){
-                    if(centerY in 0.. h){
+                } else if (centerX in w..w * 2) {
+                    if (centerY in 0..h) {
                         location = "12시 방향"
-                    }else if(centerY in h .. h * 2){
+                    } else if (centerY in h..h * 2) {
                         location = "중앙"
-                    }else if(centerY in h * 2 .. bitmap.height){
+                    } else if (centerY in h * 2..bitmap.height) {
                         location = "6시 방향"
                     }
-                }else if(centerX in w * 2 .. bitmap.width){
-                    if(centerY in 0.. h){
+                } else if (centerX in w * 2..bitmap.width) {
+                    if (centerY in 0..h) {
                         location = "1시 방향"
-                    }else if(centerY in h .. h * 2){
+                    } else if (centerY in h..h * 2) {
                         location = "3시 방향"
-                    }else if(centerY in h * 2 .. bitmap.height){
+                    } else if (centerY in h * 2..bitmap.height) {
                         location = "5시 방향"
                     }
                 }
@@ -622,6 +625,7 @@ class ScanObstacleFragment :
         // Compute dot product of plane's normal with vector from camera to plane center.
         return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
     }
+
     private fun allPermissionsGranted() = mutableListOf(
         Manifest.permission.CAMERA
     ).toTypedArray().all {

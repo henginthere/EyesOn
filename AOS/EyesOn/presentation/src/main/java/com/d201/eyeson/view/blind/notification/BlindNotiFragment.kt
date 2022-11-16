@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 private const val TAG = "BlindNotiFragment"
+
 @AndroidEntryPoint
 class BlindNotiFragment : BaseFragment<FragmentBlindNotiBinding>(R.layout.fragment_blind_noti) {
 

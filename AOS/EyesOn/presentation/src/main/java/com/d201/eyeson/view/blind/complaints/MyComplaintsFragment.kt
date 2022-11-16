@@ -15,8 +15,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 private const val TAG = "MyComplaintsFragment"
+
 @AndroidEntryPoint
-class MyComplaintsFragment : BaseFragment<FragmentMyComplaintsBinding>(R.layout.fragment_my_complaints) {
+class MyComplaintsFragment :
+    BaseFragment<FragmentMyComplaintsBinding>(R.layout.fragment_my_complaints) {
 
     private val viewModel: MyComplaintsViewModel by viewModels()
     private lateinit var job: Job
@@ -38,16 +40,20 @@ class MyComplaintsFragment : BaseFragment<FragmentMyComplaintsBinding>(R.layout.
     }
 
     private fun initViewModel() {
-        job = lifecycleScope.launch(Dispatchers.IO){
+        job = lifecycleScope.launch(Dispatchers.IO) {
             viewModel.getComplaintsList().collectLatest {
                 myComplaintsAdapter.submitData(it)
             }
         }
     }
 
-    private val blindComplaintsClickListener = object : BlindComplaintsClickListener{
+    private val blindComplaintsClickListener = object : BlindComplaintsClickListener {
         override fun onClick(complaints: Complaints) {
-            findNavController().navigate(MyComplaintsFragmentDirections.actionMyComplaintsFragmentToMyComplaintsDetailFragment(complaints.seq))
+            findNavController().navigate(
+                MyComplaintsFragmentDirections.actionMyComplaintsFragmentToMyComplaintsDetailFragment(
+                    complaints.seq
+                )
+            )
         }
     }
 }

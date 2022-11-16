@@ -18,27 +18,37 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "MyComplaintsViewModel"
+
 @HiltViewModel
 class MyComplaintsViewModel @Inject constructor(
     private val selectCompBySeqUseCase: SelectCompBySeqUseCase,
-    private val selectCompByBlindUseCase: SelectCompByBlindUseCase): ViewModel() {
+    private val selectCompByBlindUseCase: SelectCompByBlindUseCase
+) : ViewModel() {
     fun getComplaintsList(): Flow<PagingData<Complaints>> {
         return selectCompByBlindUseCase.execute()
     }
 
     private val _complaints: MutableStateFlow<Complaints?> = MutableStateFlow(null)
     val complaints get() = _complaints.asStateFlow()
-    fun getComplaints(complaintsSeq: Long){
-        viewModelScope.launch(Dispatchers.IO){
+    fun getComplaints(complaintsSeq: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
             selectCompBySeqUseCase.execute(complaintsSeq).collectLatest {
-                when(it){
+                when (it) {
                     is ResultType.Success -> {
                         var tmp = it.data.data
-                        when(tmp.state){
-                            "PROGRESS_IN" -> { tmp.state = "민원 처리중" }
-                            "RETURN" -> { tmp.state = "민원 반환됨" }
-                            "REGIST_DONE" -> { tmp.state = "민원 등록 완료" }
-                            "PROGRESS_DONE" -> { tmp.state = "민원 처리 완료" }
+                        when (tmp.state) {
+                            "PROGRESS_IN" -> {
+                                tmp.state = "민원 처리중"
+                            }
+                            "RETURN" -> {
+                                tmp.state = "민원 반환됨"
+                            }
+                            "REGIST_DONE" -> {
+                                tmp.state = "민원 등록 완료"
+                            }
+                            "PROGRESS_DONE" -> {
+                                tmp.state = "민원 처리 완료"
+                            }
                         }
                         _complaints.value = tmp
                     }

@@ -11,6 +11,7 @@ import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "ComplaintsFragment"
+
 @AndroidEntryPoint
 class ComplaintsFragment : BaseFragment<FragmentComplaintsBinding>(R.layout.fragment_complaints) {
 

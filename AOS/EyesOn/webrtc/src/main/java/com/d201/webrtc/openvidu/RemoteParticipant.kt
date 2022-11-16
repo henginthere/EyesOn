@@ -8,7 +8,7 @@ class RemoteParticipant(
     connectionId: String,
     participantName: String,
     session: Session
-): Participant(connectionId,participantName,session){
+) : Participant(connectionId, participantName, session) {
 
     private var view: View? = null
     private var videoView: SurfaceViewRenderer? = null
@@ -17,23 +17,28 @@ class RemoteParticipant(
     init {
         getSession()?.addRemoteParticipant(this)
     }
-    fun getVideoView():SurfaceViewRenderer? = videoView
 
-    fun setVideoView(videoView: SurfaceViewRenderer){
+    fun getVideoView(): SurfaceViewRenderer? = videoView
+
+    fun setVideoView(videoView: SurfaceViewRenderer) {
         this.videoView = videoView
     }
 
     fun getView() = view
 
-    fun setView(view: View){
+    fun setView(view: View) {
         this.view = view
     }
 
-    fun getParticipantNameText() : TextView { return participantNameText}
+    fun getParticipantNameText(): TextView {
+        return participantNameText
+    }
 
-    fun setParticipantNameText(participantNameText: TextView){
+    fun setParticipantNameText(participantNameText: TextView) {
         this.participantNameText = participantNameText
     }
 
-    override fun dispose() { super.dispose()}
+    override fun dispose() {
+        super.dispose()
+    }
 }

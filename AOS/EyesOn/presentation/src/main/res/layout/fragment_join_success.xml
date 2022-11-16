@@ -6,19 +6,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.login.join.JoinSuccessFragment"
         android:background="@drawable/gradient_user"
-        >
+        tools:context=".view.login.join.JoinSuccessFragment">
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="136dp"
             android:text="회원가입이 완료되었어요"
             android:textColor="@color/blind_yellow"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:layout_marginTop="136dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -27,41 +26,40 @@
             android:id="@+id/tv_selected_role"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="80dp"
-            tools:text="선택된 역할"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            tools:text="선택된 역할" />
 
         <TextView
             android:id="@+id/tv_selected_gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/tv_selected_role"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="80dp"
-            tools:text="선택된 성별"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_selected_role"
+            tools:text="선택된 성별" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animation_ok"
             android:layout_width="280dp"
             android:layout_height="280dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_selected_gender"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="40dp"
-            app:lottie_rawRes="@raw/animation_join"
-            app:lottie_loop="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_selected_gender"
             app:lottie_autoPlay="true"
-            app:lottie_speed="1.5"
-            />
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/animation_join"
+            app:lottie_speed="1.5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

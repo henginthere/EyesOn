@@ -11,7 +11,7 @@ import android.view.Surface
 import android.view.WindowManager
 import com.google.ar.core.Session
 
-class DisplayRotationHelper(var context: Context): DisplayListener {
+class DisplayRotationHelper(var context: Context) : DisplayListener {
     private var viewportChanged = false
     private var viewportWidth = 0
     private var viewportHeight = 0
@@ -19,12 +19,12 @@ class DisplayRotationHelper(var context: Context): DisplayListener {
     private var displayManager: DisplayManager? = null
     private var cameraManager: CameraManager? = null
 
-init {
-    displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-    cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    display = windowManager.defaultDisplay
-}
+    init {
+        displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        display = windowManager.defaultDisplay
+    }
 
     /** Registers the display listener. Should be called from [Activity.onResume].  */
     fun onResume() {

@@ -18,22 +18,23 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "AngelSettingViewModel"
+
 @HiltViewModel
 class AngelSettingViewModel @Inject constructor(
     private val putAngelInfoUseCase: PutAngelInfoUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
     private val angelInfoUseCase: GetAngelInfoUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _angelInfo: MutableStateFlow<AngelInfo?> = MutableStateFlow(null)
     val angelInfo get() = _angelInfo.asStateFlow()
 
-    fun getAngelInfo(){
-        viewModelScope.launch(Dispatchers.IO){
+    fun getAngelInfo() {
+        viewModelScope.launch(Dispatchers.IO) {
             angelInfoUseCase.execute().collectLatest {
-                if(it is ResultType.Success && it.data.status == 200){
+                if (it is ResultType.Success && it.data.status == 200) {
                     _angelInfo.value = it.data.data
-                }else{
+                } else {
                     Log.d(TAG, "getAngelInfo: ${it}")
                 }
             }
@@ -42,25 +43,26 @@ class AngelSettingViewModel @Inject constructor(
 
     private val _saveSettingEvent = SingleLiveEvent<Boolean>()
     val saveSettingEvent get() = _saveSettingEvent
-    fun putAngelInfo(alarmStart: Int, alarmEnd: Int, alarmDay: Int, active: Boolean){
-        viewModelScope.launch(Dispatchers.IO){
-            putAngelInfoUseCase.execute(AngelInfo(alarmStart, alarmEnd, alarmDay, active)).collectLatest {
-                if(it is ResultType.Success && it.data.status == 200){
-                    _angelInfo.value = it.data.data
-                    _saveSettingEvent.postValue(true)
-                }else{
-                    Log.d(TAG, "putAngelInfo: ${it}")
+    fun putAngelInfo(alarmStart: Int, alarmEnd: Int, alarmDay: Int, active: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            putAngelInfoUseCase.execute(AngelInfo(alarmStart, alarmEnd, alarmDay, active))
+                .collectLatest {
+                    if (it is ResultType.Success && it.data.status == 200) {
+                        _angelInfo.value = it.data.data
+                        _saveSettingEvent.postValue(true)
+                    } else {
+                        Log.d(TAG, "putAngelInfo: ${it}")
+                    }
                 }
-            }
         }
     }
 
     private val _deleteUserEvent = SingleLiveEvent<Boolean>()
     val deleteUserEvent get() = _deleteUserEvent
-    fun deleteUser(){
-        viewModelScope.launch(Dispatchers.IO){
+    fun deleteUser() {
+        viewModelScope.launch(Dispatchers.IO) {
             deleteUserUseCase.execute().collectLatest {
-                if (it is ResultType.Success){
+                if (it is ResultType.Success) {
                     _deleteUserEvent.postValue(true)
                 }
             }

@@ -2,7 +2,6 @@ package com.d201.eyeson.view.angel.help
 
 import android.content.Context
 import android.media.AudioManager
-import android.media.MediaPlayer
 import android.util.Log
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +12,6 @@ import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelHelpBinding
 import com.d201.eyeson.util.OPENVIDU_URL
 import com.d201.eyeson.view.angel.AngelHelpDisconnectListener
-import com.d201.eyeson.view.blind.help.BlindHelpDisconnectDialog
 import com.d201.webrtc.openvidu.LocalParticipant
 import com.d201.webrtc.openvidu.Session
 import com.d201.webrtc.utils.CustomHttpClient

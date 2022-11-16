@@ -9,25 +9,25 @@ import android.view.View.OnTouchListener
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
 
-class TapHelper(context: Context?): OnTouchListener {
+class TapHelper(context: Context?) : OnTouchListener {
     private var gestureDetector: GestureDetector? = null
     private val queuedSingleTaps: BlockingQueue<MotionEvent> = ArrayBlockingQueue(16)
 
-init {
-    gestureDetector = GestureDetector(
-        context,
-        object : SimpleOnGestureListener() {
-            override fun onSingleTapUp(e: MotionEvent): Boolean {
-                // Queue tap if there is space. Tap is lost if queue is full.
-                queuedSingleTaps.offer(e)
-                return true
-            }
+    init {
+        gestureDetector = GestureDetector(
+            context,
+            object : SimpleOnGestureListener() {
+                override fun onSingleTapUp(e: MotionEvent): Boolean {
+                    // Queue tap if there is space. Tap is lost if queue is full.
+                    queuedSingleTaps.offer(e)
+                    return true
+                }
 
-            override fun onDown(e: MotionEvent): Boolean {
-                return true
-            }
-        })
-}
+                override fun onDown(e: MotionEvent): Boolean {
+                    return true
+                }
+            })
+    }
 
     /**
      * Polls for a tap.

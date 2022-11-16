@@ -46,7 +46,7 @@ class Session(
 
     }
 
-    fun createLocalPeerConnection(): PeerConnection?{
+    fun createLocalPeerConnection(): PeerConnection? {
         val iceServers = ArrayList<PeerConnection.IceServer>();
         val iceServer = PeerConnection.IceServer
             .builder("stun:stun.l.google.com:19302")
@@ -63,19 +63,20 @@ class Session(
         rtcConfig.keyType = PeerConnection.KeyType.ECDSA
         rtcConfig.enableDtlsSrtp = true;
         rtcConfig.sdpSemantics = PeerConnection.SdpSemantics.UNIFIED_PLAN
-        if(peerConnectionFactory != null){
+        if (peerConnectionFactory != null) {
             val peerConnection = peerConnectionFactory!!.createPeerConnection(
-                rtcConfig, object : CustomPeerConnectionObserver("local"){
+                rtcConfig, object : CustomPeerConnectionObserver("local") {
                     override fun onIceCandidate(iceCandidate: IceCandidate) {
                         super.onIceCandidate(iceCandidate)
-                        websocket?.onIceCandidate(iceCandidate, localParticipant?.
-                        getConnectionId())
+                        websocket?.onIceCandidate(
+                            iceCandidate, localParticipant?.getConnectionId()
+                        )
                     }
 
                     override fun onSignalingChange(signalingState: SignalingState) {
-                        if(PeerConnection.SignalingState.STABLE == signalingState){
+                        if (PeerConnection.SignalingState.STABLE == signalingState) {
                             val it = localParticipant?.getIceCandidateList()?.iterator()
-                            while (it!!.hasNext()){
+                            while (it!!.hasNext()) {
                                 val candidate = it.next()
                                 localParticipant?.getPeerConnection()?.addIceCandidate(candidate)
                                 it.remove()
@@ -84,15 +85,21 @@ class Session(
                     }
 
                 })
-            if(localParticipant?.getAudioTrack() != null){
-                peerConnection!!.addTransceiver(localParticipant?.getAudioTrack(),
+            if (localParticipant?.getAudioTrack() != null) {
+                peerConnection!!.addTransceiver(
+                    localParticipant?.getAudioTrack(),
                     RtpTransceiver.RtpTransceiverInit(
-                        RtpTransceiver.RtpTransceiverDirection.SEND_ONLY))
+                        RtpTransceiver.RtpTransceiverDirection.SEND_ONLY
+                    )
+                )
             }
-            if(localParticipant?.getVideoTrack() != null){
-                peerConnection!!.addTransceiver(localParticipant?.getVideoTrack(),
+            if (localParticipant?.getVideoTrack() != null) {
+                peerConnection!!.addTransceiver(
+                    localParticipant?.getVideoTrack(),
                     RtpTransceiver.RtpTransceiverInit(
-                        RtpTransceiver.RtpTransceiverDirection.SEND_ONLY))
+                        RtpTransceiver.RtpTransceiverDirection.SEND_ONLY
+                    )
+                )
             }
 
             return peerConnection!!
@@ -112,7 +119,7 @@ class Session(
         rtcConfig.keyType = KeyType.ECDSA
         rtcConfig.enableDtlsSrtp = true
         rtcConfig.sdpSemantics = SdpSemantics.UNIFIED_PLAN
-        if(peerConnectionFactory != null){
+        if (peerConnectionFactory != null) {
             val peerConnection = peerConnectionFactory!!.createPeerConnection(
                 rtcConfig,
                 object : CustomPeerConnectionObserver("remotePeerCreation") {
@@ -126,11 +133,13 @@ class Session(
                         mediaStreams: Array<MediaStream?>?
                     ) {
                         super.onAddTrack(rtpReceiver, mediaStreams)
-                        if(mediaStreams != null && mediaStreams[0] != null
-                            && remoteParticipants != null){
+                        if (mediaStreams != null && mediaStreams[0] != null
+                            && remoteParticipants != null
+                        ) {
                             activity?.setRemoteMediaStream(
                                 mediaStreams[0]!!,
-                                remoteParticipants[connectionId]!!)
+                                remoteParticipants[connectionId]!!
+                            )
                         }
                     }
 
@@ -163,20 +172,21 @@ class Session(
     fun createOfferForPublishing(constraints: MediaConstraints?) {
         localParticipant?.getPeerConnection()?.createOffer(
             object : CustomSdpObserver("createOffer") {
-            override fun onCreateSuccess(sessionDescription: SessionDescription?) {
-                super.onCreateSuccess(sessionDescription)
-                Log.i("createOffer SUCCESS", sessionDescription.toString())
-                localParticipant?.getPeerConnection()?.setLocalDescription(
-                    CustomSdpObserver("createOffer_setLocalDescription"),
-                    sessionDescription
-                )
-                websocket?.publishVideo(sessionDescription!!)
-            }
+                override fun onCreateSuccess(sessionDescription: SessionDescription?) {
+                    super.onCreateSuccess(sessionDescription)
+                    Log.i("createOffer SUCCESS", sessionDescription.toString())
+                    localParticipant?.getPeerConnection()?.setLocalDescription(
+                        CustomSdpObserver("createOffer_setLocalDescription"),
+                        sessionDescription
+                    )
+                    websocket?.publishVideo(sessionDescription!!)
+                }
 
-            override fun onCreateFailure(s: String?) {
-                Log.e("createOffer ERROR", s!!)
-            }
-        }, constraints)
+                override fun onCreateFailure(s: String?) {
+                    Log.e("createOffer ERROR", s!!)
+                }
+            }, constraints
+        )
     }
 
     fun createAnswerForSubscribing(
@@ -257,7 +267,7 @@ class Session(
                 if (remoteParticipant.getPeerConnection() != null) {
                     remoteParticipant.getPeerConnection().close()
                 }
-                if(remoteParticipant.getView() != null){
+                if (remoteParticipant.getView() != null) {
                     viewContainer?.removeView(remoteParticipant.getView())
                 }
             }
@@ -272,11 +282,11 @@ class Session(
 
     }
 
-    fun setWebSocket(websocket: CustomWebSocket){
+    fun setWebSocket(websocket: CustomWebSocket) {
         this.websocket = websocket
     }
 
-    fun removeView(view: View){
+    fun removeView(view: View) {
         this.viewContainer?.removeView(view)
     }
 }

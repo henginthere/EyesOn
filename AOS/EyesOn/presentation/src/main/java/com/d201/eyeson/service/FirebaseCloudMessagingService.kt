@@ -13,10 +13,7 @@ import com.d201.eyeson.view.blind.BlindMainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.ServiceScoped
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 

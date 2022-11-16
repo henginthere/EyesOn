@@ -6,6 +6,7 @@ import com.d201.eyeson.databinding.ActivityIntroBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "IntroActivity"
+
 @AndroidEntryPoint
 class IntroActivity : BaseActivity<ActivityIntroBinding>(R.layout.activity_intro) {
 

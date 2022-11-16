@@ -10,16 +10,18 @@ import com.d201.domain.model.Complaints
 import com.d201.eyeson.databinding.ItemComplaintsVerticalBlindBinding
 import com.d201.eyeson.view.blind.BlindComplaintsClickListener
 
-private const val TAG ="MyComplaintsAdapter"
-class MyComplaintsAdapter(private val blindComplaintsClickListener: BlindComplaintsClickListener):
+private const val TAG = "MyComplaintsAdapter"
+
+class MyComplaintsAdapter(private val blindComplaintsClickListener: BlindComplaintsClickListener) :
     PagingDataAdapter<Complaints, MyComplaintsAdapter.ViewHolder>(diffUtil) {
-    inner class ViewHolder(private val binding: ItemComplaintsVerticalBlindBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(complaints: Complaints){
+    inner class ViewHolder(private val binding: ItemComplaintsVerticalBlindBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(complaints: Complaints) {
             binding.apply {
                 layoutComplaints.setOnClickListener {
                     blindComplaintsClickListener.onClick(complaints)
                 }
-                when(complaints.state){
+                when (complaints.state) {
                     "PROGRESS_IN" -> {
                         tvComplaintsStatusProcessing.visibility = View.VISIBLE
                     }
@@ -40,13 +42,17 @@ class MyComplaintsAdapter(private val blindComplaintsClickListener: BlindComplai
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        if(item != null){
+        if (item != null) {
             holder.bind(item)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemComplaintsVerticalBlindBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemComplaintsVerticalBlindBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 

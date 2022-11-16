@@ -7,10 +7,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentComplaintsListBinding
 import com.d201.eyeson.view.angel.ComplaintsClickListener
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -29,6 +26,7 @@ class ComplaintsListFragment :
         initViewModelCallback()
         getComplaintsList()
     }
+
     private fun initView() {
         val complaintsClickListener = object : ComplaintsClickListener {
             override fun onClick(complaintsSeq: Long) {

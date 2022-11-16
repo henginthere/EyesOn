@@ -13,15 +13,15 @@ import com.d201.eyeson.view.login.LoginActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
 private const val TAG = "BlindSettingFragment"
+
 @AndroidEntryPoint
-class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.fragment_blind_setting) {
+class BlindSettingFragment :
+    BaseFragment<FragmentBlindSettingBinding>(R.layout.fragment_blind_setting) {
     @Inject
     lateinit var sharedPref: SharedPreferences
     private val viewModel: BlindSettingViewModel by viewModels()
@@ -33,8 +33,8 @@ class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.
     }
 
     private fun initViewModel() {
-        viewModel.deleteUserEvent.observe(viewLifecycleOwner){
-            if(it){
+        viewModel.deleteUserEvent.observe(viewLifecycleOwner) {
+            if (it) {
                 finishActivity()
             }
         }
@@ -42,8 +42,8 @@ class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.
 
     private fun initListener() {
         binding.apply {
-            btnBack.apply{
-                setOnClickListener{
+            btnBack.apply {
+                setOnClickListener {
                     accessibilityDelegate = accessibilityEvent(this, requireContext())
                     setOnClickListener {
                         findNavController().popBackStack()
@@ -51,7 +51,7 @@ class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.
                 }
             }
 
-            btnReplayGuide.setOnClickListener {  }
+            btnReplayGuide.setOnClickListener { }
 
             btnLogout.setOnClickListener {
                 logOut()
@@ -63,7 +63,7 @@ class BlindSettingFragment : BaseFragment<FragmentBlindSettingBinding>(R.layout.
         }
     }
 
-    private fun finishActivity(){
+    private fun finishActivity() {
         sharedPref.edit().remove(JWT).apply()
         requireActivity().startActivity(Intent(requireContext(), LoginActivity::class.java))
         requireActivity().finish()

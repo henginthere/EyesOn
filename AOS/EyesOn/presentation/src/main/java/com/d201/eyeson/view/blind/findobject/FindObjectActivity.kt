@@ -6,6 +6,7 @@ import com.d201.eyeson.databinding.ActivityFindObjectBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "FindObjectActivity"
+
 @AndroidEntryPoint
 class FindObjectActivity : BaseActivity<ActivityFindObjectBinding>(R.layout.activity_find_object) {
 
@@ -13,9 +14,10 @@ class FindObjectActivity : BaseActivity<ActivityFindObjectBinding>(R.layout.acti
         initView()
     }
 
-    private fun initView(){
+    private fun initView() {
         binding.apply {
-            supportFragmentManager.beginTransaction().replace(R.id.frame_find_object, FindObjectFragment()).commit()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frame_find_object, FindObjectFragment()).commit()
         }
     }
 

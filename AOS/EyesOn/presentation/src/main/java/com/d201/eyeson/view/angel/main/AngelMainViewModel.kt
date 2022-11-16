@@ -13,30 +13,30 @@ import com.d201.domain.usecase.user.GetAngelInfoUseCase
 import com.d201.domain.utils.ResultType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG ="AngelMainViewModel"
+private const val TAG = "AngelMainViewModel"
+
 @HiltViewModel
 class AngelMainViewModel @Inject constructor(
     private val angelInfoUseCase: GetAngelInfoUseCase,
     private val selectCompByAngelUseCase: SelectCompByAngelUseCase,
     private val selectAllCompUseCase: SelectAllCompUseCase
-    ): ViewModel(){
+) : ViewModel() {
 
     private val _angelInfo: MutableStateFlow<AngelInfo?> = MutableStateFlow(null)
     val angelInfoData get() = _angelInfo.asStateFlow()
 
-    fun getAngelInfo(){
-        viewModelScope.launch(Dispatchers.IO){
+    fun getAngelInfo() {
+        viewModelScope.launch(Dispatchers.IO) {
             angelInfoUseCase.execute().collectLatest {
-                if(it is ResultType.Success && it.data.status == 200){
+                if (it is ResultType.Success && it.data.status == 200) {
                     _angelInfo.value = it.data.data
-                }else{
+                } else {
                     Log.d(TAG, "getAngelInfo: ${it}")
                 }
             }
@@ -46,16 +46,16 @@ class AngelMainViewModel @Inject constructor(
     private val _complaintsList: MutableStateFlow<PagingData<Complaints>?> = MutableStateFlow(null)
     val complaintsList get() = _complaintsList.asStateFlow()
 
-    fun getComplaintsByAngelList(){
-        viewModelScope.launch(Dispatchers.IO){
+    fun getComplaintsByAngelList() {
+        viewModelScope.launch(Dispatchers.IO) {
             selectCompByAngelUseCase.execute().cachedIn(this).collectLatest {
                 _complaintsList.value = it
             }
         }
     }
 
-    fun getComplaintsList(){
-        viewModelScope.launch(Dispatchers.IO){
+    fun getComplaintsList() {
+        viewModelScope.launch(Dispatchers.IO) {
             selectAllCompUseCase.execute().cachedIn(this).collectLatest {
                 _complaintsList.value = it
             }

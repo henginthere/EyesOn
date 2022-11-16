@@ -13,15 +13,13 @@ import androidx.navigation.fragment.findNavController
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelMainBinding
-import com.d201.eyeson.util.*
+import com.d201.eyeson.util.VIEW_ANGEL_HELP
 import com.d201.eyeson.view.angel.ComplaintsClickListener
 import com.d201.eyeson.view.angel.help.AngelHelpActivity
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.utils.ColorTemplate
-import com.google.ar.core.dependencies.i
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +61,12 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         if (action.isNotEmpty() && action == "AngelHelp") {
             Log.d(TAG, "actionCheck: $action")
             requireActivity().intent.putExtra("action", "")
-            checkPermission(VIEW_ANGEL_HELP, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS)
+            checkPermission(
+                VIEW_ANGEL_HELP,
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.MODIFY_AUDIO_SETTINGS
+            )
         }
     }
 
@@ -117,24 +120,26 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             pieChart.setData(generatePieData())
         }
     }
+
     private fun generatePieData(): PieData? {
         val count = 4
         val entries1: ArrayList<PieEntry> = ArrayList()
         entries1.add(PieEntry((Math.random() * 60 + 40).toFloat(), "21개"))
-     //   entries1.add(PieEntry((Math.random() * 60 + 40).toFloat(), "21개"))
+        //   entries1.add(PieEntry((Math.random() * 60 + 40).toFloat(), "21개"))
         val ds1 = PieDataSet(entries1, "Quarterly Revenues 2015")
         ds1.setColors(R.color.gradient_start, R.color.gradient_end, R.color.gradient_center)
         ds1.setSliceSpace(2f)
         ds1.setValueTextColor(Color.WHITE)
         ds1.setValueTextSize(12f)
         val d = PieData(ds1)
-      //  d.setValueTypeface(tf)
+        //  d.setValueTypeface(tf)
         return d
     }
-    private fun initViewModelCallback(){
-        job = lifecycleScope.launch { 
+
+    private fun initViewModelCallback() {
+        job = lifecycleScope.launch {
             angelMainViewModel.complaintsList.collectLatest {
-                if(it != null) {
+                if (it != null) {
                     angelMainAdapter.submitData(it)
                 }
             }
@@ -185,6 +190,7 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             )
             .check()
     }
+
     private fun generateCenterText(): SpannableString? {
         val s = SpannableString("Revenues\nQuarters 2015")
         s.setSpan(RelativeSizeSpan(2f), 0, 8, 0)

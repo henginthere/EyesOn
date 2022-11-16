@@ -34,6 +34,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 private const val TAG = "BlindHelpFragment"
+
 @AndroidEntryPoint
 class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragment_blind_help) {
 
@@ -318,7 +319,7 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
 
     private fun returnResource() {
         Log.d(TAG, "returnResource: $leaveFlag")
-        if(!leaveFlag) {
+        if (!leaveFlag) {
             leaveFlag = true
             mediaPlayer.stop()
             binding.lavLoading.pauseAnimation()

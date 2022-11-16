@@ -1,7 +1,5 @@
 package com.d201.eyeson.view.blind.findobject
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.*
 import android.media.Image
 import android.opengl.GLES20
@@ -10,8 +8,6 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.get
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.d201.depth.depth.DepthTextureHandler
@@ -27,12 +23,9 @@ import com.d201.eyeson.databinding.FragmentFindObjectBinding
 import com.d201.eyeson.util.*
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.support.image.TensorImage
@@ -43,12 +36,13 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "FindObjectFragment"
+
 @AndroidEntryPoint
 class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
-    R.layout.fragment_find_object),
+    R.layout.fragment_find_object
+),
     TextToSpeech.OnInitListener,
-    GLSurfaceView.Renderer
-{
+    GLSurfaceView.Renderer {
 
     private lateinit var tts: TextToSpeech
 
@@ -93,10 +87,10 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
         viewModel.apply {
 
         }
-        lifecycleScope.launch(Dispatchers.IO){
+        lifecycleScope.launch(Dispatchers.IO) {
             viewModel.recordText.collectLatest {
-                if(it.isNotEmpty()){
-                    when(it){
+                if (it.isNotEmpty()) {
+                    when (it) {
                         "마우스" -> objectToFind = "mouse"
                         "키보드" -> objectToFind = "keyboard"
                         "컵" -> objectToFind = "cup"
@@ -371,7 +365,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
             frame.lightEstimate.getColorCorrection(colorCorrectionRgba, 0)
 
 
-            if(objectToFind != null){
+            if (objectToFind != null) {
                 try {
                     // 현재 프레임에 해당하는 이미지 객체를 가져옴
                     // 가로 모드
@@ -393,7 +387,8 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
 
                         // 비트맵에 검출 결과를 그려서 보여줍니다
                         // 음성으로 출력
-                        val imgWithResult = drawDetectionResult(bitmap, depthImage, detectionResults)
+                        val imgWithResult =
+                            drawDetectionResult(bitmap, depthImage, detectionResults)
 
                         requireActivity().runOnUiThread {
                             binding.inputImageView.setImageBitmap(imgWithResult)
@@ -458,8 +453,8 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
             it.categories.first().label
         }
 
-        for(text in resultText){
-            if(text == objectToFind){
+        for (text in resultText) {
+            if (text == objectToFind) {
                 // Step 4: 탐지 결과를 파싱하여 보여줍니다.
                 return results.map {
                     // Get the top-1 category and craft the display text
@@ -546,28 +541,28 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                 val w = bitmap.width / 3
                 val h = bitmap.height / 3
 
-                if(centerX in 0.. w){
-                    if(centerY in 0.. h){
+                if (centerX in 0..w) {
+                    if (centerY in 0..h) {
                         location = "11시 방향"
-                    }else if(centerY in h .. h * 2){
+                    } else if (centerY in h..h * 2) {
                         location = "9시 방향"
-                    }else if(centerY in h * 2 .. bitmap.height){
+                    } else if (centerY in h * 2..bitmap.height) {
                         location = "7시 방향"
                     }
-                }else if(centerX in w .. w * 2){
-                    if(centerY in 0.. h){
+                } else if (centerX in w..w * 2) {
+                    if (centerY in 0..h) {
                         location = "12시 방향"
-                    }else if(centerY in h .. h * 2){
+                    } else if (centerY in h..h * 2) {
                         location = "중앙"
-                    }else if(centerY in h * 2 .. bitmap.height){
+                    } else if (centerY in h * 2..bitmap.height) {
                         location = "6시 방향"
                     }
-                }else if(centerX in w * 2 .. bitmap.width){
-                    if(centerY in 0.. h){
+                } else if (centerX in w * 2..bitmap.width) {
+                    if (centerY in 0..h) {
                         location = "1시 방향"
-                    }else if(centerY in h .. h * 2){
+                    } else if (centerY in h..h * 2) {
                         location = "3시 방향"
-                    }else if(centerY in h * 2 .. bitmap.height){
+                    } else if (centerY in h * 2..bitmap.height) {
                         location = "5시 방향"
                     }
                 }

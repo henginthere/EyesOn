@@ -6,8 +6,8 @@ import org.webrtc.PeerConnection.*
 import java.util.*
 
 open class CustomPeerConnectionObserver(
-    id : String
-): PeerConnection.Observer {
+    id: String
+) : PeerConnection.Observer {
 
     private val TAG = "PeerConnection-${id}"
 
@@ -18,7 +18,8 @@ open class CustomPeerConnectionObserver(
 
 
     override fun onIceConnectionChange(p0: IceConnectionState?) {
-        Log.d( TAG,
+        Log.d(
+            TAG,
             "onIceConnectionChange() called with: iceConnectionState = [$p0]"
         )
     }
@@ -39,9 +40,12 @@ open class CustomPeerConnectionObserver(
     }
 
     override fun onIceCandidatesRemoved(iceCandidates: Array<IceCandidate?>?) {
-        Log.d( TAG,
+        Log.d(
+            TAG,
             "onIceCandidatesRemoved() called with: iceCandidates = [" + Arrays.toString(
-                iceCandidates ) + "]")
+                iceCandidates
+            ) + "]"
+        )
     }
 
     override fun onAddStream(mediaStream: MediaStream) {
@@ -61,8 +65,10 @@ open class CustomPeerConnectionObserver(
     }
 
     override fun onAddTrack(rtpReceiver: RtpReceiver?, mediaStreams: Array<MediaStream?>?) {
-        Log.d( TAG,
+        Log.d(
+            TAG,
             "onAddTrack() called with: mediaStreams = ["
-                    + Arrays.toString(mediaStreams) + "]")
+                    + Arrays.toString(mediaStreams) + "]"
+        )
     }
 }

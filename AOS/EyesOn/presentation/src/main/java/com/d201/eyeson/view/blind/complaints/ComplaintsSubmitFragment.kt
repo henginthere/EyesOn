@@ -20,8 +20,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 private const val TAG = "ComplaintsSubmitFragment"
+
 @AndroidEntryPoint
-class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R.layout.fragment_complaints_submit) {
+class ComplaintsSubmitFragment :
+    BaseFragment<FragmentComplaintsSubmitBinding>(R.layout.fragment_complaints_submit) {
 
     private var bitmap: Bitmap? = null
     private var photoURI: Uri? = null
@@ -50,9 +52,13 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
                     Log.d(TAG, "initView: $photoURI")
-                    if(photoURI != null){
-                        findNavController().navigate(ComplaintsSubmitFragmentDirections.actionComplaintsSubmitFragmentToComplaintsSubmitRecordFragment(currentPhotoPath!!))
-                    }else{
+                    if (photoURI != null) {
+                        findNavController().navigate(
+                            ComplaintsSubmitFragmentDirections.actionComplaintsSubmitFragmentToComplaintsSubmitRecordFragment(
+                                currentPhotoPath!!
+                            )
+                        )
+                    } else {
                         showToast("사진을 촬영해 주세요")
                     }
                 }
@@ -60,16 +66,17 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
         }
     }
 
-    private val cameraIntentLauncher: ActivityResultLauncher<Uri> = registerForActivityResult(ActivityResultContracts.TakePicture()){
-        if(it){
-            photoURI?.let {
-                binding.ivSelectedImage.setImageURI(it)
-                Log.d(TAG, "photoURI = ${photoURI!!.path}")
+    private val cameraIntentLauncher: ActivityResultLauncher<Uri> =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) {
+            if (it) {
+                photoURI?.let {
+                    binding.ivSelectedImage.setImageURI(it)
+                    Log.d(TAG, "photoURI = ${photoURI!!.path}")
+                }
+            } else {
+                photoURI = null
             }
-        }else{
-            photoURI = null
         }
-    }
 
     private fun takePicture() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
@@ -80,7 +87,11 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
                     null
                 }
                 photoFile?.also {
-                    photoURI = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}", photoFile)
+                    photoURI = FileProvider.getUriForFile(
+                        requireContext(),
+                        "${requireContext().packageName}",
+                        photoFile
+                    )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     cameraIntentLauncher.launch(photoURI)
                 }
@@ -93,7 +104,7 @@ class ComplaintsSubmitFragment : BaseFragment<FragmentComplaintsSubmitBinding>(R
     private fun createImageFile(): File {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val storageDir = File("${requireContext().cacheDir}/image")
-        if(!storageDir.exists()){
+        if (!storageDir.exists()) {
             storageDir.mkdirs()
         }
         return File.createTempFile(

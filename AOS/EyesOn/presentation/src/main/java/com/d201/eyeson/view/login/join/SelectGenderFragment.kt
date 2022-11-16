@@ -16,14 +16,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 private const val TAG = "SelectGenderFragment"
+
 @AndroidEntryPoint
-class SelectGenderFragment : BaseFragment<FragmentSelectGenderBinding>(R.layout.fragment_select_gender) {
+class SelectGenderFragment :
+    BaseFragment<FragmentSelectGenderBinding>(R.layout.fragment_select_gender) {
 
     private val viewModel: SelectGenderViewModel by viewModels()
     private val args: SelectGenderFragmentArgs by navArgs()
 
     override fun init() {
-        if(args.role.isEmpty()){
+        if (args.role.isEmpty()) {
             startActivity(Intent(requireContext(), LoginActivity::class.java))
             requireActivity().finish()
         }
@@ -31,7 +33,7 @@ class SelectGenderFragment : BaseFragment<FragmentSelectGenderBinding>(R.layout.
         initViewModel()
     }
 
-    private fun initView(){
+    private fun initView() {
         binding.apply {
             btnMale.setOnClickListener {
                 viewModel.putUserRole(args.role, GENDER_MALE)
@@ -42,11 +44,16 @@ class SelectGenderFragment : BaseFragment<FragmentSelectGenderBinding>(R.layout.
         }
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         lifecycleScope.launch {
             viewModel.info.collectLatest {
-                if(it != null) {
-                    findNavController().navigate(SelectGenderFragmentDirections.actionSelectGenderFragmentToJoinSuccessFragment(it.role, it.gender))
+                if (it != null) {
+                    findNavController().navigate(
+                        SelectGenderFragmentDirections.actionSelectGenderFragmentToJoinSuccessFragment(
+                            it.role,
+                            it.gender
+                        )
+                    )
                 }
             }
         }

@@ -8,6 +8,7 @@ import com.d201.eyeson.databinding.ActivityLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "LoginActivity"
+
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
     private lateinit var navHostFragment: NavHostFragment
@@ -17,8 +18,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
         initView()
     }
 
-    private fun initView(){
-        navHostFragment = supportFragmentManager.findFragmentById(R.id.frame_login) as NavHostFragment
+    private fun initView() {
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.frame_login) as NavHostFragment
         navController = navHostFragment.navController
     }
 }
