@@ -9,11 +9,11 @@ import retrofit2.http.Path
 interface HelpApi {
 
     @POST("help/{gender}")
-    suspend fun requestHelp(@Path("gender") gender : String) : BaseResponse<Int>
+    suspend fun requestHelp(@Path("gender") gender: String): BaseResponse<Int>
 
     @GET("help")
-    suspend fun responseHelp() : BaseResponse<Int>
+    suspend fun responseHelp(): BaseResponse<Int>
 
     @PUT("help/finish")
-    suspend fun disconnectHelp() : BaseResponse<Void>
+    suspend fun disconnectHelp(): BaseResponse<Void>
 }

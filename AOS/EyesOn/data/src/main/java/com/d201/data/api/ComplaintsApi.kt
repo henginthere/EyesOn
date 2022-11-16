@@ -11,16 +11,29 @@ interface ComplaintsApi {
 
     @Multipart
     @POST("complaints/register")
-    suspend fun insertComp(@Part complaintsRequest: MultipartBody.Part, @Part imageFile: MultipartBody.Part): BaseResponse<Boolean>
+    suspend fun insertComp(
+        @Part complaintsRequest: MultipartBody.Part,
+        @Part imageFile: MultipartBody.Part
+    ): BaseResponse<Boolean>
 
     @GET("complaints/list/{flag}")
-    suspend fun selectComplaintsList(@Path("flag")flag: Int, @Query("page") page: Int, @Query("size") size: Int): BaseResponse<PagingResult<ComplaintsResponse>>
+    suspend fun selectComplaintsList(
+        @Path("flag") flag: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): BaseResponse<PagingResult<ComplaintsResponse>>
 
     @GET("complaints/list/angel")
-    suspend fun selectComplaintsByAngel(@Query("page") page: Int, @Query("size") size: Int): BaseResponse<PagingResult<ComplaintsResponse>>
+    suspend fun selectComplaintsByAngel(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): BaseResponse<PagingResult<ComplaintsResponse>>
 
     @GET("complaints/list/blind")
-    suspend fun selectComplaintsByBlind(@Query("page") page: Int, @Query("size") size: Int): BaseResponse<PagingResult<ComplaintsResponse>>
+    suspend fun selectComplaintsByBlind(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): BaseResponse<PagingResult<ComplaintsResponse>>
 
     @GET("complaints/{complaintsSeq}")
     suspend fun selectComplaintsBySeq(@Path("complaintsSeq") seq: Long): BaseResponse<ComplaintsResponse>

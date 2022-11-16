@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface HelpRepository {
 
-    fun requestHelp(gender : String) : Flow<ResultType<BaseResponse<Int>>>
+    fun requestHelp(gender: String): Flow<ResultType<BaseResponse<Int>>>
 
-    fun responseHelp() : Flow<ResultType<BaseResponse<Int>>>
+    fun responseHelp(): Flow<ResultType<BaseResponse<Int>>>
 
-    fun disconnectHelp() : Flow<ResultType<BaseResponse<Void>>>
+    fun disconnectHelp(): Flow<ResultType<BaseResponse<Void>>>
 
 }

@@ -10,7 +10,6 @@ import retrofit2.http.*
 
 interface UserApi {
 
-    // 로그인
     @POST("user/login")
     suspend fun loginUser(@Body userRequest: UserRequest): BaseResponse<LoginResponse>
 

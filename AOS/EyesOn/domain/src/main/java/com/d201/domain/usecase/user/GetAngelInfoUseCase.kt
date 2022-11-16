@@ -7,6 +7,6 @@ import javax.inject.Singleton
 @Singleton
 class GetAngelInfoUseCase @Inject constructor(
     private val userRepository: UserRepository
-){
-    fun excute() = userRepository.getAngelInfo()
+) {
+    fun execute() = userRepository.getAngelInfo()
 }

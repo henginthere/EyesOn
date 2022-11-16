@@ -16,70 +16,90 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val TAG = "UserRepositoryImpl"
+
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val userRemoteDataSource: UserRemoteDataSource
-): UserRepository {
+) : UserRepository {
 
-    override fun loginUser(idToken: String, fcmToken: String): Flow<ResultType<BaseResponse<Login>>> = flow {
+    override fun loginUser(
+        idToken: String,
+        fcmToken: String
+    ): Flow<ResultType<BaseResponse<Login>>> = flow {
         emit(ResultType.Loading)
         userRemoteDataSource.loginUser(UserRequest(idToken, fcmToken)).collect {
-            emit(ResultType.Success(
-                BaseResponse(
-                it.message,
-                it.status,
-                it.data.mapperToToken()
-                )))
-        }
-    }
-
-    override fun getAngelInfo(): Flow<ResultType<BaseResponse<AngelInfo>>> = flow{
-        emit(ResultType.Loading)
-        userRemoteDataSource.getAngelInfo().collect{
-            emit(ResultType.Success(
-                BaseResponse(
-                    it.message,
-                    it.status,
-                    it.data.mapperToAngelInfo()
-                )))
-        }
-    }
-
-    override fun putUserRole( role: String, gender: String): Flow<ResultType<BaseResponse<Login>>> = flow {
-        emit(ResultType.Loading)
-        userRemoteDataSource.putUserRole(UserRoleRequest(gender, role)).collect{
-            emit(ResultType.Success(
-                BaseResponse(
-                    it.message,
-                    it.status,
-                    it.data.mapperToToken()
+            emit(
+                ResultType.Success(
+                    BaseResponse(
+                        it.message,
+                        it.status,
+                        it.data.mapperToToken()
+                    )
                 )
-            ))
+            )
         }
     }
 
-    override fun putAngelInfo(angelInfo: AngelInfo): Flow<ResultType<BaseResponse<AngelInfo>>> = flow {
+    override fun getAngelInfo(): Flow<ResultType<BaseResponse<AngelInfo>>> = flow {
         emit(ResultType.Loading)
-        userRemoteDataSource.putAngelInfo(angelInfo.mapperToAngelRequest()).collect{
-            emit(ResultType.Success(
-                BaseResponse(
-                    it.message,
-                    it.status,
-                    it.data.mapperToAngelInfo()
-                )))
+        userRemoteDataSource.getAngelInfo().collect {
+            emit(
+                ResultType.Success(
+                    BaseResponse(
+                        it.message,
+                        it.status,
+                        it.data.mapperToAngelInfo()
+                    )
+                )
+            )
         }
     }
+
+    override fun putUserRole(role: String, gender: String): Flow<ResultType<BaseResponse<Login>>> =
+        flow {
+            emit(ResultType.Loading)
+            userRemoteDataSource.putUserRole(UserRoleRequest(gender, role)).collect {
+                emit(
+                    ResultType.Success(
+                        BaseResponse(
+                            it.message,
+                            it.status,
+                            it.data.mapperToToken()
+                        )
+                    )
+                )
+            }
+        }
+
+    override fun putAngelInfo(angelInfo: AngelInfo): Flow<ResultType<BaseResponse<AngelInfo>>> =
+        flow {
+            emit(ResultType.Loading)
+            userRemoteDataSource.putAngelInfo(angelInfo.mapperToAngelRequest()).collect {
+                emit(
+                    ResultType.Success(
+                        BaseResponse(
+                            it.message,
+                            it.status,
+                            it.data.mapperToAngelInfo()
+                        )
+                    )
+                )
+            }
+        }
 
     override fun deleteUser(): Flow<ResultType<BaseResponse<Void>>> = flow {
         emit(ResultType.Loading)
-        userRemoteDataSource.deleteUser().collect(){
-            emit(ResultType.Success(
-                BaseResponse(
-                    it.message,
-                    it.status,
-                    it.data
+        userRemoteDataSource.deleteUser().collect() {
+            emit(
+                ResultType.Success(
+                    BaseResponse(
+                        it.message,
+                        it.status,
+                        it.data
+                    )
                 )
-            ))
+            )
         }
     }
 }

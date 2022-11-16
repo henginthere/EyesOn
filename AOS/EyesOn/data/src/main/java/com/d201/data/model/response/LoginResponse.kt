@@ -7,4 +7,4 @@ data class LoginResponse(
     @SerializedName("tokenDto") val token: JWTToken,
     @SerializedName("role") val role: String,
     @SerializedName("gender") val gender: String
-    )
+)

@@ -30,11 +30,10 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.nio.ByteBuffer
 
-private const val TAG ="EXTENSIONS"
+private const val TAG = "EXTENSIONS"
 
-
-private fun blindTextViewFocused(context: Context, view: TextView, eventType: Int){
-    when(eventType){
+private fun blindTextViewFocused(context: Context, view: TextView, eventType: Int) {
+    when (eventType) {
         AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUSED -> {
             view.setBackgroundResource(R.drawable.btn_border_yellow_focus)
             view.setTextColor(context.getColor(R.color.black))
@@ -45,8 +44,8 @@ private fun blindTextViewFocused(context: Context, view: TextView, eventType: In
     }
 }
 
-private fun blindBackButtonViewFocused(view: ImageButton, eventType: Int){
-    when(eventType){
+private fun blindBackButtonViewFocused(view: ImageButton, eventType: Int) {
+    when (eventType) {
         AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUSED -> {
             view.setImageResource(R.drawable.btn_blind_back_black)
             view.setBackgroundResource(R.color.blind_yellow)
@@ -58,8 +57,8 @@ private fun blindBackButtonViewFocused(view: ImageButton, eventType: Int){
     }
 }
 
-private fun blindImageViewFocused(context: Context, view: ImageView, eventType: Int){
-    when(eventType){
+private fun blindImageViewFocused(context: Context, view: ImageView, eventType: Int) {
+    when (eventType) {
         AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUSED -> {
             view.imageTintList = ColorStateList.valueOf(context.getColor(R.color.black))
             view.setBackgroundResource(R.drawable.btn_border_yellow_focus)
@@ -71,24 +70,26 @@ private fun blindImageViewFocused(context: Context, view: ImageView, eventType: 
     }
 }
 
-fun blindImageViewButtonFocused(view: ImageView, context: Context) = object : View.AccessibilityDelegate(){
-    override fun onInitializeAccessibilityEvent(host: View, event: AccessibilityEvent) {
-        super.onInitializeAccessibilityEvent(host, event)
-        when(event.eventType){
-            TYPE_VIEW_ACCESSIBILITY_FOCUSED -> {
-                view.imageTintList = ColorStateList.valueOf(context.getColor(R.color.blind_yellow))
-            }
-            TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED -> {
-                view.imageTintList = ColorStateList.valueOf(context.getColor(R.color.white))
+fun blindImageViewButtonFocused(view: ImageView, context: Context) =
+    object : View.AccessibilityDelegate() {
+        override fun onInitializeAccessibilityEvent(host: View, event: AccessibilityEvent) {
+            super.onInitializeAccessibilityEvent(host, event)
+            when (event.eventType) {
+                TYPE_VIEW_ACCESSIBILITY_FOCUSED -> {
+                    view.imageTintList =
+                        ColorStateList.valueOf(context.getColor(R.color.blind_yellow))
+                }
+                TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED -> {
+                    view.imageTintList = ColorStateList.valueOf(context.getColor(R.color.white))
+                }
             }
         }
     }
-}
 
-fun accessibilityEvent(view: View, context: Context) = object : View.AccessibilityDelegate(){
+fun accessibilityEvent(view: View, context: Context) = object : View.AccessibilityDelegate() {
     override fun onInitializeAccessibilityEvent(host: View, event: AccessibilityEvent) {
         super.onInitializeAccessibilityEvent(host, event)
-        when(view){
+        when (view) {
             is TextView -> {
                 blindTextViewFocused(context, view, event.eventType)
             }
@@ -102,15 +103,15 @@ fun accessibilityEvent(view: View, context: Context) = object : View.Accessibili
     }
 }
 
-fun Any.objectToRequestBody(value: Any): RequestBody{
+fun Any.objectToRequestBody(value: Any): RequestBody {
     return Gson().toJson(value).toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
 }
 
-fun Any.objectToMultipartPart(value: Any): MultipartBody.Part{
+fun Any.objectToMultipartPart(value: Any): MultipartBody.Part {
     return MultipartBody.Part.createFormData(name = "params", null, objectToRequestBody(value))
 }
 
-fun String.imagePathToPartBody(key: String, file: File): MultipartBody.Part{
+fun String.imagePathToPartBody(key: String, file: File): MultipartBody.Part {
     Log.d(TAG, "imageUriToPartBody: ${file}")
     return MultipartBody.Part.createFormData(
         name = key,

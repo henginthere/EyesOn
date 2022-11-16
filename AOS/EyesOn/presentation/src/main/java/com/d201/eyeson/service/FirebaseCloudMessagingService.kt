@@ -41,9 +41,12 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
             val messageContent = it!!.body
             val action = message.data["action"]
 
-            Log.d(TAG, "onMessageReceived: title : $messageTitle\nbody : $messageContent\naction : ${action}")
+            Log.d(
+                TAG,
+                "onMessageReceived: title : $messageTitle\nbody : $messageContent\naction : ${action}"
+            )
 
-             val builder = when(action){
+            val builder = when (action) {
                 "AngelHelp" -> {
                     val mainIntent = Intent(this, AngelMainActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK

@@ -8,8 +8,12 @@ import com.d201.eyeson.view.angel.ReturnConfirmListener
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "ReturnComplaintsDialog"
+
 @AndroidEntryPoint
-class ReturnComplaintsDialog(private var complaints: Complaints, private val returnConfirmListener: ReturnConfirmListener) : BaseDialogFragment<DialogReturnComplaintsBinding>(R.layout.dialog_return_complaints) {
+class ReturnComplaintsDialog(
+    private var complaints: Complaints,
+    private val returnConfirmListener: ReturnConfirmListener
+) : BaseDialogFragment<DialogReturnComplaintsBinding>(R.layout.dialog_return_complaints) {
     override fun init() {
         initView()
     }
@@ -17,11 +21,11 @@ class ReturnComplaintsDialog(private var complaints: Complaints, private val ret
     private fun initView() {
         binding.apply {
             btnConfirm.setOnClickListener {
-                if(etReturn.text.isNotBlank()) {
+                if (etReturn.text.isNotBlank()) {
                     complaints.returnContent = etReturn.text.toString()
                     returnConfirmListener.onClick(complaints)
                     dismiss()
-                }else{
+                } else {
                     showToast("반환 사유를 입력해주세요")
                 }
             }

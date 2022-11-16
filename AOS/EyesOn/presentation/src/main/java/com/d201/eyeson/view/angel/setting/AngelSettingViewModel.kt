@@ -30,7 +30,7 @@ class AngelSettingViewModel @Inject constructor(
 
     fun getAngelInfo(){
         viewModelScope.launch(Dispatchers.IO){
-            angelInfoUseCase.excute().collectLatest {
+            angelInfoUseCase.execute().collectLatest {
                 if(it is ResultType.Success && it.data.status == 200){
                     _angelInfo.value = it.data.data
                 }else{
@@ -59,7 +59,7 @@ class AngelSettingViewModel @Inject constructor(
     val deleteUserEvent get() = _deleteUserEvent
     fun deleteUser(){
         viewModelScope.launch(Dispatchers.IO){
-            deleteUserUseCase.excute().collectLatest {
+            deleteUserUseCase.execute().collectLatest {
                 if (it is ResultType.Success){
                     _deleteUserEvent.postValue(true)
                 }

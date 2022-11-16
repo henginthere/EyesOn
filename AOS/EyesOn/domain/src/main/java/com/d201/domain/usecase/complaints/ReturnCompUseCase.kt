@@ -6,6 +6,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ReturnCompUseCase @Inject constructor(private val complaintsRepository: ComplaintsRepository) {
-    fun excute(complaints: Complaints) = complaintsRepository.returnComplaints(complaints)
+class ReturnCompUseCase @Inject constructor(
+    private val complaintsRepository: ComplaintsRepository
+) {
+    fun execute(complaints: Complaints) = complaintsRepository.returnComplaints(complaints)
 }

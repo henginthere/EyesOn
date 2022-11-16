@@ -10,7 +10,17 @@ data class Complaints(
     var returnContent: String?,
     var state: String?,
     var title: String?
-){
-    constructor(address: String?, content: String?): this(seq = 0L, address, content, image = "", regTime = "", resultContent = "", returnContent = "", state = "", title = "")
+) {
+    constructor(address: String?, content: String?) : this(
+        seq = 0L,
+        address,
+        content,
+        image = "",
+        regTime = "",
+        resultContent = "",
+        returnContent = "",
+        state = "",
+        title = ""
+    )
 
 }

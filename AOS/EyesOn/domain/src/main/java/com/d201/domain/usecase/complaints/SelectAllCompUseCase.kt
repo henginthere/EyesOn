@@ -6,5 +6,5 @@ import javax.inject.Singleton
 
 @Singleton
 class SelectAllCompUseCase @Inject constructor(private val complaintsRepository: ComplaintsRepository) {
-    fun excute() = complaintsRepository.selectComplaintsList(0)
+    fun execute() = complaintsRepository.selectComplaintsList(0)
 }

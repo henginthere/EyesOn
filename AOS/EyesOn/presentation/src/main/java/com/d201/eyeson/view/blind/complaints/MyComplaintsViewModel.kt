@@ -23,14 +23,14 @@ class MyComplaintsViewModel @Inject constructor(
     private val selectCompBySeqUseCase: SelectCompBySeqUseCase,
     private val selectCompByBlindUseCase: SelectCompByBlindUseCase): ViewModel() {
     fun getComplaintsList(): Flow<PagingData<Complaints>> {
-        return selectCompByBlindUseCase.excute()
+        return selectCompByBlindUseCase.execute()
     }
 
     private val _complaints: MutableStateFlow<Complaints?> = MutableStateFlow(null)
     val complaints get() = _complaints.asStateFlow()
     fun getComplaints(complaintsSeq: Long){
         viewModelScope.launch(Dispatchers.IO){
-            selectCompBySeqUseCase.excute(complaintsSeq).collectLatest {
+            selectCompBySeqUseCase.execute(complaintsSeq).collectLatest {
                 when(it){
                     is ResultType.Success -> {
                         var tmp = it.data.data

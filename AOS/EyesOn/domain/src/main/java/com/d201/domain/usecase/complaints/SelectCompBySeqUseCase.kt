@@ -5,6 +5,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SelectCompBySeqUseCase @Inject constructor(private val complaintsRepository: ComplaintsRepository) {
-    fun excute(complaintsSeq: Long) = complaintsRepository.selectComplaintsBySeq(complaintsSeq)
+class SelectCompBySeqUseCase @Inject constructor(
+    private val complaintsRepository: ComplaintsRepository
+) {
+    fun execute(complaintsSeq: Long) = complaintsRepository.selectComplaintsBySeq(complaintsSeq)
 }

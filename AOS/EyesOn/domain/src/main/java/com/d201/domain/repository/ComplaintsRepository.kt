@@ -8,7 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
 interface ComplaintsRepository {
-    fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<ResultType<BaseResponse<Boolean>>>
+    
+    fun insertComp(
+        complaintsRequest: MultipartBody.Part,
+        imageFile: MultipartBody.Part
+    ): Flow<ResultType<BaseResponse<Boolean>>>
 
     fun selectComplaintsBySeq(seq: Long): Flow<ResultType<BaseResponse<Complaints>>>
 

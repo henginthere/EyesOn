@@ -7,6 +7,6 @@ import javax.inject.Singleton
 @Singleton
 class RequestHelpUseCase @Inject constructor(
     private val helpRepository: HelpRepository
-){
-    fun execute(gender : String) = helpRepository.requestHelp(gender)
+) {
+    fun execute(gender: String) = helpRepository.requestHelp(gender)
 }

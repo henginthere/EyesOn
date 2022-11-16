@@ -6,5 +6,7 @@ import com.d201.data.model.entity.NotiEntity
 
 @Database(entities = [NotiEntity::class], version = 2, exportSchema = false)
 abstract class EyesOnDatabase : RoomDatabase() {
-    abstract fun notiDao() : NotiDao
+
+    abstract fun notiDao(): NotiDao
+
 }

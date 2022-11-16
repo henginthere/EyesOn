@@ -12,15 +12,17 @@ import com.d201.eyeson.view.angel.ComplaintsClickListener
 
 private const val TAG = "ComplaintsAdapter"
 
-class ComplaintsAdapter(private val complaintsClickListener: ComplaintsClickListener) : PagingDataAdapter<Complaints, ComplaintsAdapter.ViewHolder>(diffUtil) {
-    inner class ViewHolder(private val binding: ItemComplaintsVerticalBinding) : RecyclerView.ViewHolder(binding.root) {
+class ComplaintsAdapter(private val complaintsClickListener: ComplaintsClickListener) :
+    PagingDataAdapter<Complaints, ComplaintsAdapter.ViewHolder>(diffUtil) {
+    inner class ViewHolder(private val binding: ItemComplaintsVerticalBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(complaints: Complaints) {
             binding.apply {
                 layoutComplaints.setOnClickListener { complaintsClickListener.onClick(complaints.seq) }
                 tvComplaintsStatusProcessing.visibility = View.GONE
                 tvComplaintsStatusReturn.visibility = View.GONE
                 tvComplaintsStatusDone.visibility = View.GONE
-                when(complaints.state){
+                when (complaints.state) {
                     "PROGRESS_IN" -> {
                         tvComplaintsStatusProcessing.visibility = View.VISIBLE
                     }
@@ -47,7 +49,11 @@ class ComplaintsAdapter(private val complaintsClickListener: ComplaintsClickList
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemComplaintsVerticalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemComplaintsVerticalBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 

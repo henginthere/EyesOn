@@ -5,6 +5,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SelectCompByAngelUseCase @Inject constructor(private val complaintsRepository: ComplaintsRepository) {
-    fun excute() = complaintsRepository.selectComplaintsList(1)
+class SelectCompByAngelUseCase @Inject constructor(
+    private val complaintsRepository: ComplaintsRepository
+) {
+    fun execute() = complaintsRepository.selectComplaintsList(1)
 }

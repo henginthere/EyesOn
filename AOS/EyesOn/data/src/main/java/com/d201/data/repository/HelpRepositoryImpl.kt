@@ -1,6 +1,5 @@
 package com.d201.data.repository
 
-import android.util.Log
 import com.d201.data.datasource.HelpRemoteDataSource
 import com.d201.domain.base.BaseResponse
 import com.d201.domain.repository.HelpRepository
@@ -11,6 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val TAG = "HelpRepositoryImpl"
+
 @Singleton
 class HelpRepositoryImpl @Inject constructor(
     private val helpRemoteDataSource: HelpRemoteDataSource

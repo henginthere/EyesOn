@@ -6,6 +6,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PutAngelInfoUseCase @Inject constructor(private val userRepository: UserRepository){
+class PutAngelInfoUseCase @Inject constructor(
+    private val userRepository: UserRepository
+) {
     fun execute(angelInfo: AngelInfo) = userRepository.putAngelInfo(angelInfo)
 }

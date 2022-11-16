@@ -11,9 +11,10 @@ import okhttp3.Response
 import javax.inject.Inject
 
 private const val TAG = "XAccessTokenInterceptor"
+
 class XAccessTokenInterceptor @Inject constructor(
     private val sharedPref: SharedPreferences
-): Interceptor {
+) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
 
@@ -21,7 +22,7 @@ class XAccessTokenInterceptor @Inject constructor(
 //            sharedPref.getString(JWT,"")!!
 //        }
         var token = runBlocking {
-            sharedPref.getString(JWT,"")!!
+            sharedPref.getString(JWT, "")!!
         }
         val request = chain.request().newBuilder()
             .addHeader(JWT, "Bearer $token")

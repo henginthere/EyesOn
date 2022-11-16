@@ -20,7 +20,7 @@ class BlindSettingViewModel @Inject constructor(
     val deleteUserEvent get() = _deleteUserEvent
     fun deleteUser(){
         viewModelScope.launch(Dispatchers.IO){
-            deleteUserUseCase.excute().collectLatest {
+            deleteUserUseCase.execute().collectLatest {
                 if (it is ResultType.Success){
                     _deleteUserEvent.postValue(true)
                 }

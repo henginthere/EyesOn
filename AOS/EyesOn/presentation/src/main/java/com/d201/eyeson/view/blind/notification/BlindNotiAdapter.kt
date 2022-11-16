@@ -10,7 +10,6 @@ import com.d201.eyeson.databinding.ItemNotificationBinding
 import com.d201.eyeson.view.blind.NotiClickListener
 
 private const val TAG = "BlindNotiAdapter"
-
 class BlindNotiAdapter(private val notiClickListener : NotiClickListener) : ListAdapter<Noti, BlindNotiAdapter.ViewHolder>(diffUtil) {
     inner class ViewHolder(private val binding: ItemNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(noti: Noti, position: Int) {

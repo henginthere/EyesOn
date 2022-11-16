@@ -6,6 +6,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class InsertCompUseCase @Inject constructor(private val complaintsRepository: ComplaintsRepository) {
-    fun excute(complaints: MultipartBody.Part, imageFile: MultipartBody.Part) = complaintsRepository.insertComp(complaints, imageFile)
+class InsertCompUseCase @Inject constructor(
+    private val complaintsRepository: ComplaintsRepository
+) {
+    fun execute(complaints: MultipartBody.Part, imageFile: MultipartBody.Part) =
+        complaintsRepository.insertComp(complaints, imageFile)
 }

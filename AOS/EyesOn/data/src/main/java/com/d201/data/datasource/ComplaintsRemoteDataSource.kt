@@ -14,7 +14,10 @@ import javax.inject.Singleton
 @Singleton
 class ComplaintsRemoteDataSource @Inject constructor(private val complaintsApi: ComplaintsApi) {
 
-    fun insertComp(complaintsRequest: MultipartBody.Part, imageFile: MultipartBody.Part): Flow<BaseResponse<Boolean>> = flow {
+    fun insertComp(
+        complaintsRequest: MultipartBody.Part,
+        imageFile: MultipartBody.Part
+    ): Flow<BaseResponse<Boolean>> = flow {
         emit(complaintsApi.insertComp(complaintsRequest, imageFile))
     }
 
@@ -34,7 +37,11 @@ class ComplaintsRemoteDataSource @Inject constructor(private val complaintsApi: 
         emit(complaintsApi.completeComplaints(complaintsRequest))
     }
 
-    fun selectComplaintsList(flag: Int, page: Int, size: Int): Flow<BaseResponse<PagingResult<ComplaintsResponse>>> = flow {
+    fun selectComplaintsList(
+        flag: Int,
+        page: Int,
+        size: Int
+    ): Flow<BaseResponse<PagingResult<ComplaintsResponse>>> = flow {
         emit(complaintsApi.selectComplaintsList(flag, page, size))
     }
 

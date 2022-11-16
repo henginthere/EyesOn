@@ -31,6 +31,7 @@ abstract class BaseDialogFragment<T : ViewDataBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
+        isCancelable = false
         init()
     }
 

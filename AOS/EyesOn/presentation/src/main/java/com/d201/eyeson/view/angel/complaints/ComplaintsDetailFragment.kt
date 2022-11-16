@@ -34,57 +34,56 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
-
 private const val TAG = "ComplaintsDetailFragment"
+
 @AndroidEntryPoint
-class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R.layout.fragment_complaints_detail) {
+class ComplaintsDetailFragment :
+    BaseFragment<FragmentComplaintsDetailBinding>(R.layout.fragment_complaints_detail) {
 
     private val complaintsViewModel: ComplaintsViewModel by viewModels()
     private val args: ComplaintsDetailFragmentArgs by navArgs()
-    private lateinit var complaints: Complaints
 
     override fun init() {
         initView()
-        initViewModel()
+        initListener()
+        initViewModelCallback()
+        getComplaints()
     }
 
-    private fun initViewModel() {
-        complaintsViewModel.apply {
-            getComplaints(args.complaintsSeq)
-            successResultEvent.observe(viewLifecycleOwner){
-                showToast(it)
-                findNavController().popBackStack()
-            }
-        }
-        lifecycleScope.launch{
-            complaintsViewModel.complaints.collectLatest {
-                if(it != null) {
-                    complaints = it
-                }
-            }
-        }
-
+    private fun getComplaints() {
+        complaintsViewModel.getComplaints(args.complaintsSeq)
     }
 
     private fun initView() {
-        binding.apply {
-            vm = complaintsViewModel
+        binding.vm = complaintsViewModel
+    }
 
+    private fun initListener() {
+        binding.apply {
             btnGoSafetyEReport.setOnClickListener {
                 checkPermission()
             }
             btnReject.setOnClickListener {
-                ReturnComplaintsDialog(complaintsViewModel.complaints.value!!, returnConfirmListener).let {
+                ReturnComplaintsDialog(
+                    complaintsViewModel.complaints.value!!,
+                    returnConfirmListener
+                ).let {
                     it.show(parentFragmentManager, "ReturnComplaints")
                 }
             }
             btnRegisterTitle.setOnClickListener {
-                RegisterTitleDialog(complaintsViewModel.complaints.value!!, titleConfirmListener).let{
+                RegisterTitleDialog(
+                    complaintsViewModel.complaints.value!!,
+                    titleConfirmListener
+                ).let {
                     it.show(parentFragmentManager, "RegisterTitle")
                 }
             }
             btnComplaintsDone.setOnClickListener {
-                RegisterComplaintsResultDialog(complaintsViewModel.complaints.value!!, registerComplaintsListener).show(parentFragmentManager, "RegisterResult")
+                RegisterComplaintsResultDialog(
+                    complaintsViewModel.complaints.value!!,
+                    registerComplaintsListener
+                ).show(parentFragmentManager, "RegisterResult")
             }
             btnBack.setOnClickListener {
                 findNavController().popBackStack()
@@ -92,17 +91,34 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
         }
     }
 
-    private fun copyComplaints(){
+    private fun initViewModelCallback() {
+        lifecycleScope.launch {
+            complaintsViewModel.successResultEvent.observe(viewLifecycleOwner) {
+                showToast(it)
+                findNavController().popBackStack()
+            }
+        }
+    }
+
+    private fun copyComplaints() {
         val clipboard = requireActivity().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("label", "${complaintsViewModel.complaints.value!!.address}\n${complaintsViewModel.complaints.value!!.content}")
+        val clip = ClipData.newPlainText(
+            "label",
+            "${complaintsViewModel.complaints.value!!.address}\n${complaintsViewModel.complaints.value!!.content}"
+        )
         clipboard.setPrimaryClip(clip)
     }
 
-    private fun openWebPage(){
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.safetyreport.go.kr/#safereport/safereport")))
+    private fun openWebPage() {
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://www.safetyreport.go.kr/#safereport/safereport")
+            )
+        )
     }
 
-    fun imageUrlToCacheFileAsync(context: Context, url: String){
+    fun imageUrlToCacheFileAsync(context: Context, url: String) {
         Glide.with(context)
             .asBitmap()
             .load("$S3_URL$url")
@@ -111,7 +127,7 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     val newFile = File(
                         context.cacheDir.path,
-                        complaints.image!!
+                        complaintsViewModel.complaints.value!!.image!!
                     ).apply {
                         createNewFile()
                     }
@@ -121,9 +137,18 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
                     val values = ContentValues()
                     values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis())
                     values.put(Images.Media.MIME_TYPE, "image/jpeg")
-                    values.put(MediaStore.MediaColumns.DATA, "${context.cacheDir.path}/${complaints.image}")
-                    Log.d(TAG, "onResourceReady: ${context.cacheDir.path}/${complaints.image}")
-                    context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                    values.put(
+                        MediaStore.MediaColumns.DATA,
+                        "${context.cacheDir.path}/${complaintsViewModel.complaints.value!!.image}"
+                    )
+                    Log.d(
+                        TAG,
+                        "onResourceReady: ${context.cacheDir.path}/${complaintsViewModel.complaints.value!!.image}"
+                    )
+                    context.contentResolver.insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        values
+                    )
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
@@ -134,13 +159,13 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
             })
     }
 
-    private val returnConfirmListener = object : ReturnConfirmListener{
+    private val returnConfirmListener = object : ReturnConfirmListener {
         override fun onClick(complaints: Complaints) {
             complaintsViewModel.returnComplaints(complaints)
         }
     }
 
-    private val titleConfirmListener = object : TitleConfirmListener{
+    private val titleConfirmListener = object : TitleConfirmListener {
         override fun onClick(complaints: Complaints) {
             complaintsViewModel.submitComplaints(complaints)
         }
@@ -155,10 +180,17 @@ class ComplaintsDetailFragment : BaseFragment<FragmentComplaintsDetailBinding>(R
     private fun checkPermission() {
         val permissionListener = object : PermissionListener {
             override fun onPermissionGranted() {
-                copyComplaints()
-                imageUrlToCacheFileAsync(requireContext(), complaints.image!!)
-                openWebPage()
-                binding.btnRegisterTitle.visibility = View.VISIBLE
+                if (complaintsViewModel.complaints.value != null) {
+                    copyComplaints()
+                    imageUrlToCacheFileAsync(
+                        requireContext(),
+                        complaintsViewModel.complaints.value!!.image!!
+                    )
+                    openWebPage()
+                    binding.btnRegisterTitle.visibility = View.VISIBLE
+                } else {
+                    showToast("민원을 불러오지 못했습니다.")
+                }
             }
 
             override fun onPermissionDenied(deniedPermissions: List<String>) {

@@ -1,9 +1,7 @@
 package com.d201.eyeson.view.blind.help
 
+import android.annotation.SuppressLint
 import android.content.Context.AUDIO_SERVICE
-import android.content.Context.CAMERA_SERVICE
-import android.graphics.Camera
-import android.hardware.camera2.CameraManager
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.util.Log
@@ -35,9 +33,7 @@ import org.webrtc.EglBase
 import java.io.IOException
 import javax.inject.Inject
 
-
 private const val TAG = "BlindHelpFragment"
-
 @AndroidEntryPoint
 class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragment_blind_help) {
 
@@ -46,12 +42,11 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     @Inject
     lateinit var httpClient: CustomHttpClient
 
-    private lateinit var session: Session
     private lateinit var audioManager: AudioManager
+    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var session: Session
     private lateinit var participantListener: ParticipantListener
     private lateinit var blindHelpDisconnectListener: BlindHelpDisconnectListener
-
-    private lateinit var mediaPlayer: MediaPlayer
 
     private var leaveFlag = false
 
@@ -73,7 +68,6 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
 
     override fun onStop() {
         super.onStop()
-
         returnResource()
     }
 
@@ -87,27 +81,26 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
         mediaPlayer = MediaPlayer.create(requireActivity(), R.raw.swans_in_flight)
         audioManager =
             requireActivity().getSystemService(AUDIO_SERVICE) as AudioManager
-        if (audioManager != null) {
-            audioManager
-            audioManager.mode = AudioManager.MODE_NORMAL
-            audioManager.isSpeakerphoneOn = true
-            audioManager.isMicrophoneMute = false
-        }
+        audioManager.mode = AudioManager.MODE_NORMAL
+        audioManager.isSpeakerphoneOn = true
+        audioManager.isMicrophoneMute = false
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initListener() {
         blindHelpDisconnectListener = object : BlindHelpDisconnectListener {
             override fun onClick() {
                 requireActivity().finish()
             }
         }
+
         participantListener = object : ParticipantListener {
             override fun join() {
-                Log.d(TAG, "ParticipantListener : join: ")
-                if (mediaPlayer.isPlaying) {
-                    mediaPlayer.stop()
-                }
+                Log.d(TAG, "ParticipantListener : join")
                 lifecycleScope.launch {
+                    if (mediaPlayer.isPlaying) {
+                        mediaPlayer.stop()
+                    }
                     binding.apply {
                         this@BlindHelpFragment.showToast("엔젤과 연결되었습니다.")
                         clLoading.visibility = View.GONE
@@ -121,16 +114,16 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
 
             override fun left() {
                 requireActivity().runOnUiThread {
-                    Log.d(TAG, "ParticipantListener : left start ")
+                    Log.d(TAG, "ParticipantListener : left")
                     returnResource()
                     BlindHelpDisconnectDialog(blindHelpDisconnectListener).show(
                         parentFragmentManager,
                         "BlindHelpDisconnectDialog"
                     )
-                    Log.d(TAG, "ParticipantListener : left end ")
                 }
             }
         }
+
         binding.apply {
             peerContainer.setOnTouchListener { v, event ->
                 when (event.action) {
@@ -166,38 +159,33 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
             }
             ivSoundMode.setOnClickListener {
                 // 소리 모드 변경
-                if (audioManager != null) {
-                    audioManager.mode = AudioManager.MODE_NORMAL
-                    audioManager.isSpeakerphoneOn = !audioManager.isSpeakerphoneOn
-                    when (audioManager.isSpeakerphoneOn) {
-                        true -> {
-                            ivSoundMode.setImageResource(R.drawable.btn_speaker_on)
-                            showToast("스피커 모드")
-                        }
-                        false -> {
-                            ivSoundMode.setImageResource(R.drawable.btn_speaker_off)
-                            showToast("통화 모드")
-                        }
+                audioManager.isSpeakerphoneOn = !audioManager.isSpeakerphoneOn
+                when (audioManager.isSpeakerphoneOn) {
+                    true -> {
+                        ivSoundMode.setImageResource(R.drawable.btn_speaker_on)
+                        showToast("스피커 모드")
                     }
-
+                    false -> {
+                        ivSoundMode.setImageResource(R.drawable.btn_speaker_off)
+                        showToast("통화 모드")
+                    }
                 }
+
             }
             ivMic.setOnClickListener {
                 // 마이크 OnOff
-                if (audioManager != null) {
-                    audioManager.isMicrophoneMute = !audioManager.isMicrophoneMute
-                    when (audioManager.isMicrophoneMute) {
-                        true -> {
-                            ivMic.setImageResource(R.drawable.btn_mic_off)
-                            showToast("마이크 OFF")
-                        }
-                        false -> {
-                            ivMic.setImageResource(R.drawable.btn_mic)
-                            showToast("마이크 ON")
-                        }
+                audioManager.isMicrophoneMute = !audioManager.isMicrophoneMute
+                when (audioManager.isMicrophoneMute) {
+                    true -> {
+                        ivMic.setImageResource(R.drawable.btn_mic_off)
+                        showToast("마이크 OFF")
                     }
-
+                    false -> {
+                        ivMic.setImageResource(R.drawable.btn_mic)
+                        showToast("마이크 ON")
+                    }
                 }
+
             }
         }
     }
@@ -329,7 +317,7 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     }
 
     private fun returnResource() {
-        Log.d(TAG, "returnResource: ")
+        Log.d(TAG, "returnResource: $leaveFlag")
         if(!leaveFlag) {
             leaveFlag = true
             mediaPlayer.stop()

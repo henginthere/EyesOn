@@ -23,15 +23,15 @@ class BlindNotiViewModel @Inject constructor(
     private val deleteNotiUseCase: DeleteNotiUseCase
 ) : ViewModel() {
 
-    private val _notis: MutableStateFlow<ResultType<List<Noti>>> =
-        MutableStateFlow(ResultType.Uninitialized)
+    private val _notis: MutableStateFlow<List<Noti>> =
+        MutableStateFlow(listOf())
     val notis get() = _notis.asStateFlow()
 
     fun selectAllNotis() {
         viewModelScope.launch(Dispatchers.IO) {
             selectAllNotiUseCase.execute().collectLatest {
                 if (it is ResultType.Success) {
-                    _notis.value = it
+                    _notis.value = it.data
                     Log.d(TAG, "selectAllNotis: ${it.data}")
                 } else {
                     Log.d(TAG, "selectAllNotis: Error")

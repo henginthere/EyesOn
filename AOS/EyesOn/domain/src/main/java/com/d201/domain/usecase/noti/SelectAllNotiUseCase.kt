@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class SelectAllNotiUseCase @Inject constructor(
     private val notiRepository: NotiRepository
-    ) {
+) {
     fun execute() = notiRepository.selectAllNotis()
 }

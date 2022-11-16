@@ -8,7 +8,6 @@ import javax.inject.Singleton
 @Singleton
 class LoginUseCase @Inject constructor(
     private val userRepository: UserRepository
-){
-    fun execute(idToken:String, fcmToken : String)
-            = userRepository.loginUser(idToken, fcmToken)
+) {
+    fun execute(idToken: String, fcmToken: String) = userRepository.loginUser(idToken, fcmToken)
 }

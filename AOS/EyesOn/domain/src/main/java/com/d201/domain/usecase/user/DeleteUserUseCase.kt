@@ -8,5 +8,5 @@ import javax.inject.Singleton
 class DeleteUserUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
-    fun excute() = userRepository.deleteUser()
+    fun execute() = userRepository.deleteUser()
 }

@@ -8,7 +8,6 @@ import com.d201.eyeson.view.angel.AngelHelpDisconnectListener
 class AngelHelpDisconnectDialog(private val angelHelpDisconnectListener: AngelHelpDisconnectListener) : BaseDialogFragment<DialogHelpDisconnectBinding>(R.layout.dialog_help_disconnect) {
 
     override fun init() {
-        isCancelable = false
         initListener()
     }
 

@@ -10,43 +10,60 @@ import com.d201.eyeson.view.angel.ComplaintsClickListener
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 private const val TAG = "ComplaintsListFragment"
-@AndroidEntryPoint
-class ComplaintsListFragment : BaseFragment<FragmentComplaintsListBinding>(R.layout.fragment_complaints_list) {
 
-    private val viewModel: ComplaintsListViewModel by viewModels()
-    private lateinit var job: Job
+@AndroidEntryPoint
+class ComplaintsListFragment :
+    BaseFragment<FragmentComplaintsListBinding>(R.layout.fragment_complaints_list) {
+
+    private val complaintsListviewModel: ComplaintsListViewModel by viewModels()
     private lateinit var complaintsAdapter: ComplaintsAdapter
 
     override fun init() {
         initView()
-        initViewModel()
+        initListener()
+        initViewModelCallback()
+        getComplaintsList()
     }
 
     private fun initView() {
+        val complaintsClickListener = object : ComplaintsClickListener {
+            override fun onClick(complaintsSeq: Long) {
+                findNavController().navigate(
+                    ComplaintsListFragmentDirections.actionComplaintsListFragmentToComplaintsDetailFragment(
+                        complaintsSeq
+                    )
+                )
+            }
+        }
         complaintsAdapter = ComplaintsAdapter(complaintsClickListener)
         binding.apply {
             rvComplaintsList.apply {
                 adapter = complaintsAdapter
             }
-            tabAngelComplaintsList.addOnTabSelectedListener(object : OnTabSelectedListener{
+        }
+    }
+
+    private fun initListener() {
+        binding.apply {
+            tabAngelComplaintsList.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    when(tab!!.position){
-                        0 -> viewModel.getComplaintsList()
-                        1 -> viewModel.getComplaintsByAngelList()
+                    when (tab!!.position) {
+                        0 -> complaintsListviewModel.getComplaintsList()
+                        1 -> complaintsListviewModel.getComplaintsByAngelList()
 
                     }
                 }
+
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
                 override fun onTabReselected(tab: TabLayout.Tab?) {
-                    when(tab!!.position){
-                        0 -> viewModel.getComplaintsList()
-                        1 -> viewModel.getComplaintsByAngelList()
+                    when (tab!!.position) {
+                        0 -> complaintsListviewModel.getComplaintsList()
+                        1 -> complaintsListviewModel.getComplaintsByAngelList()
                     }
                 }
             })
@@ -56,22 +73,18 @@ class ComplaintsListFragment : BaseFragment<FragmentComplaintsListBinding>(R.lay
         }
     }
 
-    private fun initViewModel() {
-        job = lifecycleScope.launch{
-            viewModel.complaintsList.collectLatest {
-                if(it != null) {
+    private fun initViewModelCallback() {
+        lifecycleScope.launch {
+            complaintsListviewModel.complaintsList.collectLatest {
+                if (it != null) {
                     complaintsAdapter.submitData(it)
                 }
             }
         }
-        viewModel.getComplaintsList()
-
-
     }
 
-    private val complaintsClickListener = object : ComplaintsClickListener {
-        override fun onClick(complaintsSeq: Long) {
-            findNavController().navigate(ComplaintsListFragmentDirections.actionComplaintsListFragmentToComplaintsDetailFragment(complaintsSeq))
-        }
+    private fun getComplaintsList() {
+        complaintsListviewModel.getComplaintsList()
     }
+
 }

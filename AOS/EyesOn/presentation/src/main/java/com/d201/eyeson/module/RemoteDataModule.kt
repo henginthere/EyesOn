@@ -1,6 +1,5 @@
 package com.d201.eyeson.module
 
-
 import com.d201.data.api.ComplaintsApi
 import com.d201.data.api.HelpApi
 import com.d201.data.api.UserApi
@@ -22,7 +21,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RemoteDataModule {
-
 
     // HttpLoggingInterceptor DI
     @Provides

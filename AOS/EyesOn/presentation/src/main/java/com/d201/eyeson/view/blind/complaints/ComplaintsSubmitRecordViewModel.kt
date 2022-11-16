@@ -40,7 +40,7 @@ class ComplaintsSubmitRecordViewModel @Inject constructor(private val insertComp
     fun submitComplaints(complaints: Complaints, imagePath: String){
         viewModelScope.launch(Dispatchers.IO){
             val file = File(imagePath)
-            insertCompUseCase.excute(complaints.objectToMultipartPart(complaints.mapperToComplaintsRequest()), imagePath.imagePathToPartBody("file", file)).collectLatest {
+            insertCompUseCase.execute(complaints.objectToMultipartPart(complaints.mapperToComplaintsRequest()), imagePath.imagePathToPartBody("file", file)).collectLatest {
                 when(it){
                     is ResultType.Success -> _successResultEvent.postValue(it.data.message)
                     else -> Log.d(TAG, "submitComplaints: ${it}")

@@ -33,7 +33,7 @@ class AngelMainViewModel @Inject constructor(
 
     fun getAngelInfo(){
         viewModelScope.launch(Dispatchers.IO){
-            angelInfoUseCase.excute().collectLatest {
+            angelInfoUseCase.execute().collectLatest {
                 if(it is ResultType.Success && it.data.status == 200){
                     _angelInfo.value = it.data.data
                 }else{
@@ -48,7 +48,7 @@ class AngelMainViewModel @Inject constructor(
 
     fun getComplaintsByAngelList(){
         viewModelScope.launch(Dispatchers.IO){
-            selectCompByAngelUseCase.excute().cachedIn(this).collectLatest {
+            selectCompByAngelUseCase.execute().cachedIn(this).collectLatest {
                 _complaintsList.value = it
             }
         }
@@ -56,7 +56,7 @@ class AngelMainViewModel @Inject constructor(
 
     fun getComplaintsList(){
         viewModelScope.launch(Dispatchers.IO){
-            selectAllCompUseCase.excute().cachedIn(this).collectLatest {
+            selectAllCompUseCase.execute().cachedIn(this).collectLatest {
                 _complaintsList.value = it
             }
         }

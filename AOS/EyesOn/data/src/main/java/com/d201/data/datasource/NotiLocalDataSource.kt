@@ -1,6 +1,5 @@
 package com.d201.data.datasource
 
-import android.util.Log
 import com.d201.data.db.notifi.NotiDao
 import com.d201.data.model.entity.NotiEntity
 import kotlinx.coroutines.flow.Flow
@@ -12,11 +11,13 @@ import javax.inject.Singleton
 class NotiLocalDataSource @Inject constructor(
     private val notiDao: NotiDao
 ) {
+
     fun insertNoti(notiEntity: NotiEntity) = notiDao.insertNoti(notiEntity)
 
-    fun selectAllNoti() : Flow<List<NotiEntity>> = flow {
+    fun selectAllNoti(): Flow<List<NotiEntity>> = flow {
         emit(notiDao.selectAllNotis())
     }
 
     fun deleteNoti(notiEntity: NotiEntity) = notiDao.deleteNoti(notiEntity)
+
 }

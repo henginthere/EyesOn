@@ -11,9 +11,9 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
 // 상태를 유지해야 하는 Fragment
-abstract class BaseFragmentKeep<T: ViewDataBinding>(
+abstract class BaseFragmentKeep<T : ViewDataBinding>(
     @LayoutRes val layoutResId: Int
-) : Fragment(){
+) : Fragment() {
     private var _binding: T? = null
     protected val binding get() = _binding!!
 
@@ -26,7 +26,8 @@ abstract class BaseFragmentKeep<T: ViewDataBinding>(
         savedInstanceState: Bundle?
     ): View? {
         // 뷰 최초 생성시에만 그리도록 함
-        if(_binding == null) _binding = DataBindingUtil.inflate(inflater, layoutResId, container, false)
+        if (_binding == null) _binding =
+            DataBindingUtil.inflate(inflater, layoutResId, container, false)
         return binding.root
     }
 

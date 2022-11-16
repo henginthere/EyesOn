@@ -15,7 +15,8 @@ import javax.inject.Singleton
 @Singleton
 class UserRemoteDataSource @Inject constructor(
     private val userApi: UserApi
-){
+) {
+
     fun loginUser(userRequest: UserRequest): Flow<BaseResponse<LoginResponse>> = flow {
         emit(userApi.loginUser(userRequest))
     }
@@ -35,4 +36,5 @@ class UserRemoteDataSource @Inject constructor(
     fun deleteUser(): Flow<BaseResponse<Void>> = flow {
         emit(userApi.deleteUser())
     }
+
 }

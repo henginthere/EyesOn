@@ -1,6 +1,5 @@
 package com.d201.data.repository
 
-import android.util.Log
 import com.d201.data.datasource.NotiLocalDataSource
 import com.d201.data.mapper.mapperToNotiEntity
 import com.d201.data.mapper.mapperToNotis
@@ -11,6 +10,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
+
+private const val TAG = "NotiRepositoryImpl"
 
 @Singleton
 class NotiRepositoryImpl @Inject constructor(
@@ -23,7 +24,10 @@ class NotiRepositoryImpl @Inject constructor(
     override fun selectAllNotis(): Flow<ResultType<List<Noti>>> = flow {
         emit(ResultType.Loading)
         notiLocalDataSource.selectAllNoti().collect {
-            emit(ResultType.Success(it.mapperToNotis()))
+            when (it.isNotEmpty()) {
+                true -> emit(ResultType.Success(it.mapperToNotis()))
+                false -> emit(ResultType.Empty)
+            }
         }
     }
 

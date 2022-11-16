@@ -10,7 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import com.google.android.gms.location.*
 
-class LocationService private constructor(private val context: Context): LiveData<Location?>(){
+class LocationService private constructor(private val context: Context) : LiveData<Location?>() {
     var requestingLocationUpdates: Boolean = true
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private var mLocationRequest: LocationRequest? = null
@@ -42,7 +42,11 @@ class LocationService private constructor(private val context: Context): LiveDat
         }
         fusedLocationProviderClient
         createLocationRequest()
-        mFusedLocationClient?.requestLocationUpdates(mLocationRequest!!, mLocationCallback, Looper.myLooper()!!)
+        mFusedLocationClient?.requestLocationUpdates(
+            mLocationRequest!!,
+            mLocationCallback,
+            Looper.myLooper()!!
+        )
     }
 
     override fun onInactive() {
@@ -62,7 +66,7 @@ class LocationService private constructor(private val context: Context): LiveDat
     private val mLocationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             val newLocation = locationResult.lastLocation
-            if (newLocation != null && requestingLocationUpdates){
+            if (newLocation != null && requestingLocationUpdates) {
                 value = newLocation
                 onInactive()
                 Log.d(TAG, "onLocationResult: $value")

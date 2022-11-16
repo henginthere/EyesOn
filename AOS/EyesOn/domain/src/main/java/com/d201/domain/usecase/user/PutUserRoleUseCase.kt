@@ -5,6 +5,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PutUserRoleUseCase @Inject constructor(private val userRepository: UserRepository) {
+class PutUserRoleUseCase @Inject constructor(
+    private val userRepository: UserRepository
+) {
     fun execute(role: String, gender: String) = userRepository.putUserRole(role, gender)
 }

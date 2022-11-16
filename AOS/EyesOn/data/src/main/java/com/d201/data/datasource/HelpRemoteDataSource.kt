@@ -10,17 +10,17 @@ import javax.inject.Singleton
 @Singleton
 class HelpRemoteDataSource @Inject constructor(
     private val helpApi: HelpApi
-){
+) {
 
-    fun requestHelp(gender: String) : Flow<BaseResponse<Int>> = flow {
+    fun requestHelp(gender: String): Flow<BaseResponse<Int>> = flow {
         emit(helpApi.requestHelp(gender))
     }
 
-    fun responseHelp() : Flow<BaseResponse<Int>> = flow {
+    fun responseHelp(): Flow<BaseResponse<Int>> = flow {
         emit(helpApi.responseHelp())
     }
 
-    fun disconnectHelp() : Flow<BaseResponse<Void>> = flow {
+    fun disconnectHelp(): Flow<BaseResponse<Void>> = flow {
         emit(helpApi.disconnectHelp())
     }
 }
