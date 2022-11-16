@@ -29,7 +29,6 @@ class ComplaintsListFragment :
         initViewModelCallback()
         getComplaintsList()
     }
-
     private fun initView() {
         val complaintsClickListener = object : ComplaintsClickListener {
             override fun onClick(complaintsSeq: Long) {
@@ -44,29 +43,14 @@ class ComplaintsListFragment :
         binding.apply {
             rvComplaintsList.apply {
                 adapter = complaintsAdapter
+
             }
         }
     }
 
     private fun initListener() {
         binding.apply {
-            tabAngelComplaintsList.addOnTabSelectedListener(object : OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    when (tab!!.position) {
-                        0 -> complaintsListviewModel.getComplaintsList()
-                        1 -> complaintsListviewModel.getComplaintsByAngelList()
 
-                    }
-                }
-
-                override fun onTabUnselected(tab: TabLayout.Tab?) {}
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-                    when (tab!!.position) {
-                        0 -> complaintsListviewModel.getComplaintsList()
-                        1 -> complaintsListviewModel.getComplaintsByAngelList()
-                    }
-                }
-            })
             btnBack.setOnClickListener {
                 findNavController().popBackStack()
             }
@@ -81,6 +65,7 @@ class ComplaintsListFragment :
                 }
             }
         }
+
     }
 
     private fun getComplaintsList() {

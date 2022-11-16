@@ -72,6 +72,9 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             btnSetting.setOnClickListener {
                 findNavController().navigate(AngelMainFragmentDirections.actionAngelMainFragmentToAngelSettingFragment())
             }
+            btnWaitingComplaints.setOnClickListener {
+                findNavController().navigate(AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsListFragment())
+            }
         }
     }
 
@@ -79,9 +82,9 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         angelMainAdapter = AngelMainAdapter(complaintsClickListener)
         binding.apply {
             vm = angelMainViewModel
-            rvComplaintsList.apply {
-                adapter = angelMainAdapter
-            }
+//            rvComplaintsList.apply {
+//                adapter = angelMainAdapter
+//            }
 //            btnMyComplaints.setOnClickListener {
 //                findNavController().navigate(
 //                    AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsListFragment()
@@ -89,6 +92,15 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
 //            }
 //            cvComplaintsList.setOnClickListener { }
 //            cvResponseHelp.setOnClickListener { }
+            btnComplaintsList.setOnClickListener {
+
+            }
+//            constraintLayoutBottom.setOnClickListener {
+//
+//            }
+            btnWaitingComplaints.setOnClickListener {
+
+            }
 
             pieChart.getDescription().setEnabled(false)
             // radius of the center hole in percent of maximum radius

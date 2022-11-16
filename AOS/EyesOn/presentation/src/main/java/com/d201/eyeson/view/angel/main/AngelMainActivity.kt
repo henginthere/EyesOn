@@ -15,10 +15,10 @@ class AngelMainActivity : BaseActivity<ActivityAngelMainBinding>(R.layout.activi
     private lateinit var navController: NavController
 
     override fun init() {
-        val window = window
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+//        val window = window
+//        window.setFlags(
+//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         initView()
     }
 
