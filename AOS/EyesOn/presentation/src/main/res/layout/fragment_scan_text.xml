@@ -82,13 +82,13 @@
                     android:id="@+id/constraint_layout_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp">
+                    android:layout_marginTop="50dp"
+                    android:importantForAccessibility="no">
 
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="16dp"
-                        android:contentDescription="@string/frag_complaints_submit"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -111,7 +111,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:contentDescription="@string/frag_complaints"
                             android:fontFamily="@font/noto_sans_bold"
                             android:gravity="center"
                             android:importantForAccessibility="no"

@@ -37,7 +37,7 @@ class SelectHelperFragment :
             btnBack.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
-                    findNavController().popBackStack()
+                    requireActivity().finish()
                 }
             }
         }
@@ -46,9 +46,8 @@ class SelectHelperFragment :
     private fun initViewModelCallback() {
         lifecycleScope.launch {
             blindHelpViewModel.sessionId.collectLatest { sessionId ->
-                when (sessionId) {
-                    -1 -> showToast("현재 도움 받을 수 있는 엔젤이 없어요")
-                    else -> findNavController().navigate(SelectHelperFragmentDirections.actionSelectHelperFragmentToBlindHelpFragment())
+                if (sessionId > -1) {
+                    findNavController().navigate(SelectHelperFragmentDirections.actionSelectHelperFragmentToBlindHelpFragment())
                 }
             }
         }
