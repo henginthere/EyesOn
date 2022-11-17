@@ -62,13 +62,14 @@ class ComplaintsDetailFragment :
         binding.apply {
             btnGoSafetyEReport.setOnClickListener {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    binding.btnRegisterTitle.visibility = View.VISIBLE
+                    binding.btnRegisterTitle.bringToFront()
                     copyComplaints()
                     imageUrlToCacheFileAsync(
                         requireContext(),
                         complaintsViewModel.complaints.value!!.image!!
                     )
                     openWebPage()
-                    binding.btnRegisterTitle.visibility = View.VISIBLE
                 } else {
                     checkPermission()
                 }
@@ -193,6 +194,7 @@ class ComplaintsDetailFragment :
     private fun checkPermission() {
         val permissionListener = object : PermissionListener {
             override fun onPermissionGranted() {
+                binding.btnRegisterTitle.visibility = View.VISIBLE
                 if (complaintsViewModel.complaints.value != null) {
                     copyComplaints()
                     imageUrlToCacheFileAsync(
@@ -200,7 +202,6 @@ class ComplaintsDetailFragment :
                         complaintsViewModel.complaints.value!!.image!!
                     )
                     openWebPage()
-                    binding.btnRegisterTitle.visibility = View.VISIBLE
                 } else {
                     showToast("민원을 불러오지 못했습니다.")
                 }

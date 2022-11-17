@@ -53,7 +53,7 @@ fun complaintsRegistVisible(view: ConstraintLayout, state: String?) {
         if (state == "PROGRESS_IN") {
             view.visibility = View.VISIBLE
         } else {
-            view.visibility = View.GONE
+            view.visibility = View.INVISIBLE
         }
     }
 }

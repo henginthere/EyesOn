@@ -138,6 +138,7 @@
                     android:fontFamily="@font/noto_sans_medium"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="@{vm.complaints.content}"
                     android:textColor="@color/white"
                     android:textSize="16sp"
@@ -154,11 +155,12 @@
             complaintsRegistVisible="@{vm.complaints.state}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="64dp"
+            android:layout_marginVertical="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent">
-            app:layout_constraintBottom_toBottomOf="parent"
-            complaintsRegistVisible="@{vm.complaints.state}"
-            >
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_go_safety_e_report"
@@ -166,10 +168,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/shape_button_corner"
                 android:backgroundTint="@color/angel_blue"
                 android:text="민원 신청하러 가기"
                 android:textColor="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/btn_register_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_reject" />
@@ -180,6 +185,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/btn_round"
                 android:backgroundTint="@color/angel_red"
                 android:text="민원 반환"
@@ -194,9 +200,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:backgroundTint="@color/angel_blue"
+                android:background="@drawable/btn_round"
                 android:text="민원 신청 결과 입력"
+                android:textColor="@color/white"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatButton
@@ -204,14 +213,18 @@
             complaintsDoneVisible="@{vm.complaints.state}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginVertical="24dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/btn_border_blue"
             android:fontFamily="@font/noto_sans_medium"
             android:text="민원 처리 결과 입력"
             android:textColor="@color/white"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
