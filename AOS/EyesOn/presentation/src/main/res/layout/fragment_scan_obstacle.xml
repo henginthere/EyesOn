@@ -8,20 +8,24 @@
         android:background="@drawable/gradient_user"
         tools:context=".view.blind.scanobstacle.ScanObstacleFragment">
 
-        <android.opengl.GLSurfaceView
-            android:id="@+id/surfaceview"
+        <FrameLayout
+            android:id="@+id/frame_camera"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="H,3:4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/graphic_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            <android.opengl.GLSurfaceView
+                android:id="@+id/surfaceview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="H,3:4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </FrameLayout>
+
+
 
         <ImageView
             android:id="@+id/input_image_view"

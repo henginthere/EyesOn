@@ -9,7 +9,6 @@ import android.opengl.GLSurfaceView
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.d201.depth.depth.DepthTextureHandler
@@ -23,7 +22,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentScanObstacleBinding
 import com.d201.eyeson.util.*
-import com.d201.mlkit.GraphicOverlay
+import com.d201.eyeson.view.blind.findobject.DetectionResult
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
 import com.gun0912.tedpermission.PermissionListener
@@ -82,7 +81,7 @@ class ScanObstacleFragment :
     private lateinit var detector: ObjectDetector
     private lateinit var gpuThread: Executor
 
-    private lateinit var graphicOverlay: ImageView
+    private lateinit var graphicOverlay: ObjectDetectionImageView
 
     override fun init() {
         initView()
@@ -134,7 +133,6 @@ class ScanObstacleFragment :
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener { requireActivity().finish() }
             }
-            this@ScanObstacleFragment.graphicOverlay = graphicOverlay
         }
     }
 
@@ -229,6 +227,9 @@ class ScanObstacleFragment :
         binding.apply {
             inputImageView.bringToFront()
             layoutTop.bringToFront()
+            val viewGroup = frameCamera
+            graphicOverlay = ObjectDetectionImageView(requireContext())
+            viewGroup.addView(graphicOverlay)
             graphicOverlay.bringToFront()
         }
     }
@@ -388,6 +389,7 @@ class ScanObstacleFragment :
                     // 비트맵에 검출 결과를 그려서 보여줍니다
                     // 음성으로 출력
                     val imgWithResult = drawDetectionResult(bitmap, depthImage, detectionResults)
+
                     Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
                     requireActivity().runOnUiThread {
                         Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
@@ -539,7 +541,8 @@ class ScanObstacleFragment :
                 val depthY = depthImage.height - (centerX / ratio)
 
                 val distance = depthTexture.getMillimetersDepth(depthImage, depthX, depthY)
-
+                graphicOverlay.setDetectionResult(detectionResults, bitmap, depthImage, distance)
+                graphicOverlay.update()
                 var cm = (distance / 10.0).toFloat()
                 var convertedDistance = ""
                 if (cm > 100) {
@@ -588,8 +591,6 @@ class ScanObstacleFragment :
                     lastSpeakTime = System.currentTimeMillis()
                     speakOut("$location ${convertedDistance}에 ${it.text}가 있습니다")
                 }
-                graphicOverlay.draw(canvas)
-                graphicOverlay.bringToFront()
             }
         }
         return outputBitmap
@@ -663,5 +664,3 @@ class ScanObstacleFragment :
             .check()
     }
 }
-
-data class DetectionResult(val boundingBox: RectF, val text: String, val score: Int)

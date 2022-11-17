@@ -21,6 +21,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentFindObjectBinding
 import com.d201.eyeson.util.*
+import com.d201.mlkit.GraphicOverlay
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,10 +29,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import org.tensorflow.lite.support.image.TensorImage
+import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.Executor
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -78,9 +82,31 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
     private val viewModel: FindObjectViewModel by viewModels()
     private var objectToFind: String? = null
 
+    private lateinit var detector: ObjectDetector
+    private lateinit var gpuThread: Executor
+    private lateinit var graphicOverlay: ObjectDetectionImageView
+
     override fun init() {
         initView()
         initViewModel()
+        gpuThread = newSingleThreadContext("plz").executor
+        gpuThread.execute {
+            Log.d(TAG, "initView: ${Thread.currentThread()}")
+            val baseOptions = BaseOptions.builder().useGpu().build()
+//            .setBaseOptions(baseOptions)
+
+            // Step 2: Initialize the detector object
+            val options = ObjectDetector.ObjectDetectorOptions.builder()
+                .setMaxResults(MAX_RESULT)
+                .setBaseOptions(baseOptions)
+                .setScoreThreshold(SCORE_THRESHOLD)
+                .build()
+            detector = ObjectDetector.createFromFileAndOptions(
+                requireContext(),
+                "custom_models/${FIND_OBJECT_MODEL_FILE}",
+                options
+            )
+        }
     }
 
     private fun initViewModel() {
@@ -133,6 +159,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                 speakOut("찾을 물건을 말해주세요")
                 viewModel.startRecord(requireContext())
             }
+            graphicOverlay = ObjectDetectionImageView(requireContext())
         }
     }
 
@@ -229,6 +256,8 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
             btnRecord.bringToFront()
             tvObject.bringToFront()
             layoutTop.bringToFront()
+            frameCamera.addView(graphicOverlay)
+            graphicOverlay.bringToFront()
         }
     }
 
@@ -381,22 +410,32 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                     // 가로 모드
                     val depthImage = frame.acquireDepthImage16Bits()
 
-                    CoroutineScope(Dispatchers.IO).launch {
+                    gpuThread.execute {
                         // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
                         val detectionResults = runObjectDetection(bitmap!!)
 
                         // 비트맵에 검출 결과를 그려서 보여줍니다
                         // 음성으로 출력
-                        val imgWithResult =
-                            drawDetectionResult(bitmap, depthImage, detectionResults)
+//                        val imgWithResult =
+//                            drawDetectionResult(bitmap, depthImage, detectionResults)
+//
+//                        requireActivity().runOnUiThread {
+//                            binding.inputImageView.setImageBitmap(imgWithResult)
+//                        }
 
                         requireActivity().runOnUiThread {
-                            binding.inputImageView.setImageBitmap(imgWithResult)
+                            try {
+                                graphicOverlay.setDetectionResult(detectionResults, bitmap, depthImage, 15)
+                            }catch (e: Exception){
+                                Log.d(TAG, "onDrawFrame: ${e.message}")
+                            }
+                            graphicOverlay.update()
+                            currentFrameImage.close()
+                            depthImage.close()
+                            bitmap.recycle()
                         }
 
-                        currentFrameImage.close()
-                        depthImage.close()
-                        bitmap.recycle()
+
                     }
                 } catch (e: Exception) {
                     Log.d(TAG, "onDrawFrame: ${e.message}")
@@ -435,16 +474,16 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
         // Step 1: Create TFLite's TensorImage object
         val image = TensorImage.fromBitmap(bitmap)
 
-        // Step 2: Initialize the detector object
-        val options = ObjectDetector.ObjectDetectorOptions.builder()
-            .setMaxResults(MAX_RESULT)
-            .setScoreThreshold(SCORE_THRESHOLD)
-            .build()
-        val detector = ObjectDetector.createFromFileAndOptions(
-            requireContext(),
-            "custom_models/$FIND_OBJECT_MODEL_FILE",
-            options
-        )
+//        // Step 2: Initialize the detector object
+//        val options = ObjectDetector.ObjectDetectorOptions.builder()
+//            .setMaxResults(MAX_RESULT)
+//            .setScoreThreshold(SCORE_THRESHOLD)
+//            .build()
+//        detector = ObjectDetector.createFromFileAndOptions(
+//            requireContext(),
+//            "custom_models/$FIND_OBJECT_MODEL_FILE",
+//            options
+//        )
 
         // Step 3:주어진 이미지를 감지기에 공급
         val results = detector.detect(image)
