@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.EyesOn" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!--  상태바 투명으로 변경 -->
-        <item name="android:windowTranslucentStatus">true</item>
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
         <!--  하단바 투명으로 변경 -->
         <!--        <item name="android:windowTranslucentNavigation">true</item>-->
         <!-- Primary brand color. -->

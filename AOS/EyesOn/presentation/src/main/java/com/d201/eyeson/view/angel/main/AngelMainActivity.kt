@@ -1,5 +1,7 @@
 package com.d201.eyeson.view.angel.main
 
+import android.graphics.Color
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.d201.eyeson.R
@@ -19,6 +21,12 @@ class AngelMainActivity : BaseActivity<ActivityAngelMainBinding>(R.layout.activi
 //        window.setFlags(
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        window.apply {
+            //상태바
+            statusBarColor = Color.WHITE
+            //상태바 아이콘(true: 검정 / false: 흰색)
+            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = true
+        }
         initView()
     }
 

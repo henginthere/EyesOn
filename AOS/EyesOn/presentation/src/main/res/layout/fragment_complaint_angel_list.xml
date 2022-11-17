@@ -12,13 +12,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <ImageView
                 android:id="@+id/btn_back"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
                 android:paddingHorizontal="16dp"
                 android:src="@drawable/ic_baseline_arrow_back"
                 app:layout_constraintStart_toStartOf="parent"
