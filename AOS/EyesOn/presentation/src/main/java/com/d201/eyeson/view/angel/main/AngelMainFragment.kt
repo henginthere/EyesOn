@@ -108,7 +108,7 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             // radius of the center hole in percent of maximum radius
             pieChart.setHoleRadius(45f)
             pieChart.setTransparentCircleRadius(50f)
-
+            pieChart.animateXY(1000, 1000);
             val l: Legend = pieChart.getLegend()
             l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP)
             l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT)

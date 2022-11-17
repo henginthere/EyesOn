@@ -65,26 +65,113 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/tv_header"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@id/constraint_layout_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingHorizontal="24dp"
                     android:layout_marginHorizontal="24dp"
-                    android:fontFamily="@font/noto_sans_bold"
-                    android:text="내가 처리한 민원"
-                    android:textColor="@color/angel_text"
-                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pieChart"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_marginVertical="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_header" />
+                    android:background="@drawable/btn_gradient_angel"
+                    android:elevation="8dp">
+                    <TextView
+                        android:id="@+id/tv_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="@font/noto_sans_bold"
+                        android:layout_marginTop="32dp"
+                        android:text="내가 처리한 민원"
+                        android:textColor="@color/angel_text"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieChart"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="32dp"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_header"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <ImageView
+                        android:id="@+id/iv_help"
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:src="@drawable/ic_angel"
+                        app:layout_constraintTop_toTopOf="@id/pieChart"
+                        app:layout_constraintStart_toEndOf="@id/pieChart"
+                        app:layout_constraintTop_toBottomOf="@id/tv_header"
+                        app:layout_constraintBottom_toTopOf="@id/iv_complaints"/>
+
+                    <TextView
+                        android:id="@+id/tv_help_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        tools:ignore="56회"
+                        android:fontFamily="@font/noto_sans_bold"
+                        android:textColor="@color/angel_text"
+                        android:text="56회"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toTopOf="@id/tv_help_count_header"
+                        app:layout_constraintStart_toEndOf="@id/iv_help"
+                        app:layout_constraintTop_toTopOf="@id/iv_help"/>
+                    <TextView
+                        android:id="@+id/tv_help_count_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="24dp"
+                        android:textColor="@color/angel_text"
+                        android:text="나의 도움 수"
+                        android:textSize="11sp"
+                        app:layout_constraintStart_toStartOf="@id/tv_help_count"
+                        app:layout_constraintTop_toBottomOf="@id/tv_help_count"
+                        app:layout_constraintBottom_toBottomOf="@id/iv_help"/>
+                    <ImageView
+                        android:id="@+id/iv_complaints"
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/ic_angel"
+                        app:layout_constraintStart_toEndOf="@id/pieChart"
+                        app:layout_constraintTop_toBottomOf="@id/iv_help"
+                        app:layout_constraintBottom_toBottomOf="@id/pieChart"/>
+
+                    <TextView
+                        android:id="@+id/tv_complaints_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        tools:ignore="56회"
+                        android:fontFamily="@font/noto_sans_bold"
+                        android:textColor="@color/angel_text"
+                        android:text="56회"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toTopOf="@id/tv_complaints_count_header"
+                        app:layout_constraintStart_toEndOf="@id/iv_complaints"
+                        app:layout_constraintTop_toTopOf="@id/iv_complaints"/>
+                    <TextView
+                        android:id="@+id/tv_complaints_count_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/angel_text"
+                        android:text="나의 도움 수"
+                        android:textSize="11sp"
+                        app:layout_constraintStart_toStartOf="@id/tv_complaints_count"
+                        app:layout_constraintTop_toBottomOf="@id/tv_complaints_count"
+                        app:layout_constraintBottom_toBottomOf="@id/iv_complaints"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
 <!--                    android:id="@+id/btn_complaints_list"-->
@@ -141,7 +228,7 @@
                     android:elevation="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/pieChart">
+                    app:layout_constraintTop_toBottomOf="@id/constraint_layout_top">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -160,7 +247,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="24dp"
                         android:layout_marginVertical="16dp"
-                        android:layout_marginEnd="24dp"
+                        android:layout_marginEnd="32dp"
                         android:src="@drawable/btn_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -197,7 +284,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="24dp"
                         android:layout_marginVertical="16dp"
-                        android:layout_marginEnd="24dp"
+                        android:layout_marginEnd="32dp"
                         android:src="@drawable/btn_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -235,7 +322,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="24dp"
                         android:layout_marginVertical="16dp"
-                        android:layout_marginEnd="24dp"
+                        android:layout_marginEnd="32dp"
                         android:src="@drawable/btn_arrow_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
