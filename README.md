@@ -99,11 +99,11 @@
 
 **백엔드**
 - Dockerfile ( ~/BE/Dokerfile )
-![image-1.png](./image-1.png)
+![./exec/images/image-1.png](./exec/images/image-1.png)
     - Jasypt 암호 입력을 위한 변수 추가
 
 - Jenkinsfile  ( ~/Jenkinsfile )
-![image-2.png](./image-2.png)
+![./exec/images/image-2.png](./exec/images/image-2.png)
 
 **프론트엔드**
    
@@ -118,7 +118,7 @@ Help – Check for Updates – 오른쪽 아래 팝업의 Update 파란색 글�
 ```
    
 예:   
-![image-3.png](./image-3.png)
+![./exec/images/image-3.png](./exec/images/image-3.png)
 
 2. Kotlin 버전 확인 (N-1.7.20인지 확인)
 ```
@@ -132,7 +132,7 @@ File – Open 탭 클릭 후,
 AOS 폴더 안, Sonmal(안드로이드 아이콘) 클릭 후에 OK 버튼 클릭.
 ```
    
-![image-4.png](./image-4.png)
+![image-4.png](./exec/images/image-4.png)
 
 4. 프로젝트의 Gradle Version 확인
 ```
@@ -153,7 +153,7 @@ Gradle JDK가 version 11.0.13으로 되어 있는지 확인
 
 7.	아래와 같이 휴대폰 연결을 확인하고, 초록색 play 버튼 클릭.
    
-   ![image-5.png](./image-5.png)
+   ![image-5.png](./exec/images/image-5.png)
 
 8.	Build 성공 시, 휴대폰에 앱 첫번째 화면이 나오면서 설치를 확인할 수 있다!
 
@@ -188,7 +188,7 @@ sudo certbot –nginx –d [발급받은_도메인주소]
 cd /etc/nginx/sites-available
 sudo nano default
 ```
-![image-6.png](./image-6.png)
+![image-6.png](./exec/images/image-6.png)
 
 6) nginx 시작
 ```
@@ -276,12 +276,12 @@ SERVER_SSL_ENABLED=true
 
 **MySQL 원격 접속**   
 
-![image-7.png](./image-7.png)   
+![image-7.png](./exec/images/image-7.png)   
 - Workbench를 실행합니다.
 - MySQL Connection을 추가하기 위해 (+) 버튼을 클릭합니다.
 
 **Connection 설정**
-![image-8.png](./image-8.png)   
+![image-8.png](./exec/images/image-8.png)   
 - Connection Name: eyeson
 - Hostname: d201.kro.kr:3121
 - Username: admin-jbj
@@ -291,13 +291,13 @@ SERVER_SSL_ENABLED=true
 
 **Google OAuth**   
 https://developers.google.com/identity/protocols/oauth2/native-app   
-![image-9.png](./image-9.png)
+![image-9.png](./exec/images/image-9.png)
 
 **Firebase Cloud Messaging**   
 https://firebase.google.com/docs/cloud-messaging/android/client   
-![image-10.png](./image-10.png)   
+![image-10.png](./exec/images/image-10.png)   
 
-![image-11.png](./image-11.png)
+![image-11.png](./exec/images/image-11.png)
 
 
 
