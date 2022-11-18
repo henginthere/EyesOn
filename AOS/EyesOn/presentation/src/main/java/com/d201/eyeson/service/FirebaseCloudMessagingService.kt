@@ -56,11 +56,8 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
                     )
 
                     NotificationCompat.Builder(this, "EyesOn_id")
-<<<<<<< HEAD
-                        .setSmallIcon(R.mipmap.ic_app_logo_round)
-=======
+
                         .setSmallIcon(R.mipmap.ic_launcher)
->>>>>>> master
                         .setContentTitle(messageTitle)
                         .setContentText(messageContent)
                         .setAutoCancel(true)
@@ -85,11 +82,7 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
                     )
 
                     NotificationCompat.Builder(this, "EyesOn_id")
-<<<<<<< HEAD
-                        .setSmallIcon(R.mipmap.ic_app_logo_round)
-=======
                         .setSmallIcon(R.mipmap.ic_launcher)
->>>>>>> master
                         .setContentTitle(messageTitle)
                         .setContentText(messageContent)
                         .setAutoCancel(true)
