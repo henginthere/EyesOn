@@ -107,7 +107,7 @@ dependencies {
     implementation 'androidx.paging:paging-common-ktx:3.1.1'
 
     // webrtc
-    implementation 'org.webrtc:google-webrtc:'
+    implementation 'org.webrtc:google-webrtc:1.0.32006'
     implementation 'com.neovisionaries:nv-websocket-client:2.9'
 
     // Permission
