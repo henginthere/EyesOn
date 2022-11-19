@@ -82,6 +82,7 @@
                         android:textSize="20sp"
                         app:layout_constraintEnd_toStartOf="@id/tv_title_hour_start"
                         app:layout_constraintStart_toStartOf="parent"
+                        android:theme="@style/AppTheme.Picker"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
@@ -110,6 +111,7 @@
                         android:id="@+id/numpick_end"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:theme="@style/AppTheme.Picker"
                         app:layout_constraintEnd_toStartOf="@id/tv_title_hour_end"
                         app:layout_constraintStart_toEndOf="@id/tv_title_center"
                         app:layout_constraintTop_toTopOf="parent" />

@@ -95,6 +95,10 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
                     AngelMainFragmentDirections.actionAngelMainFragmentToComplaintAngelListFragment()
                 )
             }
+
+            constraintLayoutGuide.setOnClickListener {
+                showToast("준비 중인 기능입니다")
+            }
 //            cvComplaintsList.setOnClickListener { }
 //            cvResponseHelp.setOnClickListener { }
 

@@ -47,6 +47,7 @@
                 android:layout_marginEnd="24dp"
                 android:padding="12dp"
                 android:src="@drawable/ic_setting"
+                app:tint="@color/angel_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
