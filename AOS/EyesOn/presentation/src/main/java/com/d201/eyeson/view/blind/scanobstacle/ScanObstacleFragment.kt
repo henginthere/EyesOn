@@ -515,7 +515,13 @@ class ScanObstacleFragment :
                 pen.textAlign = Paint.Align.LEFT
                 pen.textSize = MAX_FONT_SIZE
 
-                val objectText = "${it.text} ${it.score}%"
+                var showText = ""
+                when(it.text){
+                    "bicycle" -> showText = "자전거"
+                    "kickboard" -> showText = "킥보드"
+                    "crosswalk" -> showText = "횡단보도"
+                }
+                val objectText = "${showText}"
 
                 val tagSize = Rect(0, 0, 0, 0)
                 pen.getTextBounds(objectText, 0, objectText.length, tagSize)
@@ -584,12 +590,7 @@ class ScanObstacleFragment :
                     }
                 }
 
-                var showText = ""
-                when(it.text){
-                    "bicycle" -> showText = "자전거"
-                    "kickboard" -> showText = "킥보드"
-                    "crosswalk" -> showText = "횡단보도"
-                }
+
                 // 음성 출력
                 if (System.currentTimeMillis() - lastSpeakTime > INTERVAL) {
                     lastSpeakTime = System.currentTimeMillis()

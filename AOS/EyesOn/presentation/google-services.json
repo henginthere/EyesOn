@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "348486946008-so2a5fkmicdng03buchcu3h9h13fjnfu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.d201.eyeson",
+            "certificate_hash": "1d2748d09b6b954cc0883154e08d6d519e40f607"
+          }
+        },
+        {
           "client_id": "348486946008-thjodigtsj86h4hlk9g3bnbob0rg2cgl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
