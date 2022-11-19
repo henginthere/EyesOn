@@ -23,12 +23,13 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="88dp"
             android:layout_marginTop="160dp"
             android:contentDescription="@string/eyeson_main"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_app_desc">
 
-            <TextView
+            <ImageView
                 android:id="@+id/iv_logo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -36,22 +37,21 @@
                 android:gravity="center"
                 android:importantForAccessibility="no"
                 android:includeFontPadding="false"
-                android:text="EyesOn"
-                android:textColor="#FFF200"
-                android:textSize="60sp"
-                android:textStyle="bold"
+                android:src="@drawable/main_logo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:id="@+id/tv_app_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/tway_air"
             android:text="시각장애인 및 저시력자를 위한 보조 앱"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_title" />
@@ -62,7 +62,7 @@
             android:layout_height="96dp"
             android:layout_marginHorizontal="72dp"
             android:contentDescription="@string/google_login_button"
-            android:textSize="24sp"
+            android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

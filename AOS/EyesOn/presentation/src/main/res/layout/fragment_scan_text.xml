@@ -111,7 +111,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:fontFamily="@font/noto_sans_bold"
+                            android:fontFamily="@font/tway_air"
                             android:gravity="center"
                             android:importantForAccessibility="no"
                             android:includeFontPadding="false"

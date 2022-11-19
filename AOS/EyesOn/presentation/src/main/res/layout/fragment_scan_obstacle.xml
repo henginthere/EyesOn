@@ -86,7 +86,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:contentDescription="@string/frag_complaints"
-                            android:fontFamily="@font/noto_sans_bold"
+                            android:fontFamily="@font/tway_air"
                             android:gravity="center"
                             android:importantForAccessibility="no"
                             android:includeFontPadding="false"

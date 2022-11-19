@@ -50,7 +50,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="8dp"
-                            android:fontFamily="@font/noto_sans_bold"
+                            android:fontFamily="@font/tway_air"
                             android:gravity="center"
                             android:text="도움을 기다리는 민원들"
                             android:textColor="@color/angel_text"

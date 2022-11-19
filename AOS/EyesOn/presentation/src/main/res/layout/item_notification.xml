@@ -26,6 +26,7 @@
             android:textColor="@color/blind_yellow"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:fontFamily="@font/tway_air"
             app:layout_constraintBottom_toTopOf="@id/tv_body"
             app:layout_constraintEnd_toStartOf="@id/iv_delete"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +54,8 @@
             android:text="@{noti.body}"
             android:textColor="@color/blind_yellow"
             android:textSize="16sp"
+            android:fontFamily="@font/tway_air"
+            android:layout_marginBottom="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_date"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,11 +70,20 @@
             android:text="@{noti.date}"
             android:textColor="@color/blind_yellow"
             android:textSize="16sp"
+            android:fontFamily="@font/tway_air"
             app:layout_constraintBottom_toBottomOf="@id/tv_body"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_body"
             app:layout_constraintTop_toTopOf="@id/tv_body"
             tools:text="11/14 09:54" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tv_date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

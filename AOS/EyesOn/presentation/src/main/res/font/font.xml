@@ -25,5 +25,8 @@
         android:font="@font/noto_sans_black"
         android:fontStyle="normal"
         android:fontWeight="400" />
-
+    <font
+        android:font="@font/tway_air"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
 </font-family>

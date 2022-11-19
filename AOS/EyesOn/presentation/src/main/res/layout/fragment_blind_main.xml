@@ -22,12 +22,12 @@
 
             <ImageView
                 android:id="@+id/iv_logo"
-                android:layout_width="200dp"
-                android:layout_height="72dp"
+                android:layout_width="232dp"
+                android:layout_height="88dp"
                 android:contentDescription="@string/eyesOn"
                 android:gravity="center|start"
                 android:importantForAccessibility="no"
-                android:src="@drawable/logo_main_yellow" />
+                android:src="@drawable/main_logo" />
         </LinearLayout>
 
         <ImageView
@@ -66,11 +66,11 @@
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/btn_border_yellow"
-            android:fontFamily="@font/noto_sans_bold"
+            android:fontFamily="@font/tway_air"
             android:gravity="center"
-            android:text="         글자 보기"
+            android:text="      글자 보기"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_tv_logo" />
@@ -115,11 +115,11 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@drawable/btn_border_yellow"
-                android:fontFamily="@font/noto_sans_bold"
+                android:fontFamily="@font/tway_air"
                 android:gravity="center"
-                android:text="         물건 찾기"
+                android:text="      물건 찾기"
                 android:textColor="@color/black"
-                android:textSize="24sp" />
+                android:textSize="30sp" />
 
             <ImageView
                 android:id="@+id/iv_search"
@@ -148,11 +148,11 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@drawable/btn_border_yellow"
-                android:fontFamily="@font/noto_sans_bold"
+                android:fontFamily="@font/tway_air"
                 android:gravity="center"
-                android:text="             장애물 인식"
+                android:text="      장애물 인식"
                 android:textColor="@color/black"
-                android:textSize="24sp" />
+                android:textSize="30sp" />
 
             <ImageView
                 android:id="@+id/iv_obstacle"
@@ -180,11 +180,11 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@drawable/btn_border_yellow"
-                android:fontFamily="@font/noto_sans_bold"
+                android:fontFamily="@font/tway_air"
                 android:gravity="center"
-                android:text="             엔젤과 연결"
+                android:text="      엔젤과 연결"
                 android:textColor="@color/black"
-                android:textSize="24sp" />
+                android:textSize="30sp" />
 
             <ImageView
                 android:id="@+id/iv_help"
@@ -213,11 +213,11 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@drawable/btn_border_yellow"
-                android:fontFamily="@font/noto_sans_bold"
+                android:fontFamily="@font/tway_air"
                 android:gravity="center"
-                android:text="              민원 신청 및 확인"
+                android:text="      민원 신청 및 확인"
                 android:textColor="@color/black"
-                android:textSize="24sp" />
+                android:textSize="30sp" />
 
             <ImageView
                 android:id="@+id/iv_complaints"
