@@ -1,5 +1,7 @@
 package com.d201.eyeson.view.blind.scanobstacle
 
+import android.graphics.Color
+import androidx.core.view.WindowInsetsControllerCompat
 import com.d201.depth.depth.common.FullScreenHelper
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseActivity
@@ -12,6 +14,12 @@ private const val TAG = "ScanObstacleActivity"
 class ScanObstacleActivity :
     BaseActivity<ActivityScanObstacleBinding>(R.layout.activity_scan_obstacle) {
     override fun init() {
+        window.apply {
+            //상태바
+            statusBarColor = Color.BLACK
+            //상태바 아이콘(true: 검정 / false: 흰색)
+            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = false
+        }
         initView()
     }
 

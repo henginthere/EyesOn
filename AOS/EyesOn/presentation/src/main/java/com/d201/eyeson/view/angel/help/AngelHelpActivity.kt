@@ -1,5 +1,7 @@
 package com.d201.eyeson.view.angel.help
 
+import android.graphics.Color
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.d201.eyeson.R
@@ -16,6 +18,12 @@ class AngelHelpActivity : BaseActivity<ActivityAngelHelpBinding>(R.layout.activi
     private lateinit var navController: NavController
 
     override fun init() {
+        window.apply {
+            //상태바
+            statusBarColor = Color.WHITE
+            //상태바 아이콘(true: 검정 / false: 흰색)
+            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = true
+        }
         initView()
     }
 

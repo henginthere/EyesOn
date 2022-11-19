@@ -1,5 +1,7 @@
 package com.d201.eyeson.view.blind.findobject
 
+import android.graphics.Color
+import androidx.core.view.WindowInsetsControllerCompat
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseActivity
 import com.d201.eyeson.databinding.ActivityFindObjectBinding
@@ -11,6 +13,12 @@ private const val TAG = "FindObjectActivity"
 class FindObjectActivity : BaseActivity<ActivityFindObjectBinding>(R.layout.activity_find_object) {
 
     override fun init() {
+        window.apply {
+            //상태바
+            statusBarColor = Color.BLACK
+            //상태바 아이콘(true: 검정 / false: 흰색)
+            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = false
+        }
         initView()
     }
 

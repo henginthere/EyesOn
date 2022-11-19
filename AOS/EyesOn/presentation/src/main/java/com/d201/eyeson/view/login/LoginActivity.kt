@@ -1,5 +1,7 @@
 package com.d201.eyeson.view.login
 
+import android.graphics.Color
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.d201.eyeson.R
@@ -15,6 +17,12 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     private lateinit var navController: NavController
 
     override fun init() {
+        window.apply {
+            //상태바
+            statusBarColor = Color.BLACK
+            //상태바 아이콘(true: 검정 / false: 흰색)
+            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = false
+        }
         initView()
     }
 

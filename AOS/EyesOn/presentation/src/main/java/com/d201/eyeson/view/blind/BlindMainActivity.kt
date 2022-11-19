@@ -1,6 +1,8 @@
 package com.d201.eyeson.view.blind
 
+import android.graphics.Color
 import android.view.WindowManager
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.d201.eyeson.R
@@ -18,10 +20,16 @@ class BlindMainActivity : BaseActivity<ActivityBlindMainBinding>(R.layout.activi
 
     override fun init() {
         val window = window
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
+//        window.setFlags(
+//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+//        )
+        window.apply {
+            //상태바
+            statusBarColor = Color.BLACK
+            //상태바 아이콘(true: 검정 / false: 흰색)
+            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = false
+        }
         initView()
     }
 

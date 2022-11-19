@@ -14,7 +14,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="24dp"
             android:contentDescription="@string/frag_main"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,9 +31,8 @@
 
         <ImageView
             android:id="@+id/btn_notification"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:backgroundTint="@color/white"
             android:contentDescription="알림"
             android:padding="8dp"
@@ -45,8 +43,8 @@
 
         <ImageView
             android:id="@+id/btn_setting"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="24dp"
             android:backgroundTint="@color/white"
@@ -68,7 +66,7 @@
             android:background="@drawable/btn_border_yellow"
             android:fontFamily="@font/tway_air"
             android:gravity="center"
-            android:text="      글자 보기"
+            android:text="     글자 보기"
             android:textColor="@color/black"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +77,7 @@
             android:id="@+id/iv_text"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:layout_marginStart="48dp"
+            android:layout_marginStart="56dp"
             android:src="@drawable/ic_text"
             app:layout_constraintBottom_toBottomOf="@id/btn_scan_text"
             app:layout_constraintStart_toStartOf="@id/btn_scan_text"
@@ -117,7 +115,7 @@
                 android:background="@drawable/btn_border_yellow"
                 android:fontFamily="@font/tway_air"
                 android:gravity="center"
-                android:text="      물건 찾기"
+                android:text="     물건 찾기"
                 android:textColor="@color/black"
                 android:textSize="30sp" />
 
@@ -126,7 +124,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="56dp"
                 android:src="@drawable/ic_search" />
 
         </FrameLayout>
@@ -215,7 +213,7 @@
                 android:background="@drawable/btn_border_yellow"
                 android:fontFamily="@font/tway_air"
                 android:gravity="center"
-                android:text="      민원 신청 및 확인"
+                android:text="       민원 신청 및 확인"
                 android:textColor="@color/black"
                 android:textSize="30sp" />
 
@@ -224,7 +222,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="48dp"
+                android:layout_marginStart="40dp"
                 android:src="@drawable/ic_complaints" />
 
         </FrameLayout>
