@@ -16,7 +16,7 @@ const val INTERVAL = 3000
 const val MODEL_FILE = "model_221116_1320_eff1.tflite"
 const val FIND_OBJECT_MODEL_FILE = "model_object_221115_0210_eff1.tflite"
 const val MAX_RESULT = 1
-const val SCORE_THRESHOLD = 0.4F
+const val SCORE_THRESHOLD = 0.65F
 
 // View
 const val VIEW_SCAN_TEXT = 0

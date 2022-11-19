@@ -392,7 +392,7 @@ class ScanObstacleFragment :
                     Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
                     requireActivity().runOnUiThread {
                         Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
-//                        binding.inputImageView.setImageBitmap(imgWithResult)
+                        binding.inputImageView.setImageBitmap(imgWithResult)
                     }
                     currentFrameImage.close()
                     depthImage.close()
@@ -584,10 +584,16 @@ class ScanObstacleFragment :
                     }
                 }
 
+                var showText = ""
+                when(it.text){
+                    "bicycle" -> showText = "자전거"
+                    "kickboard" -> showText = "킥보드"
+                    "crosswalk" -> showText = "횡단보도"
+                }
                 // 음성 출력
                 if (System.currentTimeMillis() - lastSpeakTime > INTERVAL) {
                     lastSpeakTime = System.currentTimeMillis()
-                    speakOut("$location ${convertedDistance}에 ${it.text}가 있습니다")
+                    speakOut("$location ${convertedDistance}에 ${showText}가 있습니다")
                 }
                 graphicOverlay.draw(canvas)
                 graphicOverlay.bringToFront()
