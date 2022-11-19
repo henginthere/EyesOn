@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
@@ -20,6 +21,7 @@ import com.d201.eyeson.databinding.FragmentLoginBinding
 import com.d201.eyeson.util.ANGEL
 import com.d201.eyeson.util.BLIND
 import com.d201.eyeson.util.GENDER_DEFAULT
+import com.d201.eyeson.util.JWT
 import com.d201.eyeson.view.angel.main.AngelMainActivity
 import com.d201.eyeson.view.blind.BlindMainActivity
 import com.d201.eyeson.view.login.LoginViewModel
@@ -32,6 +34,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 private const val TAG = "LoginFragment"
 
@@ -40,12 +43,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private val loginViewModel: LoginViewModel by viewModels()
     private lateinit var mGoogleSignInClient: GoogleSignInClient
 
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
     private var action = ""
     private var fcmToken = ""
 
     override fun init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel("EyesOn_id", "EyesOn")
+        }
+        if (sharedPreferences.getString(JWT, "null") == "null"){
+            PermissionDialog().show(parentFragmentManager, "PermissionDialog")
         }
         initAction()
         initFirebaseTokenListener()

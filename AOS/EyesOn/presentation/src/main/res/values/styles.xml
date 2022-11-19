@@ -17,4 +17,9 @@
     <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="android:textColorPrimary">@android:color/black</item>
     </style>
+
+    <style name="AppTheme.Button" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorPrimary">@color/angel_blue</item>
+
+    </style>
 </resources>
