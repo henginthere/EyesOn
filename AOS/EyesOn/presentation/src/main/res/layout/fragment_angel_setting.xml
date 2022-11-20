@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/white"
         tools:context=".view.angel.setting.AngelSettingFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,7 @@
                 android:fontFamily="@font/tway_air"
                 android:gravity="center"
                 android:text="설정"
-                android:textColor="@color/white"
+                android:textColor="@color/angel_text"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -35,7 +35,7 @@
                 android:layout_height="56dp"
                 android:padding="16dp"
                 android:paddingHorizontal="16dp"
-                android:src="@drawable/btn_back"
+                android:src="@drawable/btn_blind_back_black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/tway_air"
                 android:text="도움 요청 알림 시간"
-                android:textColor="@color/white"
+                android:textColor="@color/angel_text"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -123,6 +123,7 @@
                         android:id="@+id/tv_title_hour_end"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/tway_air"
                         android:text="시"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toTopOf="@id/layout_days"

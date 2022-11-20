@@ -20,6 +20,7 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
@@ -111,7 +112,9 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT)
             l.setOrientation(Legend.LegendOrientation.VERTICAL)
             l.setDrawInside(false)
+            pieChart.legend.isEnabled = false
 
+            pieChart.setEntryLabelColor(Color.parseColor("#181B68"))
             pieChart.setData(generatePieData())
         }
     }
@@ -119,14 +122,21 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
     private fun generatePieData(): PieData? {
 
         val entries1: ArrayList<PieEntry> = ArrayList()
-        entries1.add(PieEntry((245).toFloat(), "245개"))
-        entries1.add(PieEntry((6).toFloat(), "6개"))
-        entries1.add(PieEntry((40).toFloat(), "17개"))
+        entries1.add(PieEntry((65).toFloat(), "최근 민원 수"))
+        entries1.add(PieEntry((17).toFloat(), "나의 민원 수"))
+        entries1.add(PieEntry((54).toFloat(), "최근 도움 수"))
+        entries1.add(PieEntry((6).toFloat(), "나의 도움 수"))
+//        entries1.add(PieEntry((40).toFloat(), ""))
         val ds1 = PieDataSet(entries1, " ")
-        //ds1.setColors(R.color.gradient_start, R.color.gradient_end, R.color.gradient_center)
+
+        val colors: ArrayList<Int> = ArrayList()
+        for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
+
+        ds1.setColors(colors)
         ds1.setSliceSpace(2f)
-        ds1.setValueTextColor(Color.WHITE)
-        ds1.setValueTextSize(24f)
+        ds1.setValueTextColor(Color.parseColor("#181B68"))
+        ds1.setValueTextSize(8f)
+
         val d = PieData(ds1)
       //  d.setValueTypeface(tf)
         return d
