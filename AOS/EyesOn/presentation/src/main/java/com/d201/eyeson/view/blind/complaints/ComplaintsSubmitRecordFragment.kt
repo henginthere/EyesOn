@@ -12,7 +12,11 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentComplaintsSubmitRecordBinding
 import com.d201.eyeson.util.accessibilityEvent
+import com.d201.eyeson.view.loading.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -25,6 +29,7 @@ class ComplaintsSubmitRecordFragment :
     private val args: ComplaintsSubmitRecordFragmentArgs by navArgs()
     private val viewModel: ComplaintsSubmitRecordViewModel by viewModels()
     private lateinit var location: Location
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun init() {
         initView()
@@ -43,6 +48,9 @@ class ComplaintsSubmitRecordFragment :
         viewModel.apply {
             initTTS(requireContext())
             successResultEvent.observe(viewLifecycleOwner) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    loadingDialog.dismiss()
+                }
                 showToast("민원이 접수되었습니다")
                 findNavController().popBackStack()
             }
@@ -73,6 +81,8 @@ class ComplaintsSubmitRecordFragment :
             btnSubmit.apply {
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener {
+                    loadingDialog = LoadingDialog(requireContext(), "민원 신청 중...")
+                    loading()
                     val comp = Complaints(
                         "${location.longitude},${location.latitude}",
                         viewModel.recordText.value
@@ -95,5 +105,14 @@ class ComplaintsSubmitRecordFragment :
         viewModel.startRecord(requireContext())
     }
 
-
+    private fun loading() {
+        loadingDialog.show()
+        // 로딩이 진행되지 않았을 경우
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(10000)
+            if (loadingDialog.isShowing) {
+                loadingDialog.dismiss()
+            }
+        }
+    }
 }
