@@ -122,10 +122,10 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
     private fun generatePieData(): PieData? {
 
         val entries1: ArrayList<PieEntry> = ArrayList()
-        entries1.add(PieEntry((65).toFloat(), "최근 민원 수"))
-        entries1.add(PieEntry((17).toFloat(), "나의 민원 수"))
-        entries1.add(PieEntry((54).toFloat(), "최근 도움 수"))
-        entries1.add(PieEntry((6).toFloat(), "나의 도움 수"))
+        entries1.add(PieEntry((65).toFloat(), "최근 민원"))
+        entries1.add(PieEntry((17).toFloat(), "나의 민원"))
+        entries1.add(PieEntry((54).toFloat(), "최근 도움"))
+        entries1.add(PieEntry((6).toFloat(), "나의 도움"))
 //        entries1.add(PieEntry((40).toFloat(), ""))
         val ds1 = PieDataSet(entries1, " ")
 
