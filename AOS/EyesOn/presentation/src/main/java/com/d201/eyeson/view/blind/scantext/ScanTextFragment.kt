@@ -113,7 +113,6 @@ class ScanTextFragment : BaseFragment<FragmentScanTextBinding>(R.layout.fragment
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume")
         textRecognitionProcessor = TextRecognitionProcessor(
             requireContext(),
             KoreanTextRecognizerOptions.Builder().build()

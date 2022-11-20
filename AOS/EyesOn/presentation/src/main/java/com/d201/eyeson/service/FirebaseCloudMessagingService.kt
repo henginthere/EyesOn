@@ -2,7 +2,6 @@ package com.d201.eyeson.service
 
 import android.app.PendingIntent
 import android.content.Intent
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.d201.domain.model.Noti
@@ -27,7 +26,6 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        Log.d(TAG, "onNewToken: ${token}")
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
@@ -35,13 +33,8 @@ class FirebaseCloudMessagingService : FirebaseMessagingService() {
 
         message.notification.let {
             val messageTitle = it!!.title
-            val messageContent = it!!.body
+            val messageContent = it.body
             val action = message.data["action"]
-
-            Log.d(
-                TAG,
-                "onMessageReceived: title : $messageTitle\nbody : $messageContent\naction : ${action}"
-            )
 
             val builder = when (action) {
                 "AngelHelp" -> {

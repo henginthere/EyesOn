@@ -21,6 +21,7 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentFindObjectBinding
 import com.d201.eyeson.util.*
+import com.d201.eyeson.view.blind.scanobstacle.DetectionResult
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,10 +64,6 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
     // Temporary matrix allocated here to reduce number of allocations for each frame.
     private val anchorMatrix = FloatArray(16)
 
-    private val SEARCHING_PLANE_MESSAGE = "Please move around slowly..."
-    private val PLANES_FOUND_MESSAGE = "Tap to place objects."
-    private val DEPTH_NOT_AVAILABLE_MESSAGE = "[Depth not supported on this device]"
-
     // Anchors created from taps used for object placing with a given color.
     private val OBJECT_COLOR = floatArrayOf(139.0f, 195.0f, 74.0f, 255.0f)
     private val anchors = ArrayList<Anchor>()
@@ -90,13 +87,21 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.recordText.collectLatest {
                 if (it.isNotEmpty()) {
+                    var tm = "를"
                     when (it) {
-                        "마우스" -> objectToFind = "mouse"
-                        "키보드" -> objectToFind = "keyboard"
-                        "컵" -> objectToFind = "cup"
+                        "마우스" -> {
+                            objectToFind = "mouse"
+                        }
+                        "키보드" -> {
+                            objectToFind = "keyboard"
+                        }
+                        "컵" -> {
+                            objectToFind = "cup"
+                            tm = "을"
+                        }
                     }
 
-                    speakOut("${objectToFind}를 찾습니다")
+                    speakOut("${objectToFind}${tm} 찾습니다")
                 }
             }
         }
@@ -326,7 +331,6 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
             // 이 프레임의 최신 깊이 이미지를 검색
             if (isDepthSupported) {
                 depthTexture.update(frame)
-                // Log.d(TAG, "isDepthSupported ${camera.pose.xAxis}  ${camera.pose.yAxis}  ${camera.pose.zAxis}")
             }
             // Handle one tap per frame.
 //            handleTap(frame, camera)
@@ -498,7 +502,18 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                 pen.textAlign = Paint.Align.LEFT
                 pen.textSize = MAX_FONT_SIZE
 
-                val objectText = "${it.text} ${it.score}%"
+                var showText = ""
+                var speakText = "가"
+                when(it.text){
+                    "cup" -> {
+                        showText = "컵"
+                        speakText = "이"
+                    }
+                    "mouse" -> showText = "마우스"
+                    "keyboard" -> showText = "키보드"
+                }
+
+                val objectText = "${showText}"
 
                 val tagSize = Rect(0, 0, 0, 0)
                 pen.getTextBounds(objectText, 0, objectText.length, tagSize)
@@ -570,7 +585,7 @@ class FindObjectFragment : BaseFragment<FragmentFindObjectBinding>(
                 // 음성 출력
                 if (System.currentTimeMillis() - lastSpeakTime > INTERVAL) {
                     lastSpeakTime = System.currentTimeMillis()
-                    speakOut("$location ${convertedDistance}에 ${it.text}가 있습니다")
+                    speakOut("$location ${convertedDistance}에 ${showText}${speakText} 있습니다")
                 }
             }
         }

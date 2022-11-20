@@ -1,7 +1,6 @@
 package com.d201.eyeson.view.angel.setting
 
 import android.content.Intent
-import android.util.Log
 import android.widget.ToggleButton
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -107,7 +106,6 @@ class AngelSettingFragment :
                         }
                         alarmDay = alarmDay shr 1
                     }
-                    Log.d(TAG, "initViewModel: $it")
                     binding.apply {
                         numpickStart.value = it.alarmStart
                         numpickEnd.value = it.alarmEnd
@@ -142,7 +140,6 @@ class AngelSettingFragment :
                 alarmDay,
                 switchAlarm.isChecked
             )
-//            Log.d(TAG, "saveAlarmInfo: ${numpickStart.value} | ${numpickEnd.value} | ${alarmDay} | ${switchAlarm.isChecked}")
         }
     }
 

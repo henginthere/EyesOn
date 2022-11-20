@@ -491,12 +491,6 @@ public class CameraSource {
             this.rotationDegrees = (cameraInfo.orientation - degrees + 360) % 360;
             displayAngle = this.rotationDegrees;
         }
-        Log.d(TAG, "Display rotation is: " + rotation);
-        Log.d(TAG, "Camera face is: " + cameraInfo.facing);
-        Log.d(TAG, "Camera rotation is: " + cameraInfo.orientation);
-        // This value should be one of the degrees that ImageMetadata accepts: 0, 90, 180 or 270.
-        Log.d(TAG, "RotationDegrees is: " + this.rotationDegrees);
-
         camera.setDisplayOrientation(displayAngle);
         parameters.setRotation(this.rotationDegrees);
     }

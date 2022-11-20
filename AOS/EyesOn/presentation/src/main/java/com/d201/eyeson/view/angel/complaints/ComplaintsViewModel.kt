@@ -43,7 +43,6 @@ class ComplaintsViewModel @Inject constructor(
                 when (it) {
                     is ResultType.Success -> {
                         _complaints.value = it.data.data
-                        Log.d(TAG, "getComplaints: ${it.data.data}")
                     }
                     else -> Log.d(TAG, "getComplaints: ${it}")
                 }

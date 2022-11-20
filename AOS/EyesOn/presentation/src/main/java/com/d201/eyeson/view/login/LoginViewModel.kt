@@ -28,7 +28,6 @@ class LoginViewModel @Inject constructor(
     val login get() = _login.asStateFlow()
 
     fun login(idToken: String, fcmToken: String) {
-        Log.d(TAG, "login: $idToken \n $fcmToken")
         viewModelScope.launch(Dispatchers.IO) {
             loginUseCase.execute(idToken, fcmToken).collectLatest {
                 if (it is ResultType.Success && it.data.status == 200) {
@@ -36,7 +35,6 @@ class LoginViewModel @Inject constructor(
                     _login.value = it.data.data
                     sharedPreferences.edit().putString(JWT, it.data.data.jwtToken.accessToken)
                         .apply()
-                    Log.d(TAG, "login: ${sharedPreferences.getString(JWT, "null")}")
                 } else {
                     //로그인 실패
                     Log.d(TAG, "login: ${it}")

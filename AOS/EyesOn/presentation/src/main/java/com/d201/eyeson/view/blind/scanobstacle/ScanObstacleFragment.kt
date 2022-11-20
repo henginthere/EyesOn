@@ -1,7 +1,5 @@
 package com.d201.eyeson.view.blind.scanobstacle
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.*
 import android.media.Image
 import android.opengl.GLES20
@@ -10,8 +8,6 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import android.widget.ImageView
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.d201.depth.depth.DepthTextureHandler
 import com.d201.depth.depth.common.CameraPermissionHelper
 import com.d201.depth.depth.common.DisplayRotationHelper
@@ -23,12 +19,8 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentScanObstacleBinding
 import com.d201.eyeson.util.*
-import com.d201.mlkit.GraphicOverlay
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.*
-
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -68,10 +60,6 @@ class ScanObstacleFragment :
     // Temporary matrix allocated here to reduce number of allocations for each frame.
     private val anchorMatrix = FloatArray(16)
 
-    private val SEARCHING_PLANE_MESSAGE = "Please move around slowly..."
-    private val PLANES_FOUND_MESSAGE = "Tap to place objects."
-    private val DEPTH_NOT_AVAILABLE_MESSAGE = "[Depth not supported on this device]"
-
     // Anchors created from taps used for object placing with a given color.
     private val OBJECT_COLOR = floatArrayOf(139.0f, 195.0f, 74.0f, 255.0f)
     private val anchors = ArrayList<Anchor>()
@@ -87,12 +75,9 @@ class ScanObstacleFragment :
 
     override fun init() {
         initView()
-        checkPermission()
         gpuThread = newSingleThreadContext("plz").executor
         gpuThread.execute {
-            Log.d(TAG, "initView: ${Thread.currentThread()}")
             val baseOptions = BaseOptions.builder().useGpu().build()
-//            .setBaseOptions(baseOptions)
 
             // Step 2: Initialize the detector object
             val options = ObjectDetector.ObjectDetectorOptions.builder()
@@ -256,25 +241,6 @@ class ScanObstacleFragment :
 
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (!CameraPermissionHelper.hasCameraPermission(requireActivity())) {
-            Toast.makeText(
-                requireContext(), "Camera permission is needed to run this application",
-                Toast.LENGTH_LONG
-            ).show()
-            if (!CameraPermissionHelper.shouldShowRequestPermissionRationale(requireActivity())) {
-                // Permission denied with checking "Do not ask again".
-                CameraPermissionHelper.launchPermissionSettings(requireActivity())
-            }
-            requireActivity().finish()
-        }
-    }
-
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
 
@@ -329,11 +295,8 @@ class ScanObstacleFragment :
             // 이 프레임의 최신 깊이 이미지를 검색
             if (isDepthSupported) {
                 depthTexture.update(frame)
-                // Log.d(TAG, "isDepthSupported ${camera.pose.xAxis}  ${camera.pose.yAxis}  ${camera.pose.zAxis}")
             }
             // Handle one tap per frame.
-//            handleTap(frame, camera)
-
             // If frame is ready, render camera preview image to the GL surface.
             // 프레임이 준비되면 카메라 미리보기 이미지를 GL 표면으로 렌더링
             backgroundRenderer.draw(frame)
@@ -389,9 +352,7 @@ class ScanObstacleFragment :
                     // 비트맵에 검출 결과를 그려서 보여줍니다
                     // 음성으로 출력
                     val imgWithResult = drawDetectionResult(bitmap, depthImage, detectionResults)
-                    Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
                     requireActivity().runOnUiThread {
-                        Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
                         binding.inputImageView.setImageBitmap(imgWithResult)
                     }
                     currentFrameImage.close()
@@ -399,40 +360,11 @@ class ScanObstacleFragment :
                     bitmap.recycle()
                 }
 
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    Log.d(TAG, "onDrawFrame: ${Thread.currentThread()}")
-//                    // 비트맵에서 객체를 찾아 감지된 결과 리스트를 저장합니다.
-//                    val detectionResults = runObjectDetection(bitmap!!)
-//
-//                    // 비트맵에 검출 결과를 그려서 보여줍니다
-//                    // 음성으로 출력
-//                    val imgWithResult = drawDetectionResult(bitmap, depthImage, detectionResults)
-//
-//                    requireActivity().runOnUiThread {
-//                        binding.inputImageView.setImageBitmap(imgWithResult)
-//                    }
-//
-//                    currentFrameImage.close()
-//                    depthImage.close()
-//                    bitmap.recycle()
-//                }
             } catch (e: Exception) {
                 Log.d(TAG, "onDrawFrame: ${e.message}")
             }
 
             // No tracking error at this point. Inform user of what to do based on if planes are found.
-//            var messageToShow = if (!hasTrackingPlane()) {
-//                SEARCHING_PLANE_MESSAGE
-//            } else {
-//                ""
-//            }
-//            if (!isDepthSupported) {
-//                messageToShow += """
-//                ${DEPTH_NOT_AVAILABLE_MESSAGE}
-//                """.trimIndent()
-//            }
-//            messageSnackbarHelper.showMessage(requireActivity(), messageToShow)
-
             // Visualize anchors created by touch.
             val scaleFactor = 1.0f
             for (anchor in anchors) {
@@ -469,19 +401,14 @@ class ScanObstacleFragment :
     private fun runObjectDetection(bitmap: Bitmap): List<DetectionResult> {
         // Step 1: Create TFLite's TensorImage object
         val image = TensorImage.fromBitmap(bitmap)
-
-
-        Log.d(TAG, "runObjectDetection: ${Thread.currentThread()}")
         // Step 3:주어진 이미지를 감지기에 공급
         val results = detector.detect(image)
-
         // Step 4: 탐지 결과를 파싱하여 보여줍니다.
         return results.map {
             // Get the top-1 category and craft the display text
             val category = it.categories.first()
             val text = category.label
             val score = category.score.times(100).toInt()
-
             // 탐지 결과를 표시할 데이터 객체 생성
             DetectionResult(it.boundingBox, text, score)
         }
@@ -591,6 +518,7 @@ class ScanObstacleFragment :
                 }
 
 
+
                 // 음성 출력
                 if (System.currentTimeMillis() - lastSpeakTime > INTERVAL) {
                     lastSpeakTime = System.currentTimeMillis()
@@ -618,57 +546,6 @@ class ScanObstacleFragment :
         tts.setPitch(1f)
         tts.setSpeechRate(3.5f)
         tts.speak(text, TextToSpeech.QUEUE_ADD, null, "id1")
-    }
-
-    // Checks if we detected at least one plane.
-    private fun hasTrackingPlane(): Boolean {
-        for (plane in session!!.getAllTrackables(Plane::class.java)) {
-            if (plane.trackingState == TrackingState.TRACKING) {
-                return true
-            }
-        }
-        return false
-    }
-
-    // Calculate the normal distance to plane from cameraPose, the given planePose should have y axis
-    // parallel to plane's normal, for example plane's center pose or hit test pose.
-    private fun calculateDistanceToPlane(planePose: Pose, cameraPose: Pose): Float {
-        val normal = FloatArray(3)
-        val cameraX = cameraPose.tx()
-        val cameraY = cameraPose.ty()
-        val cameraZ = cameraPose.tz()
-        // Get transformed Y axis of plane's coordinate system.
-        planePose.getTransformedAxis(1, 1.0f, normal, 0)
-        // Compute dot product of plane's normal with vector from camera to plane center.
-        return (cameraX - planePose.tx()) * normal[0] + (cameraY - planePose.ty()) * normal[1] + (cameraZ - planePose.tz()) * normal[2]
-    }
-
-    private fun allPermissionsGranted() = mutableListOf(
-        Manifest.permission.CAMERA
-    ).toTypedArray().all {
-        ContextCompat.checkSelfPermission(
-            requireActivity().baseContext, it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun checkPermission() {
-        val permissionListener = object : PermissionListener {
-            override fun onPermissionGranted() {
-            }
-
-            override fun onPermissionDenied(deniedPermissions: List<String>) {
-                showToast("권한을 허용해야 이용이 가능합니다.")
-                requireActivity().finish()
-            }
-
-        }
-        TedPermission.create()
-            .setPermissionListener(permissionListener)
-            .setDeniedMessage("권한을 허용해주세요. [설정] > [앱 및 알림] > [고급] > [앱 권한]")
-            .setPermissions(
-                Manifest.permission.CAMERA
-            )
-            .check()
     }
 }
 

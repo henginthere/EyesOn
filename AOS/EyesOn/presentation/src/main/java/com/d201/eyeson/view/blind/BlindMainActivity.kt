@@ -1,7 +1,6 @@
 package com.d201.eyeson.view.blind
 
 import android.graphics.Color
-import android.view.WindowManager
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment

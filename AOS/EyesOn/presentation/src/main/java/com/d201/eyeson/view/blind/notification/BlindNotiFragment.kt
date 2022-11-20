@@ -36,13 +36,6 @@ class BlindNotiFragment : BaseFragment<FragmentBlindNotiBinding>(R.layout.fragme
     }
 
     private fun initView() {
-        val notiClickListener = object : NotiClickListener {
-            override fun onClick(noti: Noti, position: Int) {
-                blindNotiViewModel.deleteNoti(noti)
-                blindNotiViewModel.selectAllNotis()
-            }
-        }
-
         blindNotiViewModel.selectAllNotis()
         blindNotiAdapter = BlindNotiAdapter(notiClickListener)
         binding.apply {
@@ -52,6 +45,12 @@ class BlindNotiFragment : BaseFragment<FragmentBlindNotiBinding>(R.layout.fragme
                 accessibilityDelegate = accessibilityEvent(this, requireContext())
                 setOnClickListener { findNavController().popBackStack() }
             }
+        }
+    }
+
+    private val notiClickListener = object : NotiClickListener {
+        override fun onClick(noti: Noti, position: Int) {
+            blindNotiViewModel.deleteNoti(noti)
         }
     }
 }

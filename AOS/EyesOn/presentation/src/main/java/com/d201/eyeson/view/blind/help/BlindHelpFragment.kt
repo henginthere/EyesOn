@@ -97,7 +97,6 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
 
         participantListener = object : ParticipantListener {
             override fun join() {
-                Log.d(TAG, "ParticipantListener : join")
                 lifecycleScope.launch {
                     if (mediaPlayer.isPlaying) {
                         mediaPlayer.stop()
@@ -115,7 +114,6 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
 
             override fun left() {
                 requireActivity().runOnUiThread {
-                    Log.d(TAG, "ParticipantListener : left")
                     returnResource()
                     BlindHelpDisconnectDialog(blindHelpDisconnectListener).show(
                         parentFragmentManager,
@@ -211,8 +209,6 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
                 object : Callback {
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
-                        Log.d(TAG, "responseString: " + response.body!!.string())
-
                         // Token Request
                         val tokenBody: RequestBody =
                             RequestBody.create(
@@ -232,7 +228,6 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
                                     } catch (e: IOException) {
                                         Log.e(TAG, "Error getting body", e)
                                     }
-                                    Log.d(TAG, "responseString2: $responseString")
                                     var tokenJsonObject: JSONObject? = null
                                     var token: String? = null
                                     try {
@@ -318,7 +313,6 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
     }
 
     private fun returnResource() {
-        Log.d(TAG, "returnResource: $leaveFlag")
         if (!leaveFlag) {
             leaveFlag = true
             mediaPlayer.stop()
@@ -335,7 +329,6 @@ class BlindHelpFragment : BaseFragment<FragmentBlindHelpBinding>(R.layout.fragme
         requireActivity().runOnUiThread {
             binding.localGlSurfaceView.clearImage()
             binding.localGlSurfaceView.release()
-            Log.d(TAG, "leaveSession: clearImage")
             binding.remoteGlSurfaceView.clearImage()
             binding.remoteGlSurfaceView.release()
         }

@@ -28,7 +28,6 @@ class BlindHelpViewModel @Inject constructor(
             requestHelpUseCase.execute(gender).collectLatest {
                 if (it is ResultType.Success) {
                     _sessionId.value = it.data.data
-                    Log.d(TAG, "requestHelp: ${it.data.data}")
                 } else {
                     Log.d(TAG, "requestHelp: $it")
                 }

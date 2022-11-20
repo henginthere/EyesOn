@@ -12,7 +12,6 @@
             android:id="@+id/frame_find_object"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="32dp"
             tools:layout="@layout/fragment_find_object" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

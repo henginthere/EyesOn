@@ -11,7 +11,6 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -72,7 +71,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun initFirebaseTokenListener() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
-                Log.d(TAG, "FCM Token: ${it.result}")
                 fcmToken = it.result
             } else {
                 Log.d(TAG, "FCM 토큰 얻기 실패", it.exception)
@@ -153,10 +151,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private val requestActivity: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { activityResult ->
-        Log.d(
-            TAG,
-            "GoogleLoginActivityResult : ${activityResult.resultCode}, RESULT_OK : ${AppCompatActivity.RESULT_OK}"
-        )
         if (activityResult.resultCode == Activity.RESULT_OK) {
 
             // 구글 인증 결과 획득
@@ -164,9 +158,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
             try {
                 val account = task.getResult(ApiException::class.java)
-
-                Log.d(TAG, "Id Token: ${account.idToken}")
-
                 // 발급 받은 IdToken 과 FcmToken 을 서버로 전송
                 loginViewModel.login(account.idToken!!, fcmToken)
 

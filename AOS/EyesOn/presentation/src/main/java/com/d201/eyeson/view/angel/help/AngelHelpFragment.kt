@@ -86,7 +86,7 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
 
         participantListener = object : ParticipantListener {
             override fun join() {
-                Log.d(TAG, "join: 감지됨")
+
             }
 
             override fun left() {
@@ -96,7 +96,6 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
                         "AngelHelpDisconnectDialog"
                     )
                     returnResource()
-                    Log.d(TAG, "left: 감지됨")
                 }
             }
         }
@@ -174,8 +173,6 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
         lifecycleScope.launch {
             angelHelpViewModel.sessionId.collectLatest {
                 if (it > 0) getToken("${angelHelpViewModel.sessionId.value}-session")
-                Log.d(TAG, "initViewModelCallback: $it-session")
-
             }
         }
     }
@@ -231,10 +228,6 @@ class AngelHelpFragment : BaseFragment<FragmentAngelHelpBinding>(R.layout.fragme
                                             e
                                         )
                                     }
-                                    Log.d(
-                                        TAG,
-                                        "responseString2: $responseString"
-                                    )
                                     var tokenJsonObject: JSONObject? = null
                                     var token: String? = null
                                     try {

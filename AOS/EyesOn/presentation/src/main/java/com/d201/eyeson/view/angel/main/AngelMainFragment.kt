@@ -3,10 +3,6 @@ package com.d201.eyeson.view.angel.main
 import android.Manifest
 import android.content.Intent
 import android.graphics.Color
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,7 +10,6 @@ import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelMainBinding
 import com.d201.eyeson.util.VIEW_ANGEL_HELP
-import com.d201.eyeson.view.angel.ComplaintsClickListener
 import com.d201.eyeson.view.angel.help.AngelHelpActivity
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
@@ -24,7 +19,6 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -35,14 +29,11 @@ private const val TAG = "AngelMainFragment"
 class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragment_angel_main) {
 
     private val angelMainViewModel: AngelMainViewModel by viewModels()
-    private lateinit var job: Job
-    private lateinit var angelMainAdapter: AngelMainAdapter
 
     override fun init() {
         initListener()
         initView()
         initViewModelCallback()
-        angelMainViewModel.getAngelInfo()
         actionCheck()
     }
 
@@ -60,7 +51,6 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         }
 
         if (action.isNotEmpty() && action == "AngelHelp") {
-            Log.d(TAG, "actionCheck: $action")
             requireActivity().intent.putExtra("action", "")
             checkPermission(
                 VIEW_ANGEL_HELP,
@@ -81,7 +71,6 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
     }
 
     private fun initView() {
-        angelMainAdapter = AngelMainAdapter(complaintsClickListener)
         binding.apply {
             vm = angelMainViewModel
 
@@ -126,7 +115,6 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         entries1.add(PieEntry((17).toFloat(), "나의 민원"))
         entries1.add(PieEntry((54).toFloat(), "최근 도움"))
         entries1.add(PieEntry((6).toFloat(), "나의 도움"))
-//        entries1.add(PieEntry((40).toFloat(), ""))
         val ds1 = PieDataSet(entries1, " ")
 
         val colors: ArrayList<Int> = ArrayList()
@@ -138,35 +126,15 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         ds1.setValueTextSize(8f)
 
         val d = PieData(ds1)
-      //  d.setValueTypeface(tf)
         return d
     }
 
     private fun initViewModelCallback() {
-        job = lifecycleScope.launch {
-            angelMainViewModel.complaintsList.collectLatest {
-                if (it != null) {
-                    angelMainAdapter.submitData(it)
-                }
-            }
-        }
         lifecycleScope.launch {
             angelMainViewModel.apply {
                 angelInfoData.collectLatest {
                 }
             }
-        }
-        angelMainViewModel.getComplaintsList()
-
-    }
-
-    private val complaintsClickListener = object : ComplaintsClickListener {
-        override fun onClick(complaintsSeq: Long) {
-            findNavController().navigate(
-                AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsDetailFragment(
-                    complaintsSeq
-                )
-            )
         }
     }
 
@@ -195,12 +163,5 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
                 *permissions
             )
             .check()
-    }
-
-    private fun generateCenterText(): SpannableString? {
-        val s = SpannableString("Revenues\nQuarters 2015")
-        s.setSpan(RelativeSizeSpan(2f), 0, 8, 0)
-        s.setSpan(ForegroundColorSpan(Color.GRAY), 8, s.length, 0)
-        return s
     }
 }

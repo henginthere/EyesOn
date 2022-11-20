@@ -76,14 +76,14 @@
                     android:layout_marginVertical="8dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/tway_air"
-                    android:gravity="start"
+                    android:gravity="center_vertical"
                     android:maxLines="1"
                     android:text="@{data.content}"
                     app:layout_constraintBottom_toTopOf="@id/tv_complaints_address"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/cv_complaints_image"
                     app:layout_constraintTop_toBottomOf="@id/tv_complaints_title"
-                    tools:text="민원 내용 민원 내용 민원 내용 민원 내용" />
+                    tools:text="민원 내용" />
 
                 <TextView
                     android:id="@+id/tv_complaints_address"

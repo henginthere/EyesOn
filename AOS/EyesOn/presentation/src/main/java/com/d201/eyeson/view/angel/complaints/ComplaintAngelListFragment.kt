@@ -1,18 +1,11 @@
 package com.d201.eyeson.view.angel.complaints
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentComplaintAngelListBinding
-import com.d201.eyeson.databinding.FragmentComplaintsListBinding
 import com.d201.eyeson.view.angel.ComplaintsClickListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

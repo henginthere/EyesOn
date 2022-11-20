@@ -4,7 +4,6 @@ import android.content.Context
 import android.media.Image
 import android.opengl.GLES20
 import android.opengl.GLES30
-import android.util.Log
 import com.google.ar.core.Coordinates2d
 import com.google.ar.core.Frame
 import com.google.ar.core.exceptions.NotYetAvailableException
@@ -16,8 +15,6 @@ class DepthTextureHandler(var context: Context) {
     private var depthTextureId = -1
     private var depthTextureWidth = -1
     private var depthTextureHeight = -1
-    var distance1 = 0
-    var distance2 = 0
 
     /**
      * Creates and initializes the depth texture. This method needs to be called on a
@@ -52,25 +49,10 @@ class DepthTextureHandler(var context: Context) {
 
     fun update(frame: Frame) {
         try {
-//            val originImage = frame.acquireCameraImage()
             val depthImage = frame.acquireDepthImage16Bits()
-//            val rawDepthImage = frame.acquireRawDepthImage16Bits()
-
-            // Log.d(TAG, "originImage : ${originImage.width}  ${originImage.height}" )
-            Log.d(TAG, "originImage : ${depthImage.width}  ${depthImage.height}")
-//            Log.d(TAG, "originImage : ${rawDepthImage.width}  ${rawDepthImage.height}" )
             // 160*120 픽셀
             depthTextureWidth = depthImage.width
             depthTextureHeight = depthImage.height
-            Log.d(TAG, "depthTexturepixelStride : ${depthImage.planes[0].pixelStride}")
-            Log.d(TAG, "depthTexturerowStride : ${depthImage.planes[0].rowStride}")
-            Log.d(TAG, "depthTexturebuffer : ${depthImage.planes[0].buffer}")
-            Log.d(TAG, "depthTextureWidth : $depthTextureWidth")
-            Log.d(TAG, "depthTextureHeight : $depthTextureHeight")
-            Log.d(
-                TAG,
-                "depthTexturePixelStride : ${(depthTextureWidth * depthImage.planes[0].pixelStride)} : ${(depthTextureHeight * depthImage.planes[0].pixelStride)}"
-            )
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, depthTextureId)
             GLES20.glTexImage2D(
                 GLES20.GL_TEXTURE_2D,
@@ -83,9 +65,6 @@ class DepthTextureHandler(var context: Context) {
                 GLES20.GL_UNSIGNED_BYTE,
                 depthImage.planes[0].buffer
             )
-//            distance1 = getMillimetersDepth(depthImage, (depthTextureWidth*depthImage.planes[0].rowStride), (depthTextureHeight*depthImage.planes[0].rowStride))
-//            distance2 = getMillimetersDepth(depthImage, (depthTextureWidth*depthImage.planes[0].pixelStride), (depthTextureHeight*depthImage.planes[0].pixelStride))
-//            onDepthImageUpdateListener.onUpdateDepthImage(distance)
             depthImage.close()
         } catch (e: NotYetAvailableException) {
             // This normally means that depth data is not available yet.
@@ -100,9 +79,6 @@ class DepthTextureHandler(var context: Context) {
         val byteIndex = x * plane.pixelStride + y * plane.rowStride - 2
         val buffer = plane.buffer.order(ByteOrder.nativeOrder())
         val depthSample = buffer.getShort(byteIndex)
-        Log.d(TAG, "depthTexture byteIndex : $byteIndex")
-        Log.d(TAG, "depthTexture buffer: $buffer")
-        Log.d(TAG, "depthTexture depthSample: $depthSample")
         return depthSample.toInt()
     }
 

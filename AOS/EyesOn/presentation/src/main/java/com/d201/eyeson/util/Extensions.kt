@@ -10,7 +10,6 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicYuvToRGB
-import android.util.Log
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED
@@ -112,7 +111,6 @@ fun Any.objectToMultipartPart(value: Any): MultipartBody.Part {
 }
 
 fun String.imagePathToPartBody(key: String, file: File): MultipartBody.Part {
-    Log.d(TAG, "imageUriToPartBody: ${file}")
     return MultipartBody.Part.createFormData(
         name = key,
         filename = file.name,

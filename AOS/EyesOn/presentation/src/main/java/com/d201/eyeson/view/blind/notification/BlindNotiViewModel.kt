@@ -32,18 +32,20 @@ class BlindNotiViewModel @Inject constructor(
             selectAllNotiUseCase.execute().collectLatest {
                 if (it is ResultType.Success) {
                     _notis.value = it.data
-                    Log.d(TAG, "selectAllNotis: ${it.data}")
-                } else {
+                } else if(it is ResultType.Empty) {
+                    _notis.value = listOf()
+                }else{
                     Log.d(TAG, "selectAllNotis: Error")
                 }
+
             }
         }
     }
 
     fun deleteNoti(noti: Noti) {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d(TAG, "deleteNoti: ${noti}")
             deleteNotiUseCase.execute(noti)
+            selectAllNotis()
         }
     }
 }

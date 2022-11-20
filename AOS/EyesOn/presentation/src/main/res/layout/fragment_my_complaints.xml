@@ -13,6 +13,7 @@
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:layout_marginTop="32dp"
             android:contentDescription="@string/frag_my_complaints"
             app:layout_constraintTop_toTopOf="parent">
 

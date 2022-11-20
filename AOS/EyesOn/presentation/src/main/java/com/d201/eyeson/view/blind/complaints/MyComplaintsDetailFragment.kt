@@ -1,6 +1,5 @@
 package com.d201.eyeson.view.blind.complaints
 
-import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,7 +22,6 @@ class MyComplaintsDetailFragment :
     private val viewModel: MyComplaintsViewModel by viewModels()
     private lateinit var complaints: Complaints
     override fun init() {
-        Log.d(TAG, "init: ${args.complaintSeq}")
         initViewModel()
         initView()
     }

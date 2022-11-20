@@ -3,7 +3,6 @@ package com.d201.depth.depth.rendering
 import android.content.Context
 import android.opengl.GLES11Ext
 import android.opengl.GLES20
-import android.util.Log
 import com.d201.arcore.depth.rendering.ShaderUtil
 import com.google.ar.core.Coordinates2d
 import com.google.ar.core.Frame
@@ -58,7 +57,6 @@ class BackgroundRenderer {
     @Throws(IOException::class)
     fun createOnGlThread(context: Context?) {
         // Generate the background texture.
-        Log.d(TAG, "createOnGlThread: $context")
         val textures = IntArray(1)
         GLES20.glGenTextures(1, textures, 0)
         textureId = textures[0]

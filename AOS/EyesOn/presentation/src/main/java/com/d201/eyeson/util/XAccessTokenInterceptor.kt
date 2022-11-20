@@ -1,7 +1,6 @@
 package com.d201.eyeson.util
 
 import android.content.SharedPreferences
-import android.util.Log
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -24,8 +23,6 @@ class XAccessTokenInterceptor @Inject constructor(
         val request = chain.request().newBuilder()
             .addHeader(JWT, "Bearer $token")
             .build()
-        Log.d(TAG, "intercept headers: ${request.headers} ")
-        Log.d(TAG, "intercept body : ${request.body} ")
         return chain.proceed(request)
     }
 }

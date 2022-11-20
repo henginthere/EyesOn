@@ -7,6 +7,7 @@ import com.d201.domain.model.Complaints
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentMyComplaintsBinding
+import com.d201.eyeson.util.accessibilityEvent
 import com.d201.eyeson.view.blind.BlindComplaintsClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +36,12 @@ class MyComplaintsFragment :
         binding.apply {
             rvMyComplaints.apply {
                 adapter = myComplaintsAdapter
+            }
+            btnBack.apply {
+                accessibilityDelegate = accessibilityEvent(this, requireContext())
+                setOnClickListener {
+                    findNavController().popBackStack()
+                }
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.d201.eyeson.view.binding
 
 import android.net.Uri
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.Button
@@ -19,7 +18,6 @@ private const val TAG = "BindingAdapter"
 
 @BindingAdapter("imageLoader")
 fun imageLoader(view: ImageView, src: String?) {
-    Log.d(TAG, "imageLoader: ${S3_URL}$src")
     Glide.with(view.context)
         .load(Uri.parse("${S3_URL}$src"))
         .error(R.drawable.icon_no_image)

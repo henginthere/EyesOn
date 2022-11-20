@@ -331,7 +331,6 @@ public class BitmapUtils {
     }
 
     private static ByteBuffer imageToByteBuffer(final Image image) {
-        Log.d(TAG, "imageToByteBuffer: " + image.getWidth());
         final Rect crop = image.getCropRect();
         final int width = crop.width();
         final int height = crop.height();

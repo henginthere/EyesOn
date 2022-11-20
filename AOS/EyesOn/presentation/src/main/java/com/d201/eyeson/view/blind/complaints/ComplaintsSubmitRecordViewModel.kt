@@ -78,7 +78,7 @@ class ComplaintsSubmitRecordViewModel @Inject constructor(private val insertComp
     //STT
     private lateinit var speechRecognizer: SpeechRecognizer
 
-    private val _recordText: MutableStateFlow<String> = MutableStateFlow("안녕하세요")
+    private val _recordText: MutableStateFlow<String> = MutableStateFlow("민원 내용을 녹음해 주세요")
     val recordText get() = _recordText
 
     private val _statusSTT: MutableStateFlow<Boolean> = MutableStateFlow(false)

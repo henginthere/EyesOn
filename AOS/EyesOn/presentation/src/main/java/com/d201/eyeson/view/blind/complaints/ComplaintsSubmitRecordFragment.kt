@@ -1,7 +1,6 @@
 package com.d201.eyeson.view.blind.complaints
 
 import android.location.Location
-import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -64,7 +63,6 @@ class ComplaintsSubmitRecordFragment :
                 }
             }
             location?.observe(viewLifecycleOwner) {
-                Log.d(TAG, "initViewModel: GPS LOCATION : ${it}")
                 this@ComplaintsSubmitRecordFragment.location = it
                 binding.btnSubmit.isEnabled = true
             }
