@@ -99,17 +99,10 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             constraintLayoutGuide.setOnClickListener {
                 showToast("준비 중인 기능입니다")
             }
-//            cvComplaintsList.setOnClickListener { }
-//            cvResponseHelp.setOnClickListener { }
 
-//            constraintLayoutBottom.setOnClickListener {
-//
-//            }
 
 
             pieChart.getDescription().setEnabled(false)
-            // radius of the center hole in percent of maximum radius
-            // radius of the center hole in percent of maximum radius
             pieChart.setHoleRadius(45f)
             pieChart.setTransparentCircleRadius(50f)
             pieChart.animateXY(1000, 1000);
@@ -124,17 +117,18 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
     }
 
     private fun generatePieData(): PieData? {
-        val count = 4
+
         val entries1: ArrayList<PieEntry> = ArrayList()
-        entries1.add(PieEntry((Math.random() * 60 + 40).toFloat(), "21개"))
-        //   entries1.add(PieEntry((Math.random() * 60 + 40).toFloat(), "21개"))
-        val ds1 = PieDataSet(entries1, "Quarterly Revenues 2015")
-        ds1.setColors(R.color.gradient_start, R.color.gradient_end, R.color.gradient_center)
+        entries1.add(PieEntry((245).toFloat(), "245개"))
+        entries1.add(PieEntry((6).toFloat(), "6개"))
+        entries1.add(PieEntry((40).toFloat(), "17개"))
+        val ds1 = PieDataSet(entries1, " ")
+        //ds1.setColors(R.color.gradient_start, R.color.gradient_end, R.color.gradient_center)
         ds1.setSliceSpace(2f)
         ds1.setValueTextColor(Color.WHITE)
-        ds1.setValueTextSize(12f)
+        ds1.setValueTextSize(24f)
         val d = PieData(ds1)
-        //  d.setValueTypeface(tf)
+      //  d.setValueTypeface(tf)
         return d
     }
 
