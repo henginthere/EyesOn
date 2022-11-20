@@ -14,19 +14,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "348486946008-so2a5fkmicdng03buchcu3h9h13fjnfu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.d201.eyeson",
-            "certificate_hash": "1d2748d09b6b954cc0883154e08d6d519e40f607"
-          }
-        },
-        {
           "client_id": "348486946008-thjodigtsj86h4hlk9g3bnbob0rg2cgl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.d201.eyeson",
             "certificate_hash": "76890492ab64f10177d4c20b8bc997b1d6010651"
+          }
+        },
+        {
+          "client_id": "348486946008-vi01n9kusmn8cftlc5o939mcooe267o1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.d201.eyeson",
+            "certificate_hash": "1d2748d09b6b954cc0883154e08d6d519e40f607"
           }
         },
         {
