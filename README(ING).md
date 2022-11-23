@@ -140,6 +140,6 @@
 #### 아키텍처
 >안드로이드는 클린 아키텍처를 도입했습니다.
 <br/> 
-<img src="/uploads/8fd5fba52ee0259d389cf059dc49351b/CleanArchitecture.png"height="400"/>
+<img src="/uploads/8fd5fba52ee0259d389cf059dc49351b/CleanArchitecture.png"height="300"/>
 <br/>
 <br/>
