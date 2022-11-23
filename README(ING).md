@@ -1,7 +1,7 @@
 # EyesOn
 ### 시각장애인의 눈[:Eyes] 을 뜨게[:On] 해주다.
 <br/>
-<img src="/uploads/8826ed638e19fc4b7721779382cd9063/app_logo.png"  width="200" height="200"/>  
+<img src="/uploads/8826ed638e19fc4b7721779382cd9063/app_logo.png" width="200" height="200"/>  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/uploads/87073df6594b49852dcdb0f2a34d0fbd/logo.png"  width="35%" height="35%"/>  
 <br/><br/>
  
@@ -35,9 +35,10 @@
 
 ## 📝 Design
 
-> 사용 기술
+#### 사용 기술
 <br/>
-프로젝트에서 사용된 기술들입니다.   <br/>
+> 프로젝트에서 사용된 기술들입니다.   <br/>
 <br/>  
-![tech_stack](/uploads/252e6871f3645ccab61e0015c4bee5ac/tech_stack.png)
+<img src="/uploads/252e6871f3645ccab61e0015c4bee5ac/tech_stack.png"height="400"/>  
+
 
