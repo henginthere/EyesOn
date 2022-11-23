@@ -39,4 +39,5 @@
 <br/>
 프로젝트에서 사용된 기술들입니다.   <br/>
 <br/>  
-   ![techstack](/uploads/8d7dec9ffedabf839469d6038d8bc711/techstack.png)    
+![tech_stack](/uploads/252e6871f3645ccab61e0015c4bee5ac/tech_stack.png)
+
