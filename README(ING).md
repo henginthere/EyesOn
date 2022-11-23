@@ -1,7 +1,10 @@
 # EyesOn
 
-![app_logo](/uploads/8826ed638e19fc4b7721779382cd9063/app_logo.png){: width="100" height="100"}
 
+<img src="/uploads/8826ed638e19fc4b7721779382cd9063/app_logo.png"  width="200" height="200"/>  
+<img src="/uploads/87073df6594b49852dcdb0f2a34d0fbd/logo.png"  width="35%" height="35%"/>  
+
+![logo](/uploads/87073df6594b49852dcdb0f2a34d0fbd/logo.png)
 **[애플리케이션 아이콘]**
 
 ![             [Eyes On 로고_1]](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/32eb4757-85bf-4b2c-8b66-b97809958f9d/logo.png)
