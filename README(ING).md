@@ -1,6 +1,6 @@
 # EyesOn
 
-![**[애플리케이션 아이콘]**](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b3f18430-3cfc-4056-bb79-edc71f3a8b4d/app_logo.png)
+![app_logo](/uploads/8826ed638e19fc4b7721779382cd9063/app_logo.png){: width="100" height="100"}
 
 **[애플리케이션 아이콘]**
 
