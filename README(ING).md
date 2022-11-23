@@ -37,7 +37,7 @@
 
 #### 사용 기술
 
->프로젝트에서 사용된 기술들입니다.   
+>프로젝트에서 사용된 기술들입니다.
 <br/>  
 <img src="/uploads/252e6871f3645ccab61e0015c4bee5ac/tech_stack.png"height="400"/>  
 <br/>
@@ -45,7 +45,7 @@
 
 #### 프로젝트 구조도
 
->프로젝트 구조도입니다.    
+>프로젝트 구조도입니다.
 <br/>
 <img src="/uploads/1a13669dd82686460f621842717a9dcb/SystemArchitecture.png"height="400"/>  
 <br/>
