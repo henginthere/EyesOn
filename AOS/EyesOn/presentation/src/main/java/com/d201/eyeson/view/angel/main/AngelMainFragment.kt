@@ -6,6 +6,7 @@ import android.graphics.Color
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.d201.domain.model.AngelInfo
 import com.d201.eyeson.R
 import com.d201.eyeson.base.BaseFragment
 import com.d201.eyeson.databinding.FragmentAngelMainBinding
@@ -34,12 +35,8 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
         initListener()
         initView()
         initViewModelCallback()
-        actionCheck()
-    }
-
-    override fun onResume() {
-        super.onResume()
         angelMainViewModel.getAngelInfo()
+        actionCheck()
     }
 
     private fun actionCheck() {
@@ -66,74 +63,82 @@ class AngelMainFragment : BaseFragment<FragmentAngelMainBinding>(R.layout.fragme
             btnSetting.setOnClickListener {
                 findNavController().navigate(AngelMainFragmentDirections.actionAngelMainFragmentToAngelSettingFragment())
             }
-
+            btnWaitingComplaints.setOnClickListener {
+                findNavController().navigate(
+                    AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsListFragment()
+                )
+            }
+            btnMyComplaints.setOnClickListener {
+                findNavController().navigate(
+                    AngelMainFragmentDirections.actionAngelMainFragmentToComplaintAngelListFragment()
+                )
+            }
+            constraintLayoutGuide.setOnClickListener {
+                showToast("준비 중인 기능입니다")
+            }
         }
     }
 
     private fun initView() {
         binding.apply {
             vm = angelMainViewModel
+            initChart()
+        }
+    }
 
-            btnWaitingComplaints.setOnClickListener {
-                findNavController().navigate(
-                    AngelMainFragmentDirections.actionAngelMainFragmentToComplaintsListFragment()
-                )
-            }
-
-            btnMyComplaints.setOnClickListener {
-                findNavController().navigate(
-                    AngelMainFragmentDirections.actionAngelMainFragmentToComplaintAngelListFragment()
-                )
-            }
-
-            constraintLayoutGuide.setOnClickListener {
-                showToast("준비 중인 기능입니다")
-            }
-
-
-
-            pieChart.getDescription().setEnabled(false)
-            pieChart.setHoleRadius(45f)
-            pieChart.setTransparentCircleRadius(50f)
+    private fun initChart() {
+        binding.apply {
+            pieChart.description.isEnabled = false
+            pieChart.holeRadius = 45f
+            pieChart.transparentCircleRadius = 50f
             pieChart.animateXY(1000, 1000);
-            val l: Legend = pieChart.getLegend()
-            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP)
-            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT)
-            l.setOrientation(Legend.LegendOrientation.VERTICAL)
+
+            val l: Legend = pieChart.legend
+            l.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+            l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+            l.orientation = Legend.LegendOrientation.VERTICAL
             l.setDrawInside(false)
             pieChart.legend.isEnabled = false
 
             pieChart.setEntryLabelColor(Color.parseColor("#181B68"))
-            pieChart.setData(generatePieData())
         }
     }
 
-    private fun generatePieData(): PieData? {
-
+    private fun generatePieData(angelInfo: AngelInfo): PieData? {
         val entries1: ArrayList<PieEntry> = ArrayList()
-        entries1.add(PieEntry((65).toFloat(), "최근 민원"))
-        entries1.add(PieEntry((17).toFloat(), "나의 민원"))
-        entries1.add(PieEntry((54).toFloat(), "최근 도움"))
-        entries1.add(PieEntry((6).toFloat(), "나의 도움"))
+        entries1.add(PieEntry((angelInfo.compCnt).toFloat(), "민원처리 횟수"))
+        entries1.add(PieEntry((angelInfo.helpCnt).toFloat(), "도움 횟수"))
         val ds1 = PieDataSet(entries1, " ")
 
         val colors: ArrayList<Int> = ArrayList()
         for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
 
-        ds1.setColors(colors)
-        ds1.setSliceSpace(2f)
-        ds1.setValueTextColor(Color.parseColor("#181B68"))
-        ds1.setValueTextSize(8f)
+        ds1.colors = colors
+        ds1.sliceSpace = 2f
+        ds1.valueTextColor = Color.parseColor("#181B68")
+        ds1.valueTextSize = 8f
 
         val d = PieData(ds1)
         return d
     }
 
     private fun initViewModelCallback() {
-        lifecycleScope.launch {
-            angelMainViewModel.apply {
-                angelInfoData.collectLatest {
+        angelMainViewModel.apply {
+            angelInfoSuccess.observe(viewLifecycleOwner) {
+                when (it) {
+                    true -> updateAngelInfo()
+                    false -> {}
                 }
+            }
+        }
+    }
+
+    private fun updateAngelInfo() {
+        angelMainViewModel.apply{
+            binding.apply {
+                pieChart.data = generatePieData(angelInfoData.value!!)
+                tvHelpCount.text = "${angelInfoData.value!!.helpCnt} 회"
+                tvComplaintsCount.text = "${angelInfoData.value!!.compCnt} 회"
             }
         }
     }

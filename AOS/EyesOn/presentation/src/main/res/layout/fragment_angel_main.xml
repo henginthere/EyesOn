@@ -80,7 +80,7 @@
                         android:layout_marginStart="8dp"
                         android:fontFamily="@font/tway_air"
                         android:layout_marginTop="32dp"
-                        android:text="내가 처리한 민원"
+                        android:text="나의 정보"
                         android:textColor="@color/angel_text"
                         android:textSize="20sp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -151,14 +151,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        tools:ignore="17회"
                         android:fontFamily="@font/tway_air"
-                        android:textColor="@color/angel_text"
                         android:text="17회"
+                        android:textColor="@color/angel_text"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toTopOf="@id/tv_complaints_count_header"
                         app:layout_constraintStart_toEndOf="@id/iv_complaints"
-                        app:layout_constraintTop_toTopOf="@id/iv_complaints"/>
+                        app:layout_constraintTop_toTopOf="@id/iv_complaints"
+                        tools:ignore="17회" />
                     <TextView
                         android:id="@+id/tv_complaints_count_header"
                         android:layout_width="wrap_content"
