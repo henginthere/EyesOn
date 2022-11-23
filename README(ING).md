@@ -41,12 +41,14 @@
 <br/>  
 <img src="/uploads/252e6871f3645ccab61e0015c4bee5ac/tech_stack.png"height="400"/>  
 <br/>
+<br/>
 
 #### 프로젝트 구조도
 
 >프로젝트 구조도입니다.    
 <br/>
 <img src="/uploads/1a13669dd82686460f621842717a9dcb/SystemArchitecture.png"height="400"/>  
+<br/>
 <br/>
 
 #### ERD
@@ -55,4 +57,5 @@
 <br/>
 <img src="/uploads/83b158f5064b33ec8d5d9f1b24bd631a/ERD.png"height="400"/>  
 <br/><br/>
+
 ## 📱 Android
