@@ -36,8 +36,8 @@
 ## 📝 Design
 
 #### 사용 기술
-<br/>
-> 프로젝트에서 사용된 기술들입니다.   <br/>
+
+>프로젝트에서 사용된 기술들입니다.   <br/>
 <br/>  
 <img src="/uploads/252e6871f3645ccab61e0015c4bee5ac/tech_stack.png"height="400"/>  
 
