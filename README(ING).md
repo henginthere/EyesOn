@@ -35,8 +35,12 @@
 
 ## 📝 Design
 
-> <h3><font color="green">전체 기술 스택</font></h3>
-<br/>
-<img src="/uploads/f967fd734fb263f42a523ce20654721d/tech_stack.png"  width="200" height="200"/>  
-<img src="/uploads/f967fd734fb263f42a523ce20654721d/tech_stack.png"/>  
-![tech_stack](/uploads/f967fd734fb263f42a523ce20654721d/tech_stack.png)
+### 사용 기술
+
+> 프로젝트에서 사용된 기술들입니다.  
+
+<img src="/uploads/f967fd734fb263f42a523ce20654721d/tech_stack.png"  width="200" height="200"/>  <br/>
+<img src="/uploads/946e9d700551fc647c952795e6e81b94/tech_stack.png"  width="200" height="200"/>    <br/>
+<img src="/uploads/946e9d700551fc647c952795e6e81b94/tech_stack.png"/>  <br/>
+![tech_stack](/uploads/f87f9ca0c9c1dbe86c3a5f400c65f4de/tech_stack.png)  <br/>
+![tech_stack](/uploads/f967fd734fb263f42a523ce20654721d/tech_stack.png)<br/>  <br/>
