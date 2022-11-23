@@ -173,7 +173,7 @@ public class CompService {
         ResponseCompDto result = CompMapper.INSTANCE.toDto(complaintsEntity);
 
         AngelInfoEntity angelInfoEntity = angelRepository.findByUserEntity_UserSeq(getLoginUser().getUserSeq()).get();
-        angelInfoEntity.setAngelCompCnt(angelInfoEntity.getAngelHelpCnt() + 1);
+        angelInfoEntity.setAngelCompCnt(angelInfoEntity.getAngelCompCnt() + 1);
         angelRepository.save(angelInfoEntity);
 
         //알림보내기
