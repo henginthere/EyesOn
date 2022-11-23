@@ -36,5 +36,7 @@
 ## 📝 Design
 
 > <h3><font color="green">전체 기술 스택</font></h3>
-
+<br/>
+<img src="/uploads/f967fd734fb263f42a523ce20654721d/tech_stack.png"  width="200" height="200"/>  
 <img src="/uploads/f967fd734fb263f42a523ce20654721d/tech_stack.png"/>  
+![tech_stack](/uploads/f967fd734fb263f42a523ce20654721d/tech_stack.png)
