@@ -1,305 +1,302 @@
-# README.md
+# 3등 축하 >< 너무 기쁘지만 리드미는 작성해야지
 
-## Eyeon
+**아래 참고해서 작성중입니다**
 
-시각장애 및 저시력자를 위한 보조서비스.
+[https://github.com/RichardLitt/standard-readme/blob/master/spec.md#banner](https://github.com/RichardLitt/standard-readme/blob/master/spec.md#banner) 
 
-## **프로젝트 소개**
+# 👁️ EyesOn
 
-> 스마트폰을 활용하여 보행 중 위험과 생활 속 불편함을 조금이라도 해소할 수 있도록 도움을 주기 위한 애플리케이션 입니다.
+![**[애플리케이션 아이콘]**](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/app_logo.png)
 
-글자 인식, 사물 인식, 장애물 인식, 도움 요청, 민원 처리의 기능이 있습니다.
-시각장애인을 도와주는 엔젤 용 애플리케이션이 존재합니다.
+**[애플리케이션 아이콘]**
 
-## 프로젝트 기술 스택
+![             [Eyes On 로고_1]](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/logo.png)
 
-**형상관리**
-- Git
+             [Eyes On 로고_1]
 
-**커뮤니케이션**
-- Mattermost, Webex, notion
+![              [Eyes On 로고_2]](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/logo_navi.png)
 
-**개발환경**
-- OS: Window 10, 11
-- IDE
-    - IntelliJ
-    - Android Studio
-    - UI/UX: Figma
-- Database 
-    - Server: AWS RDS
-    - DBMS: MySQL 8.0.31
-- Server: AWS EC2 
-    - OS: Ubuntu 20.04 LTS (GNU/Linux 5.4.0-1018-aws x86_64)
-    - SSH: MobaXterm
-- File Server: AWS S3
-- GPU Server: JupyterHub(SSAFY)
-    - OS: Ubuntu 20.04 LTS (Linux 5.4.0-124-generic x86_64)
-    - CPU: Intel Xeon Gold 6248
-    - GPU: 10 X Nvidia Tesla V100 32GB
-- CI/CD: Jenkins, Docker, Nginx
+              [Eyes On 로고_2]
 
-**상세 기술**
- 
-- Frontend (Android)
-    - Android Studio Dolphin | 2021.3.1
-    - Kotlin 1.7.20
-    - JDK 11.0.13
-    - Gradle 7.5
-    - SDK ( Min / Target / Compile - 24 / 33 / 33 )
-    - WebRTC 1.0.32
-    - Retrofit 2.9.0
-    - Tensorflow-lite 2.9.0
-    - AR Core 1.34
-    - ML Kit 18.5
-    - Dagger Hilt 2.44
-    - WebRTC 1.0.32006
-    - Firebase Cloud Messaging 23.1
-    - Room 2.4.3
-    - Paging 3.1.1
+**EyesOn** 프로젝트는 시각장애인 및 저시력자를 위한 보조 애플리케이션 입니다.
 
-- Backend
-    - JDK: 11
-    - Spring Boot: 2.7.5
-    - Gradle 7.5
-    - Spring Security
-    - Spring Data JPA
-    - Springfox Swagger UI: 2.9.2
-    - Jasypt
-    - Lombok
-    - Logger
-    - Json Web Token
-    - GSON
-    - AWS
-    - Naver Cloud Api
+시각 장애의 92%는 후천적이며, 이들의 90%는 점자를 읽지 못합니다. 또한 인도의 높이가 낮은 장애물들은 흰지팡이로도 감지하기 어려워 큰 사고를 야기합니다. 
+이러한 보행 중 위험과 생활 속 불편함을 조금이나마 해소할 수 있도록 저희는  
 
-- Server 
-    - AWS EC2
-    - AWS S3
-    - Ubuntu 20.04 LTS
-    - Docker
-    - Jenkins
-    - CertBot
-- IDE 	
-    - HeidiSQL 12.1.0
-    - WorkBench 8.0CE
-    - Android Studio Dolphin | 2021.3.1
-    - IntelliJ IDEA | 2022.1.4
-    - Spring Tool Suite 3.9.14
+<aside>
+💡 **시각장애인의 눈[:Eyes] 을 뜨게[:On] 해주다.**
 
-- AI
-    - Python 3.7.12
-    - Tensorflow(GPU) 2.8.0
-    - CudaToolkit: 11.3.1
-    - CuDNN 8.4.1.50
-    - Tensorflow-lite : 2.9.0
-    - JupyterHub
-    - Anaconda3
+</aside>
 
-## 빌드 상세 내용
+라는 의미의 Eyes On(아이즈 온) 프로젝트를 진행하게 되었습니다.
 
-**백엔드**
-- Dockerfile ( ~/BE/Dokerfile )
-![./exec/images/image-1.png](./exec/images/image-1.png)
-    - Jasypt 암호 입력을 위한 변수 추가
+## ERD
 
-- Jenkinsfile  ( ~/Jenkinsfile )
-![./exec/images/image-2.png](./exec/images/image-2.png)
+> 사용자, 엔젤, 민원 기능이 유기적으로 연결되어있고,
+> 
+> 
+> 그를 효율적으로 활용하기 위해 ERD를 작성했습니다.
+> 
 
-**프론트엔드**
-   
-카메라, 마이크 권한을 사용하기 때문에 에뮬레이터가 아닌 휴대폰에서 사용해야 한다.
-에뮬레이터를 사용할 경우, 빌드가 되더라도 앱이 강제 종료되며 기능들을 테스트할 수 없다.
-빌드 과정은 다음과 같다.
+![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled.png)
 
-1. Android Studio 설치 혹은 버전 확인 – Dolphin (2021.3.1)
-```
-Android Studio 버전 확인을 원할 경우,
-Help – Check for Updates – 오른쪽 아래 팝업의 Update 파란색 글씨 클릭 – Configure 버튼 누르면 버전 확인 가능
-```
-   
-예:   
-![./exec/images/image-3.png](./exec/images/image-3.png)
+### 사용 기술
 
-2. Kotlin 버전 확인 (N-1.7.20인지 확인)
-```
-File – Settings – Languages & Frameworks – Kotlin 클릭.
-Current Kotlin plugin version 확인.
+> 프로젝트에서 사용된 기술들입니다.
+> 
+
+![tech_stack.png](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/tech_stack.png)
+
+### 프로젝트 구조도
+
+> 프로젝트 구조도 입니다.
+> 
+
+![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled%201.png)
+
+# **📱Android**
+
+### 디렉터리 구조도
+
+```markdown
+📁AOS
+├──📁**presentation**
+│ ├──📁base
+│ ├──📁di
+│ ├──📁module
+│ ├──📁service
+│ ├──📁util
+│ ├──📁view
+│ │ ├──📁binding
+│ │ ├──📁angel
+│ │ ├──📁blind
+│ │ ├──📁intro
+│ │ ├──📁loading
+│ │ ├──📁login
+│ │ │ ├──📁join
+│ │ │ ├──📁login
+├──📁**domain**
+│ ├──📁base
+****│ ├──📁model
+│ ├──📁repository
+│ ├──📁usecase
+│ │ │ ├──📁complaints
+│ │ │ ├──📁help
+│ │ │ ├──📁noti
+│ │ │ ├──📁user
+│ ├──📁utils
+├──**📁data**
+│ ├──📁api
+│ ├──📁datasource
+│ │ ├──📁paging
+│ ├──📁mapper
+│ ├──📁model
+│ │ │ ├──📁entity
+│ │ │ ├──📁request
+│ │ │ ├──📁response
+│ ├──📁repository(Impl)
+│ ├──📁utils
+├──**📁mlkit**
+│ ├──📁objectdetecor'
+│ ├──📁textdetector
+****├──**📁webrtc**
+│ ├──📁constants
+│ ├──📁observers
+│ ├──📁openvidu
+│ ├──📁utils
+│ ├──📁websocket
+**├──📁arcore**
+│ ├──📁common
+│ ├──📁rendering
 ```
 
-3. 프로젝트 열기
-```
-File – Open 탭 클릭 후,
-AOS 폴더 안, Sonmal(안드로이드 아이콘) 클릭 후에 OK 버튼 클릭.
-```
-   
-![image-4.png](./exec/images/image-4.png)
+### 아키텍처
 
-4. 프로젝트의 Gradle Version 확인
-```
-File – Project Structure 탭 클릭.
-Project 탭에서 Gradle Version이 맞는지 확인. (Gradle Version : 7.5)
-```
+> 안드로이드는 **클린 아키텍처**를 도입했습니다.
+> 
 
-5. Gradle JDK 확인
-```
-File – Settings – Build, Execution, Deployment – Build Tools – Gradle 클릭 후,
-Gradle JDK가 version 11.0.13으로 되어 있는지 확인
-```
+![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled%202.png)
 
-6.	휴대폰과 Android Studio 연결을 위해, 휴대폰 개발자 모드 켜서 USB 디버깅 허용 시키기
-   
-   휴대폰마다 방법이 다르므로, ‘휴대폰 기종 + 개발자 모드’를 검색 키워드로 검색해, 개발자 모드를 활성화 하고 USB 디버깅을 허용시켜준다.   
-   예시 링크 : https://learnandcreate.tistory.com/796
+### 사용한 라이브러리
 
-7.	아래와 같이 휴대폰 연결을 확인하고, 초록색 play 버튼 클릭.
-   
-   ![image-5.png](./exec/images/image-5.png)
+```markdown
+	
+| Name            | Description                                  |
+| --------------- | -------------------------------------------- |
+| Navigation      | 프래그먼트 전환 라이브러리                   |
+| Glide           | 이미지 로딩 라이브러리                       |
+| ViewModel       | 수명주기 고려 데이터를 저장, 관리 라이브러리 |
+| Coroutine       | 비동기 처리 라이브러리                       |
+| Coroutine Flow  | 비동기 데이터 스트림                         |
+| TedPermission   | 안드로이드 권한 라이브러리                   |
+| Retrofit        | HTTP 통신 라이브러리                         |
+| Dagger Hilt     | 의존성 주입 라이브러리                       |
+| okhttp3         | HTTP 통신 라이브러리                       |
+| Google Auth     | 구글 소셜 로그인                             |
+| Lottie          | 안드로이드 애니메이션 라이브러리             |
+| MPAndroidChart  | 안드로이드 차트 라이브러리                  |
+| ARCore          | 구글 증강 현실 플랫폼 API                  |
+| ML Kit          | 구글 머신러닝 모바일 SDK                  |
+| Paging 3        | 대규모 데이터 세트의 데이터 페이지 로드 라이브러리 |
+| TensorFlow lite | 구글 머신러닝 오픈스스 모바일 라이브러리 |
+| FCM             | 구글 알림 메시지 전송 라이브러리 |
+| OpenVidu        | WebRTC 기반 화상 미팅 라이브러리 |
 
-8.	Build 성공 시, 휴대폰에 앱 첫번째 화면이 나오면서 설치를 확인할 수 있다!
-
-
-## 서버 세팅
-
-**HTTPS 설정**
-- 미리 도메인 등록&연결 해놓거나, SSAFY EC2 도메인 사용. 80포트는 열려 있어야 함
-
-1) 80포트 열기
-```
-sudo ufw allow 80
-sudo ufw status
-```
-2) Certbot 설치
-```
-sudo apt-get update
-sudo snap install core; sudo snap refresh core
-sudo snap install –classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-```
-3) Nginx 설치
-```
-sudo apt install nginx
-```
-4) Certbot 인증키 발급
-```
-sudo certbot –nginx –d [발급받은_도메인주소]
-```
-5) nginx 설정
-```
-cd /etc/nginx/sites-available
-sudo nano default
-```
-![image-6.png](./exec/images/image-6.png)
-
-6) nginx 시작
-```
-sudo nginx
 ```
 
-**젠킨스 컨테이너 세팅**
-1)	Docker 설치
-```
-sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-curl –fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add –
-sudo add-apt-repository \ "deb [arch=amd64] https://download.docker.com/linux/ubuntu \ $(lsb_release -cs) \ stable"
-sudo apt-get update && sudo apt-get install docker-ce docker-ce-cli containerd.io
-```
-2)	젠킨스 설치 및 Docker volume연결
-```
-sudo docker run -d --name jenkins -u root --privileged \ -p '8080:8080' \ -v '/home/ubuntu/docker-volume/jenkins:/var/jenkins_home' \ -v '/var/run/docker.sock:/var/run/docker.sock' \ -v '/usr/bin/docker:/usr/bin/docker' \ jenkins/jenkins
-```
-3) 젠킨스 접속
-```
-- 설정한 포트로 젠킨스 접속
-- 초기 비밀번호 : sudo cat /var/lib/jenkins/secrets/initialAdminPassword 
-```
-4) 젠킨스 설정 
-```
-- 플러그인 설치 (Gitlab, SSH)
-- 새로운 아이템 추가 > Pipeline
-	- 빌드 유발 : Gitlab webhook – 고급 – Secret Token에 깃랩 리포지토리에서 발급한 token 추가
-		- Definition을 Pipeline script from SCM 선택
-- RepositoryURL , Credential에 Gitlab ID/PW 입력
-		- Branches to build= */Backend로 지정
-		- Script Path = Jenkinsfile 
-```
-5) 서버 로그
-```
-sudo docker ps –a
-sudo docker logs –f [backimg docker container id]
-```
-- 젠킨스로 빌드시 프로젝트 경로는 /home/ubuntu/docker-volume/jenkins/workspace/EyesOn/BE
+# **💽**BACK-END
 
-**MySQL 세팅**
+## 디렉터리 구조
 
-1)	docker pull mysql
-2)	docker run --name mysql -e MYSQL_ROOT_PASSWORD=<password> -e TZ=Asia/Seoul -p 3121:3306 mysql:latest 
-3)	sudo ufw allow 3121
-4)	docker ps -a
-5)	docker exec -it <container-id> /bin/bash
-6)	mysql -u root -p <password>
-7)	mysql> use mysql;
-8)	mysql> update user set user=’admin-id’ where user=’root’;
-9)	mysql> flush privileges;
-
-**OpenVidu 세팅**
-1)	Docker, Docker Compose 설치
-2)	Openvidu 설치
-```
-sudo su
-cd /opt
-curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_openvidu_latest.sh | bash
-```
-3)	OpenVidu 환경 설정
-```
-cd openvidu
-nano .env
-```
-```
-DOMAIN_OR_PUBLIC_IP=서버 도메인 
-OPENVIDU_SECRET=암호 
-CERTIFICATE_TYPE=letsencrypt 
-HTTPS_PORT=443
-```
-4)	Docker 설정
-```
-nano docker-compose.yml
-```
-```
-SERVER_SSL_ENABLED=true
-```
-5)	OpenVidu 시작
-```
-./openvidu start
+```markdown
+📁BACK
+├──📁**main**
+│ ├──📁java
+│ │ ├──📁config
+│ │ ├──📁controller
+│ │ ├──📁dto
+│ │ ├──📁entity
+│ │ ├──📁jwt
+│ │ ├──📁mapper
+│ │ ├──📁repository
+│ │ ├──📁service
+│ │ ├──📁util
+│ ├──📁resources
+│ │ ├──📁firebase
+│ │ ├──📁templates
 ```
 
-## DB 계정
+## 아키텍처 구조
 
-**MySQL 원격 접속**   
+### **기타**
 
-![image-7.png](./exec/images/image-7.png)   
-- Workbench를 실행합니다.
-- MySQL Connection을 추가하기 위해 (+) 버튼을 클릭합니다.
+- **[와이어프레임](https://www.figma.com/file/Fh80vZbnQpV1oeqbSWwYxf/%EC%9E%90%EC%9C%A8?node-id=27%3A28&t=DkyqGkomxJYHRJXZ-0)**
+    - 피그마를 사용하여 제작된 와이어프레임
+- [API Documentation](https://www.notion.so/API-1227dcd49efd492383dbdfc127eaf667)
+    - RESTful 서버의 API 문서입니다.
+    
 
-**Connection 설정**
-![image-8.png](./exec/images/image-8.png)   
-- Connection Name: eyeson
-- Hostname: d201.kro.kr:3121
-- Username: admin-jbj
-- Password: hy1221
+### 
 
-## 외부서비스
+## 사용한 라이브러리
 
-**Google OAuth**   
-https://developers.google.com/identity/protocols/oauth2/native-app   
-![image-9.png](./exec/images/image-9.png)
+## ⭐주요기능
 
-**Firebase Cloud Messaging**   
-https://firebase.google.com/docs/cloud-messaging/android/client   
-![image-10.png](./exec/images/image-10.png)   
+→ 링크 달아서 GIF , 설명 ( 모든 기능 ) 
 
-![image-11.png](./exec/images/image-11.png)
+### 🤍 엔젤
 
+- 엔젤과의 연결
+    - 엔젤은 알림 허용 시간 ( 요일, 시간 ) 을 설정하고 원하는 시간에만 엔젤과의 연결 알림을 받을 수 있습니다.
+    - 화상통화를 통해 시각장애인에게 도움을 줄 수 있습니다.
 
+- 민원 처리
+    - 엔젤은 시각장애인이 등록한 민원을 검토하고 국민신문고에 접수할 수 있습니다.
+    - 접수 후 민원 처리 상태 입력을 통해 시각장애인에게 처리 현황을 안내해줍니다.
 
+### 💜 시각장애인
 
+- 글자 인식
+    - 글자를 인식하면 자막과 함께 음성으로 글자를 읽어줍니다.
+    
+- 물건 찾기
+    - 찾고 싶은 물건을 음성으로 입력합니다.
+    - 카메라로 시야를 비춥니다.
+    - 입력된 물건이 카메라에 잡히면 어느 위치에 얼만큼 떨어져있는지 음성으로 안내해줍니다.
+        - ex) 세시 방향 29cm에 마우스가 있습니다.
+        
+- 장애물 인식
+    - 장애물이 인식되면 어떤 장애물인지, 얼만큼 떨어져있는지 음성으로 안내해줍니다.
+        - ex) 5.9m 앞에 킥보드가 있습니다.
 
+- 민원 신청
+    - 민원 신청에 쓸 사진을 촬영합니다.
+    - 민원 신청 내용을 음성으로 입력합니다.
+    - 입력된 음성은 텍스트로 변환되어 민원 신청을 할 수 있습니다.
+    - 신청된 민원은 엔젤이 검토 후 국민신문고에 등록합니다.
+    - 그 후 진행되는 과정은 엔젤이 사용자에게 알림을 통해 정보 전달을 해줍니다.
+        - 접수 전
+        - 반환
+        - 접수 완료
+        - 처리 완료
+
+- 엔젤과의 연결
+    - 엔젤과의 화상통화를 통해 간단한 문제를 해결할 수 있습니다.
+
+## 팀원 **소개**
+
+### **🍀 EyesOn 팀**
+
+- 김지수 - Backend, AI 전처리 작업
+- 배혜연 - Backend, Infra, AI 전처리 작업
+- 박종욱 - Backend, AI 전처리 작업
+- 권용준 - AOS
+- 김명지 - AOS
+- 정봉진 - AOS
+
+## 프로젝트 구성 요소
+
+### Android **구성 요소**
+
+| Package | Version | Comment |
+| --- | --- | --- |
+| Dagger Hilt | 2.44 | 의존성 주입 라이브러리  |
+| Retrofit | 2.9.0 | HTTP 통신 라이브러리 |
+| OKHttp | 4.10.0 | HTTP 통신 라이브러리 |
+| Coroutines | 1.6.4 | 비동기 처리 라이브러리 |
+| Navigation | 2.5.3 | 화면 이동 라이브러리 |
+| PlayServicesAuth | 20.3.0 | Google OAuth |
+| AR Core | 1.34.0 | AR 사용을 위한 라이브러리 |
+| Tensorflow-lite-task-vision | 0.4.0 | Object Detection |
+| Tensorflow-lite-gpu | 2.9.0 | Object Detection에 GPU 사용 |
+| ML Kit | 18.5.0 | Text Recognition 라이브러리 |
+| Firebase Cloud Messaigng  | 23.1.0 | PUSH 알림 사용을 위한 라이브러리 |
+| Paging 3 | 3.1.1 | Pagination 라이브러리 |
+| WebRTC | 1.0.32006 | 영상 통화를 위한 라이브러리 |
+| Glide | 4.13.2 | 이미지 로딩 라이브러리 |
+| AndroidViewAnamations | 2.4 | 뷰 애니메이션 라이브러리 |
+| Lottie | 5.2.0 | 뷰 애니메이션 라이브러리 |
+| Room | 2.4.3 | 로컬 Database |
+| PlayServicesLocation | 21.0.1 | GPS 사용 라이브러리 |
+| MPAndroidChart | 3.1.0 | 그래프, 차트 라이브러리 |
+
+### **Backend 구성 요소**
+
+| 기술 스택 | Version | Comment |
+| --- | --- | --- |
+| OpenJDK | 11 | Java vendor 사용 |
+| SpringBoot | 2.7.3 | Rest API 웹 애플리케이션 개발 |
+| Gradle | 7.5 | 프로젝트를 빌드하고 라이브러리를 관리 도구 |
+| MySQL | 8.0.30 | DB |
+| JPA | 2.7.3 | 서버와 DB의 연동을 위해 사용 |
+| JWT | 0.11.2 | 로그인 유저 인증을 위해 토큰 사용 |
+| Spring Security | 2.7.3 | 손쉬운 보안 관리를 위해 사용 |
+| Swagger | 2.9.2 | API 문서화를 위해 사용 |
+| Ubuntu | 20.04 LTS | 서비스 제공을 위해 리눅스 서버 구축 |
+| Docker | latest | 컨테이너화 된 애플리케이션 관리 |
+| Jenkins | latest | 자동화 배포 및 빌드 |
+| Nginx | latest | Vue 클라이언트 웹 서버 사용 |
+| GoogleApi | 1.30.10 | 구글 로그인 사용 |
+| FirebaseAdmin | 6.8.1 | FirebaseCloudMessaging 사용 |
+| MapStruct | 1.4.2 | Mapper 활용 |
+| AWS | 2.3.1 | AWS S3 |
+| Jasypt | 3.0.4 | 프로퍼티 암호화 |
+
+### AI 구성 요소
+
+| 기술 스택 | Version | Comment |
+| --- | --- | --- |
+| Tensorflow | 2.8.0 | AI 모델 학습 |
+| Tensorflow-lite | 2.9.0 | 안드로이드 객체 탐지 |
+| CudaToolkit | 11.3.1 | 학습 시 GPU 사용 |
+| CuDNN | 8.4.1.50 | 학습 시 GPU 사용 |
+| EfficientDet | 1 | 객체 탐지 모델 |
+| ML Kit | 18.5 | 텍스트 인식 라이브러리 |
+
+### 컨벤션
+
+![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled%203.png)
+
+![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled%204.png)
+
+![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled%205.png)
