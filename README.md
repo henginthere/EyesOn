@@ -1,7 +1,7 @@
 # 👁️ EyesOn
-<img src = "/uploads/c57ec9a73fccdc5dfde5d89b76d6ba0c/app_logo.png" width="160" height="160"> 
-<img src = "/uploads/3837ce7829e4f82d353ca8b30ac3b954/logo_navi.png" width="280" height="150"> 
-<img src = "/uploads/8e6aa1b8daaae9269860a38881c08f84/logo.png" width="280" height="150">
+<img src = "./assets/img/app_logo.png" width="160" height="160"> 
+<img src = "./assets/img/logo_navi.png" width="280" height="150"> 
+<img src = "./assets/img/logo.png" width="280" height="150">
 
  [애플리케이션 아이콘]        [Eyes On 로고_1]               [Eyes On 로고_2]
 
@@ -23,19 +23,19 @@
 > 
 > 그를 효율적으로 활용하기 위해 ERD를 작성했습니다.
 > 
-<img src = "/uploads/b204fc11601468906e6af66dae7b6c3f/Untitled.png" width="900" height="400">
+<img src = "./assets/img/Untitled.png" width="900" height="400">
 
 ## 사용 기술
 
 > 프로젝트에서 사용된 기술들입니다.
 > 
-<img src = "/uploads/13f90c545e2f8b90062c0eecc4c41d2e/tech_stack.png" width="900" height="400">
+<img src = "./assets/img/tech_stack.png" width="900" height="400">
 
 ## 프로젝트 구조도
 
 > 프로젝트 구조도 입니다.
 > 
-<img src = "/uploads/00a0bafc620ebc07d6b4d8c88aae7a6c/architecture.png" width="900" height="400">
+<img src = "./assets/img/architecture.png" width="900" height="400">
 
 
 ## 문서
@@ -109,7 +109,7 @@
 > 안드로이드는 **클린 아키텍처**를 도입했습니다.
 > 
 
-<img src = "/uploads/c5b84c93f95a04aaa4ea96e3c78de7f0/android_architecture.png" width="900" height="350">
+<img src = "./assets/img/android_architecture.png" width="900" height="350">
 
 ### 사용한 라이브러리
 
