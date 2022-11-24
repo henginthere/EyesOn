@@ -216,7 +216,7 @@
         <td align="center"> 👑팀장 <br> BackEnd <br> AI 전처리
         <td align="center"> 부팀장 <br> BackEnd <br> Infra <br> AI 전처리 
         <td align="center"> BackEnd <br> AI 전처리
-        <td align="center">Android 
+        <td align="center">Android <br> Infra
         <td align="center">Android 
         <td align="center">Android
     </tr>
