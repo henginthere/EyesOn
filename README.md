@@ -23,13 +23,13 @@
 > 
 > 그를 효율적으로 활용하기 위해 ERD를 작성했습니다.
 > 
-<img src = "/uploads/b204fc11601468906e6af66dae7b6c3f/Untitled.png" width="500" height="300">
+<img src = "/uploads/b204fc11601468906e6af66dae7b6c3f/Untitled.png" width="900" height="400">
 
 ## 사용 기술
 
 > 프로젝트에서 사용된 기술들입니다.
 > 
-<img src = "/uploads/13f90c545e2f8b90062c0eecc4c41d2e/tech_stack.png" width="500" height="300">
+<img src = "/uploads/13f90c545e2f8b90062c0eecc4c41d2e/tech_stack.png" width="550" height="300">
 
 ## 프로젝트 구조도
 
@@ -165,7 +165,7 @@
 
 - **[Talkback 기능](./assets/md/talkback.md)**
 
-## 회원가입
+## ❤ 회원가입
 
 - **[시각 장애인 회원 가입](./assets/md/join_blind.md)**
 
@@ -206,7 +206,7 @@
         <td height="140px" align="center"> <a href="https://github.com/jongui-94">
             <img src="https://avatars.githubusercontent.com/u/64008540?v=4" width="140px" /> <br><br> 박종욱 <br>(Back-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/JeongBJ">
-            <img src="https://avatars.githubusercontent.com/u/85900947?v=4" width="140px" /> <br><br> 정봉진 <br>(Back-End) </a> <br></td>
+            <img src="https://avatars.githubusercontent.com/u/85900947?v=4" width="140px" /> <br><br> 정봉진 <br>(AOS) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/mxxxxxji">
             <img src="https://avatars.githubusercontent.com/u/52437364?v=4" width="140px" /> <br><br> 김명지 <br>(AOS) </a> <br></td>
             <td height="140px" align="center"> <a href="https://github.com/taxfdi6371">
