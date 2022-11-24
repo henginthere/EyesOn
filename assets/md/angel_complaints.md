@@ -1,7 +1,5 @@
 <div align="center">
-
-![엔젤_민원처리.gif](./../gif/Angel_Complaints.gif)
-
+<img src="./../gif/Angel_Complaints.gif"/>
 </div>
 
 - 민원 처리

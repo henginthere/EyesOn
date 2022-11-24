@@ -1,5 +1,3 @@
-<center>
-
-![블라인드_회원가입.gif](./../gif/Join_Blind.gif)
-
-</center>
+<div align="center">
+<img src="./../gif/Join_Blind.gif"/>
+</div>

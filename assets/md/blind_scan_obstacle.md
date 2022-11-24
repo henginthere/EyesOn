@@ -1,8 +1,6 @@
-<center>
-
-![블라인드_장애물인식.gif](./../gif/Blind_Scan_Obstacle.gif)
-
-</center>
+<div align="center">
+<img src="./../gif/Blind_Scan_Obstacle.gif"/>
+</div>
 
 - 장애물 인식
     - 장애물이 인식되면 어떤 장애물인지, 얼만큼 떨어져있는지 음성으로 안내해줍니다.

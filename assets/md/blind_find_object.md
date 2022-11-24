@@ -1,8 +1,6 @@
-<center>
-
-![블라인드_물건찾기.gif](./../gif/Blind_Find_Object.gif)
-
-</center>
+<div align="center">
+<img src="./../gif/Blind_Find_Object.gif"/>
+</div>
 
 - 물건 찾기
     - 찾고 싶은 물건을 음성으로 입력합니다.

@@ -1,7 +1,5 @@
 <div align="center">
-
-![엔젤_도움.gif](./../gif/Angel_Help.gif)
-
+<img src="./../gif/Angel_Help.gif"/>
 </div>
 
 

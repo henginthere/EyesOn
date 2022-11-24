@@ -1,5 +1,3 @@
 <div align="center">
-
-![톡백.gif](./../gif/talkback.gif)
-
-</center>
+<img src="./../gif/talkback.gif"/>
+</div>

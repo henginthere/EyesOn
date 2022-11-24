@@ -1,8 +1,6 @@
-<center>
-
-![블라인드_민원신청.gif](./../gif/Blind_Complaints.gif)
-
-</center>
+<div align="center">
+<img src="./../gif/Blind_Complaints.gif"/>
+</div>
 
 - 민원 신청
     - 민원 신청에 쓸 사진을 촬영합니다.
