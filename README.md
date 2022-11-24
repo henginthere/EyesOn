@@ -5,8 +5,8 @@
 
  [애플리케이션 아이콘]        [Eyes On 로고_1]               [Eyes On 로고_2]
 
-**EyesOn**
-프로젝트는 시각장애인 및 저시력자를 위한 보조 애플리케이션 입니다.
+
+#### **EyesOn** 프로젝트는 시각장애인 및 저시력자를 위한 보조 애플리케이션 입니다.
 
 시각 장애의 92%는 후천적이며, 이들의 90%는 점자를 읽지 못합니다. 또한 인도의 높이가 낮은 장애물들은 흰지팡이로도 감지하기 어려워 큰 사고를 야기합니다. 
 이러한 보행 중 위험과 생활 속 불편함을 조금이나마 해소할 수 있도록 저희는  
@@ -29,13 +29,13 @@
 
 > 프로젝트에서 사용된 기술들입니다.
 > 
-<img src = "/uploads/13f90c545e2f8b90062c0eecc4c41d2e/tech_stack.png" width="550" height="300">
+<img src = "/uploads/13f90c545e2f8b90062c0eecc4c41d2e/tech_stack.png" width="900" height="400">
 
 ## 프로젝트 구조도
 
 > 프로젝트 구조도 입니다.
 > 
-<img src = "/uploads/00a0bafc620ebc07d6b4d8c88aae7a6c/architecture.png" width="550" height="300">
+<img src = "/uploads/00a0bafc620ebc07d6b4d8c88aae7a6c/architecture.png" width="900" height="400">
 
 
 ## 문서
@@ -54,7 +54,7 @@
 
 ```markdown
 📁AOS
-├──📁**presentation**
+├──📁presentation
 │ ├──📁base
 │ ├──📁di
 │ ├──📁module
@@ -69,9 +69,9 @@
 │ │ ├──📁login
 │ │ │ ├──📁join
 │ │ │ ├──📁login
-├──📁**domain**
+├──📁domain
 │ ├──📁base
-****│ ├──📁model
+│ ├──📁model
 │ ├──📁repository
 │ ├──📁usecase
 │ │ │ ├──📁complaints
@@ -79,7 +79,7 @@
 │ │ │ ├──📁noti
 │ │ │ ├──📁user
 │ ├──📁utils
-├──**📁data**
+├──📁data
 │ ├──📁api
 │ ├──📁datasource
 │ │ ├──📁paging
@@ -90,16 +90,16 @@
 │ │ │ ├──📁response
 │ ├──📁repository(Impl)
 │ ├──📁utils
-├──**📁mlkit**
-│ ├──📁objectdetecor'
+├──📁mlkit
+│ ├──📁objectdetecor
 │ ├──📁textdetector
-****├──**📁webrtc**
+├──📁webrtc
 │ ├──📁constants
 │ ├──📁observers
 │ ├──📁openvidu
 │ ├──📁utils
 │ ├──📁websocket
-**├──📁arcore**
+├──📁arcore
 │ ├──📁common
 │ ├──📁rendering
 ```
@@ -109,11 +109,11 @@
 > 안드로이드는 **클린 아키텍처**를 도입했습니다.
 > 
 
-<img src = "/uploads/c5b84c93f95a04aaa4ea96e3c78de7f0/android_architecture.png" width="550" height="250">
+<img src = "/uploads/c5b84c93f95a04aaa4ea96e3c78de7f0/android_architecture.png" width="900" height="350">
 
 ### 사용한 라이브러리
 
-```markdown
+
 	
 | Name            | Description                                  |
 | --------------- | -------------------------------------------- |
@@ -136,15 +136,15 @@
 | FCM             | 구글 알림 메시지 전송 라이브러리 |
 | OpenVidu        | WebRTC 기반 화상 미팅 라이브러리 |
 
-```
+
 
 # **💽**BACK-END
 
-## 디렉터리 구조
+### 디렉터리 구조
 
 ```markdown
 📁BACK
-├──📁**main**
+├──📁main
 │ ├──📁java
 │ │ ├──📁config
 │ │ ├──📁controller
@@ -285,8 +285,3 @@
 | EfficientDet | 1 | 객체 탐지 모델 |
 | ML Kit | 18.5 | 텍스트 인식 라이브러리 |
 
-## 컨벤션
-<img src = "/uploads/7954cfcfb0e54a186172121488c09b52/convention.png" width="330" height="380">   
-
-<img src = "/uploads/f2018b85c27dc4fd4643b81e206096c7/aos_convention.png" width="290" height="330">
-<img src = "/uploads/af257b68d664da09d6c91a371fd5ba2b/back_convention.png" width="430" height="300">
