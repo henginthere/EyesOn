@@ -1,8 +1,5 @@
 # 3등 축하 >< 너무 기쁘지만 리드미는 작성해야지
 
-**아래 참고해서 작성중입니다**
-
-[https://github.com/RichardLitt/standard-readme/blob/master/spec.md#banner](https://github.com/RichardLitt/standard-readme/blob/master/spec.md#banner) 
 
 # 👁️ EyesOn
 
