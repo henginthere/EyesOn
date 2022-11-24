@@ -1,8 +1,8 @@
-<center>
+<div align="center">
 
 ![엔젤_민원처리.gif](./../gif/Angel_Complaints.gif)
 
-</center>
+</div>
 
 - 민원 처리
     - 엔젤은 시각장애인이 등록한 민원을 검토하고 국민신문고에 접수할 수 있습니다.

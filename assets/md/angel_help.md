@@ -1,8 +1,8 @@
-<center>
+<div align="center">
 
 ![엔젤_도움.gif](./../gif/Angel_Help.gif)
 
-</center>
+</div>
 
 
 - 엔젤과의 연결
