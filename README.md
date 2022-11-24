@@ -1,26 +1,18 @@
 # 👁️ EyesOn
+<img src = "/uploads/c57ec9a73fccdc5dfde5d89b76d6ba0c/app_logo.png" width="160" height="160"> 
+<img src = "/uploads/3837ce7829e4f82d353ca8b30ac3b954/logo_navi.png" width="280" height="150"> 
+<img src = "/uploads/8e6aa1b8daaae9269860a38881c08f84/logo.png" width="280" height="150">
 
-![**[애플리케이션 아이콘]**](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/app_logo.png)
+ [애플리케이션 아이콘]        [Eyes On 로고_1]               [Eyes On 로고_2]
 
-**[애플리케이션 아이콘]**
-
-![             [Eyes On 로고_1]](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/logo.png)
-
-             [Eyes On 로고_1]
-
-![              [Eyes On 로고_2]](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/logo_navi.png)
-
-              [Eyes On 로고_2]
-
-**EyesOn** 프로젝트는 시각장애인 및 저시력자를 위한 보조 애플리케이션 입니다.
+**EyesOn**
+프로젝트는 시각장애인 및 저시력자를 위한 보조 애플리케이션 입니다.
 
 시각 장애의 92%는 후천적이며, 이들의 90%는 점자를 읽지 못합니다. 또한 인도의 높이가 낮은 장애물들은 흰지팡이로도 감지하기 어려워 큰 사고를 야기합니다. 
 이러한 보행 중 위험과 생활 속 불편함을 조금이나마 해소할 수 있도록 저희는  
 
-<aside>
-💡 **시각장애인의 눈[:Eyes] 을 뜨게[:On] 해주다.**
 
-</aside>
+💡 **시각장애인의 눈[:Eyes] 을 뜨게[:On] 해주다.** 💡
 
 라는 의미의 Eyes On(아이즈 온) 프로젝트를 진행하게 되었습니다.
 
@@ -31,20 +23,19 @@
 > 
 > 그를 효율적으로 활용하기 위해 ERD를 작성했습니다.
 > 
-
-![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled.png)
+<img src = "/uploads/b204fc11601468906e6af66dae7b6c3f/Untitled.png" width="500" height="300">
 
 ## 사용 기술
 
 > 프로젝트에서 사용된 기술들입니다.
-
-![tech_stack.png](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/tech_stack.png)
+> 
+<img src = "/uploads/13f90c545e2f8b90062c0eecc4c41d2e/tech_stack.png" width="500" height="300">
 
 ## 프로젝트 구조도
 
 > 프로젝트 구조도 입니다.
-
-![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled%201.png)
+> 
+<img src = "/uploads/00a0bafc620ebc07d6b4d8c88aae7a6c/architecture.png" width="550" height="300">
 
 
 ## 문서
@@ -118,7 +109,7 @@
 > 안드로이드는 **클린 아키텍처**를 도입했습니다.
 > 
 
-![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled%202.png)
+<img src = "/uploads/c5b84c93f95a04aaa4ea96e3c78de7f0/android_architecture.png" width="550" height="250">
 
 ### 사용한 라이브러리
 
@@ -204,14 +195,36 @@
 
 # 팀원 소개
 
-## **🍀 EyesOn 팀**
+### **🍀 TEAM EyesOn**
 
-- 김지수 - Backend, AI 전처리 작업
-- 배혜연 - Backend, Infra, AI 전처리 작업
-- 박종욱 - Backend, AI 전처리 작업
-- 권용준 - AOS
-- 김명지 - AOS
-- 정봉진 - AOS
+<table>
+    <tr>
+        <td height="140px" align="center"> <a href="https://github.com/us13579">
+            <img src="https://avatars.githubusercontent.com/u/97679742?v=4" width="140px" /> <br><br> 김지수 <br>(Back-End) </a> <br></td>
+        <td height="140px" align="center"> <a href="https://github.com/henginthere">
+            <img src="https://avatars.githubusercontent.com/u/58303100?v=4" width="140px" /> <br><br> 배혜연 <br>(Back-End) </a> <br></td>
+        <td height="140px" align="center"> <a href="https://github.com/jongui-94">
+            <img src="https://avatars.githubusercontent.com/u/64008540?v=4" width="140px" /> <br><br> 박종욱 <br>(Back-End) </a> <br></td>
+        <td height="140px" align="center"> <a href="https://github.com/JeongBJ">
+            <img src="https://avatars.githubusercontent.com/u/85900947?v=4" width="140px" /> <br><br> 정봉진 <br>(Back-End) </a> <br></td>
+        <td height="140px" align="center"> <a href="https://github.com/mxxxxxji">
+            <img src="https://avatars.githubusercontent.com/u/52437364?v=4" width="140px" /> <br><br> 김명지 <br>(AOS) </a> <br></td>
+            <td height="140px" align="center"> <a href="https://github.com/taxfdi6371">
+            <img src="https://avatars.githubusercontent.com/u/53108175?v=4" width="140px" /> <br><br> 권용준 <br>(AOS) </a> <br></td>
+    </tr>
+    <tr>
+        <td align="center"> 👑팀장 <br> BackEnd <br> AI 전처리
+        <td align="center"> 부팀장 <br> BackEnd <br> Infra <br> AI 전처리 
+        <td align="center"> BackEnd <br> AI 전처리
+        <td align="center">Android 
+        <td align="center">Android 
+        <td align="center">Android
+    </tr>
+</table>
+
+<div id="2">
+<br><br>
+</div>
 
 ## 프로젝트 구성 요소
 
@@ -272,10 +285,8 @@
 | EfficientDet | 1 | 객체 탐지 모델 |
 | ML Kit | 18.5 | 텍스트 인식 라이브러리 |
 
-### 컨벤션
+## 컨벤션
+<img src = "/uploads/7954cfcfb0e54a186172121488c09b52/convention.png" width="330" height="380">   
 
-![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled%203.png)
-
-![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled%204.png)
-
-![Untitled](3%E1%84%83%E1%85%B3%E1%86%BC%20%E1%84%8E%E1%85%AE%E1%86%A8%E1%84%92%E1%85%A1%20%E1%84%82%E1%85%A5%E1%84%86%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%88%E1%85%B3%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A1%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%83%E1%85%B3%E1%84%86%E1%85%B5%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%8C%E1%85%A1%E1%86%A8%E1%84%89%E1%85%A5%E1%86%BC%E1%84%92%E1%85%A2%E1%84%8B%E1%85%A3%E1%84%8C%E1%85%B5%207bfafe59470e4096bdb79fe8ecac93fe/Untitled%205.png)
+<img src = "/uploads/f2018b85c27dc4fd4643b81e206096c7/aos_convention.png" width="290" height="330">
+<img src = "/uploads/af257b68d664da09d6c91a371fd5ba2b/back_convention.png" width="430" height="300">
