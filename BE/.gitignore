@@ -29,6 +29,7 @@ out/
 !**/src/test/**/out/
 application.yml
 secret.yml
+firebase_service_key.json
 
 ### NetBeans ###
 /nbproject/private/
