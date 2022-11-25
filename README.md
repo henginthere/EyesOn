@@ -111,33 +111,6 @@
 
 <img src = "./assets/img/android_architecture.png" width="900" height="350">
 
-### 사용한 라이브러리
-
-
-	
-| Name            | Description                                  |
-| --------------- | -------------------------------------------- |
-| Navigation      | 프래그먼트 전환 라이브러리                   |
-| Glide           | 이미지 로딩 라이브러리                       |
-| ViewModel       | 수명주기 고려 데이터를 저장, 관리 라이브러리 |
-| Coroutine       | 비동기 처리 라이브러리                       |
-| Coroutine Flow  | 비동기 데이터 스트림                         |
-| TedPermission   | 안드로이드 권한 라이브러리                   |
-| Retrofit        | HTTP 통신 라이브러리                         |
-| Dagger Hilt     | 의존성 주입 라이브러리                       |
-| okhttp3         | HTTP 통신 라이브러리                       |
-| Google Auth     | 구글 소셜 로그인                             |
-| Lottie          | 안드로이드 애니메이션 라이브러리             |
-| MPAndroidChart  | 안드로이드 차트 라이브러리                  |
-| ARCore          | 구글 증강 현실 플랫폼 API                  |
-| ML Kit          | 구글 머신러닝 모바일 SDK                  |
-| Paging 3        | 대규모 데이터 세트의 데이터 페이지 로드 라이브러리 |
-| TensorFlow lite | 구글 머신러닝 오픈스스 모바일 라이브러리 |
-| FCM             | 구글 알림 메시지 전송 라이브러리 |
-| OpenVidu        | WebRTC 기반 화상 미팅 라이브러리 |
-
-
-
 # **💽**BACK-END
 
 ### 디렉터리 구조
